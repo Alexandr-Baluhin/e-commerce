@@ -1,0 +1,53 @@
+{
+  "name": "RTU_project",
+  "version": "1.0.0",
+  "angular-cli": {},
+  "scripts": {
+    "build": "npm run clean:dist && npm run clean:temp && npm run inline && npm run tsc",
+    "build:prod": "npm run build && npm run libs && browserify -s main temp/main.js > dist/app/bundle.js && npm run minify && npm run clean:temp",
+    "start": "npm run clean:dist && tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "start:prod": "npm run clean:dist && gulp prod-config && tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "lite": "lite-server",
+    "lite:prod": "lite-server -c config/lite-server.json",
+    "clean:dist": "rimraf dist/app/*",
+    "clean:temp": "rimraf temp",
+    "inline": "gulp inline-code",
+    "libs": "gulp copy-libs",
+    "minify": "uglifyjs dist/app/bundle.js --screw-ie8 --compress --no-mangle --output dist/app/bundle.min.js",
+    "postinstall": "typings install",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "typings": "typings"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "~2.1.0",
+    "@angular/compiler": "~2.1.0",
+    "@angular/core": "~2.1.0",
+    "@angular/forms": "~2.1.0",
+    "@angular/http": "~2.1.0",
+    "@angular/platform-browser": "~2.1.0",
+    "@angular/platform-browser-dynamic": "~2.1.0",
+    "@angular/router": "~3.1.0",
+    "bootstrap": "^3.3.7",
+    "core-js": "^2.4.0",
+    "primeng": "1.0.0-beta.19",
+    "primeui": "4.1.15",
+    "reflect-metadata": "^0.1.3",
+    "rxjs": "5.0.0-beta.12",
+    "systemjs": "0.19.31",
+    "zone.js": "~0.6.23"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "concurrently": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-inline-ng2-template": "^2.1.0",
+    "gulp-rename": "^1.2.2",
+    "lite-server": "^2.2.2",
+    "rimraf": "^2.5.4",
+    "typescript": "^2.0.0",
+    "typings": "^1.3.2",
+    "uglifyjs": "^2.4.10"
+  }
+}
