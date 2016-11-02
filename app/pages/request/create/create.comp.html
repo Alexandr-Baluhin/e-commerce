@@ -1,0 +1,156 @@
+<div class="container">
+	<div class="ui-g">
+		<form [formGroup]="organizerForm" (ngSubmit)="formSubmit(organizerForm.value)">
+			<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+				<span class="form-label">Pasākuma organizators</span>
+				<div class="form-subgroup">
+					<span class="form-label">Vārds</span>
+					<input class="form-input" formControlName="name" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Uzvārds</span>
+					<input class="form-input" formControlName="surname" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Personas kods</span>
+					<input class="form-input" formControlName="person_code" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Dzīvesvietas adrese</span>
+					<input class="form-input" formControlName="address" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Tālrunis</span>
+					<input class="form-input" formControlName="phone" type="text" pInputText placeholder="Nav obligāts" />
+				</div>
+			</div>
+			<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+				<span class="form-label">Tehnisko drošību atbildīgā persona</span>
+				<div class="form-subgroup">
+					<span class="form-label">Vārds</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Uzvārds</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Personas kods</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Dzīvesvietas adrese</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Tālrunis</span>
+					<input class="form-input" type="text" pInputText placeholder="Nav obligāts" />
+				</div>
+			</div>
+			<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+				<span class="form-label">Sabiedrisko kārtību un drošību atbildīgā persona</span>
+				<div class="form-subgroup">
+					<span class="form-label">Vārds</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Uzvārds</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Personas kods</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Dzīvesvietas adrese</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Tālrunis</span>
+					<input class="form-input" type="text" pInputText placeholder="Nav obligāts" />
+				</div>
+			</div>
+			<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+				<span class="form-label">Kārtības uzturētāja persona</span>
+				<div class="form-subgroup">
+					<span class="form-label">Vārds</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Uzvārds</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Personas kods</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Dzīvesvietas adrese</span>
+					<input class="form-input" type="text" pInputText placeholder="Obligāts" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Tālrunis</span>
+					<input class="form-input" type="text" pInputText placeholder="Nav obligāts" />
+				</div>
+			</div>
+			<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+				<div class="form-subgroup">
+					<span class="form-label">Pasākuma nosaukums, veids un mērķis</span>
+					<textarea type="text" pInputTextarea></textarea>
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Pasākuma norises vieta</span>
+					<textarea type="text" pInputTextarea></textarea>
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Pasākuma datums</span>
+					<!-- TODO: make date input -->
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Pasākuma sākuma un beigu laiks</span>
+					<!-- TODO: make time input -->
+				</div>
+			</div>
+			<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+				<div class="form-subgroup">
+					<span class="form-label">Plānotais pasākuma apmeklētāju skaits</span>
+					<input class="form-input" type="text" pInputText placeholder="plānotais pasākuma apmeklētāju skaits" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Plānotais pasākuma dalībnieku skaits</span>
+					<input class="form-input" type="text" pInputText placeholder="Plānotais pasākuma dalībnieku skaits" />
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Pasākumā izmantojamās bīstamās iekārtas</span>
+					<textarea type="text" pInputTextarea></textarea>
+				</div>
+				<div class="form-subgroup">
+					<span class="form-label">Pasākuma netraucētai un drošai norisei nepieciešamais valsts un pašvaldības iestāžu atbalsts</span>
+					<textarea type="text" pInputTextarea></textarea>
+				</div>
+			</div>
+			<span class="form-label">Līguma kopija ar kārtības uzturētājiem</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<span class="form-label">Līguma kopija ar personu, kas atbildīga par tehnisko drošību</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<span class="form-label">Līguma kopija ar personu, kas atbildīga par sabiedrisko kārtību un drošību</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<span class="form-label">Detalizēts pasākuma plāns</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<span class="form-label">Līguma kopija ar pasākuma norises vietas īpašnieku, ja viņš nav pasākuma organizators.</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<span class="form-label">Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<span class="form-label">citu saskaņojumu vai līgumu kopijas</span>
+			<p-fileUpload name="myfile[]" url="http://localhost:8080/upload"></p-fileUpload>
+			<!-- TODO: make file input -->
+			<button type="submit" [disabled]="!organizerForm.valid">Nosūtīt pieprasījumu</button>
+		</form>
+	</div>
+</div>

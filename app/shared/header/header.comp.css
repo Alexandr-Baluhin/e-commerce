@@ -1,0 +1,20 @@
+.header {
+  width: 100%;
+  height: 70px;
+  text-align: center;  
+  background: rgba(0,0,0,0.1);
+}
+
+.header .logo {
+  font-size: 28px;
+  line-height: 70px;
+}
+
+.auth-form {
+  text-align: center;  
+}
+
+.auth-form .form-input {
+  display: block;
+  margin: 10px auto;
+}

@@ -1,0 +1,8 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+/* PRIMENG */
+.ui-tabview-nav {
+  display: flex !important;
+  justify-content: center !important;
+}
