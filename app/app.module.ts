@@ -9,7 +9,9 @@ import {
   InputTextareaModule, 
   FileUploadModule,
   DialogModule,
-  TabViewModule
+  TabViewModule,
+  CalendarModule,
+  InputMaskModule
 } from 'primeng/primeng';
 
 // Components
@@ -40,7 +42,9 @@ import { CreateService } from './pages/request/create/create.service';
     InputTextareaModule, 
     FileUploadModule,
     DialogModule,
-    TabViewModule
+    TabViewModule,
+    CalendarModule,
+    InputMaskModule
   ],
   declarations: [
     AppComp,

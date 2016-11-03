@@ -1,4 +1,5 @@
-<p-dialog header="Autorizācija" [width]="400" [(visible)]="displayAuth" [draggable]="false" [resizable]="false" [modal]="true" [showEffect]="fade">
+<p-dialog header="Autorizācija" [width]="400" [(visible)]="displayAuth" [draggable]="false" [resizable]="false" [modal]="true"
+	[showEffect]="fade">
 	<p-tabView>
 		<p-tabPanel header="Lietotājs" leftIcon="fa-user">
 			<form class="auth-form" [formGroup]="authForm" (ngSubmit)="formSubmit(authForm.value)">
@@ -18,6 +19,8 @@
 </p-dialog>
 
 <nav class="header">
-	<span class="logo">Publisko pasākumu organizēšanas atļauju iesniegšana</span>
-	<button type="text" (click)="showDialog()" pButton icon="fa-external-link-square" label="Autorizēties"></button>
+	<div class="row">
+		<span class="logo">Publisko pasākumu organizēšanas atļauju iesniegšana</span>
+		<button class="auth-btn" type="text" (click)="showDialog()" pButton icon="fa-external-link-square" label="Autorizēties"></button>
+	</div>
 </nav>

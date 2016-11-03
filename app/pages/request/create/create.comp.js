@@ -15,12 +15,45 @@ var CreateComp = (function () {
     function CreateComp(_service, fb) {
         this._service = _service;
         this.fb = fb;
-        this.organizerForm = fb.group({
-            'name': ['', forms_1.Validators.required],
-            'surname': ['', forms_1.Validators.required],
-            'person_code': ['', forms_1.Validators.required],
-            'address': ['', forms_1.Validators.required],
-            'phone': ['']
+        this.requestForm = fb.group({
+            'organizer': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'guard': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'social_guard': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'support': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'description': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(250)])],
+            'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+            'start_date': ['', forms_1.Validators.required],
+            'end_date': ['', forms_1.Validators.required],
+            'start_time': ['', forms_1.Validators.required],
+            'end_time': ['', forms_1.Validators.required],
+            'visitors': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(6), forms_1.Validators.pattern('^[0-9]+$')])],
+            'participiants': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(6), forms_1.Validators.pattern('^[0-9]+$')])],
+            'dangerous': ['', forms_1.Validators.maxLength(250)],
+            'gov_callback': ['', forms_1.Validators.maxLength(250)]
         });
     }
     CreateComp.prototype.ngOnInit = function () { };
