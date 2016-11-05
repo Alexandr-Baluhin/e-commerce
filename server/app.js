@@ -1,7 +1,6 @@
 'use strict';
 const express = require('express');
 const app = express();
-const mysql = require('mysql');
 const DAL = require('./DAL');
 
 let database = new DAL();
@@ -14,14 +13,19 @@ app.get('/', (req, res) => {
 
 app.get('/request/list', (req, res) => {
     // get list from DB
-    // format list
-    res.send({data: "Listing"});
+    database.getList().then(
+            result => res.send({data: result}),
+            err    => res.send({err: err})
+    )
 });
 
 app.get('/request/:id', (req, res) => {
     // get request from DB
-    // format request
-    res.send({data: "Request"});
+    // TODO: format request
+    database.getList(req.params.id).then(
+            result => res.send({data: result}),
+            err    => res.send({err: err})
+    )
 });
 
 app.post('/request', (req, res) => {
