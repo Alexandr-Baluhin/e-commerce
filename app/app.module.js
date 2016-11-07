@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
 var router_1 = require('@angular/router');
+var http_1 = require('@angular/http');
 var primeng_1 = require('primeng/primeng');
 // Components
 var app_comp_1 = require('./app.comp');
@@ -25,6 +26,7 @@ var list_comp_1 = require('./pages/request/list/list.comp');
 var detail_comp_1 = require('./pages/request/detail/detail.comp');
 // Shared
 var header_comp_1 = require('./shared/header/header.comp');
+var auth_comp_1 = require('./shared/auth/auth.comp');
 var create_service_1 = require('./pages/request/create/create.service');
 var AppModule = (function () {
     function AppModule() {
@@ -35,6 +37,7 @@ var AppModule = (function () {
                 platform_browser_1.BrowserModule,
                 forms_1.ReactiveFormsModule,
                 router_1.RouterModule,
+                http_1.HttpModule,
                 // routes
                 routes_1.routing,
                 // primeng
@@ -57,7 +60,8 @@ var AppModule = (function () {
                 list_comp_1.ListComp,
                 detail_comp_1.DetailComp,
                 // Shared
-                header_comp_1.HeaderComp
+                header_comp_1.HeaderComp,
+                auth_comp_1.AuthComp
             ],
             bootstrap: [app_comp_1.AppComp],
             providers: [create_service_1.CreateService]

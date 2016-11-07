@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/forms';
 
 @Component({
   moduleId: module.id,
@@ -10,28 +9,21 @@ import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/fo
 
 export class HeaderComp {
 
-  public authForm: FormGroup;
-
-  private displayAuth: boolean;
+  private isDisplayAuth: boolean;
   
-  constructor(private fb: FormBuilder) {
-    this.authForm = fb.group({
-      'login': ['', Validators.required],
-      'password': ['', Validators.required]
-    });
-  }
+  constructor() {}
 
   public ngOnInit(): void {
-    this.displayAuth = false;
+    this.isDisplayAuth = false;
   }
 
   public ngOnDestroy(): void {}
 
-  private showDialog(): void {
-    this.displayAuth = true;
+  private toggleDisplay(value: boolean): void {
+    this.isDisplayAuth = value;
   }
 
-  private formSubmit(values: any) {
-    console.log(values);
+  private showDialog(): void {
+    this.isDisplayAuth = true;
   }
 }

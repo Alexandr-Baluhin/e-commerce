@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 
 import {
   ButtonModule,
@@ -26,6 +27,7 @@ import { ListComp } from './pages/request/list/list.comp';
 import { DetailComp } from './pages/request/detail/detail.comp';
 // Shared
 import { HeaderComp } from './shared/header/header.comp';
+import { AuthComp } from './shared/auth/auth.comp';
 
 import { CreateService } from './pages/request/create/create.service';
 
@@ -34,6 +36,7 @@ import { CreateService } from './pages/request/create/create.service';
     BrowserModule,
     ReactiveFormsModule,
     RouterModule,
+    HttpModule,
     // routes
     routing,    
     // primeng
@@ -56,7 +59,8 @@ import { CreateService } from './pages/request/create/create.service';
     ListComp,
     DetailComp,
     // Shared
-    HeaderComp
+    HeaderComp,
+    AuthComp
   ],
   bootstrap: [AppComp],
   providers: [CreateService]

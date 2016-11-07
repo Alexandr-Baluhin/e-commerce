@@ -15,7 +15,8 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x" [autoClear]="false" required></p-inputMask>
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Dzīvesvietas adrese</span>
@@ -38,7 +39,8 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x" [autoClear]="false" required></p-inputMask>							
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Dzīvesvietas adrese</span>
@@ -46,7 +48,7 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>							
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 						</div>
 					</div>
 					<div formGroupName="social_guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
@@ -61,7 +63,8 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x" [autoClear]="false" required></p-inputMask>														
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Dzīvesvietas adrese</span>
@@ -69,7 +72,7 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>							
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 						</div>
 					</div>
 					<div formGroupName="support" class="form-group ui-g-12 ui-md-6 ui-lg-6">
@@ -84,7 +87,8 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x" [autoClear]="false" required></p-inputMask>																					
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Dzīvesvietas adrese</span>
@@ -92,7 +96,162 @@
 						</div>
 						<div class="form-subgroup">
 							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>							
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+						</div>
+					</div>
+					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+						<div class="form-subgroup column">
+							<span class="form-label">Pasākuma nosaukums, veids un mērķis</span>
+							<textarea formControlName="description" rows="5" cols="30" pInputTextarea required></textarea>
+						</div>
+						<div class="form-subgroup column">
+							<span class="form-label">Pasākuma norises vieta</span>
+							<textarea formControlName="address" rows="5" cols="30" pInputTextarea required></textarea>
+						</div>
+					</div>
+					<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+						<div class="form-subgroup column">
+							<span class="form-label">Pasākuma datums</span>
+							<div>
+								<p-calendar [styleClass]="form-calendar" formControlName="start_date" required></p-calendar>
+								<p-calendar [styleClass]="form-calendar" formControlName="end_date" required></p-calendar>
+							</div>
+						</div>
+						<div class="form-subgroup column">
+							<span class="form-label">Pasākuma sākuma un beigu laiks</span>
+							<div>
+								<p-calendar formControlName="start_time" [timeOnly]="true" required></p-calendar>
+								<p-calendar formControlName="end_time" [timeOnly]="true" required></p-calendar>
+							</div>
+						</div>
+					</div>
+					<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+						<div class="form-subgroup column">
+							<span class="form-label">Plānotais pasākuma apmeklētāju skaits</span>
+							<input class="form-input" formControlName="visitors" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup column">
+							<span class="form-label">Plānotais pasākuma dalībnieku skaits</span>
+							<input class="form-input" formControlName="participiants" type="text" pInputText required />
+						</div>
+					</div>
+					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+						<div class="form-subgroup column">
+							<span class="form-label">Pasākumā izmantojamās bīstamās iekārtas</span>
+							<textarea rows="5" cols="30" formControlName="dangerous" pInputTextarea></textarea>
+						</div>
+						<div class="form-subgroup column">
+							<span class="form-label">Pasākuma netraucētai un drošai norisei nepieciešamais valsts un pašvaldības iestāžu atbalsts</span>
+							<textarea rows="5" cols="30" formControlName="gov_callback" pInputTextarea></textarea>
+						</div>
+						<span class="form-label">Jūs varēt augšupielādēt sekojošie faili:</span>
+						<ul class="upload-list">
+							<li>Līguma kopija ar kārtības uzturētājiem</li>
+							<li>Līguma kopija ar personu, kas atbildīga par tehnisko drošību</li>
+							<li>Līguma kopija ar personu, kas atbildīga par sabiedrisko kārtību un drošību</li>
+							<li>Detalizēts pasākuma plāns</li>
+							<li>Līguma kopija ar pasākuma norises vietas īpašnieku, ja viņš nav pasākuma organizators.</li>
+							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
+							<li>citu saskaņojumu vai līgumu kopijas</li>
+						</ul>
+						<p-fileUpload [(name)]="files" url="http://localhost:8080/upload" multiple="multiple" 
+							(onBeforeUpload)="getBinaries($event)"></p-fileUpload>
+					</div>
+					<button type="submit" pButton [disabled]="!requestForm.valid" label="Nosūtīt pieprasījumu"></button>
+				</form>
+			</p-tabPanel>
+			<p-tabPanel header="Juridiska persona" leftIcon="fa-briefcase">
+				<form [formGroup]="requestLawForm" (ngSubmit)="formSubmit(requestLawForm.value)">
+					<div formGroupName="organizer" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+						<span class="form-label">Pasākuma organizators</span>
+						<div class="form-subgroup">
+							<span class="form-label">Jūridiskā persona</span>
+							<input class="form-input" formControlName="law_name" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Reģistrācijas numurs</span>
+							<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Juridiskā adrese</span>
+							<input class="form-input" formControlName="law_address" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Tālrunis</span>
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+						</div>
+					</div>
+					<div formGroupName="guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+						<span class="form-label">Tehnisko drošību atbildīgā persona</span>
+						<div class="form-subgroup">
+							<span class="form-label">Vārds</span>
+							<input class="form-input" formControlName="name" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Uzvārds</span>
+							<input class="form-input" formControlName="surname" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Personas kods</span>
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Dzīvesvietas adrese</span>
+							<input class="form-input" formControlName="address" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Tālrunis</span>
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+						</div>
+					</div>
+					<div formGroupName="social_guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+						<span class="form-label">Sabiedrisko kārtību un drošību atbildīgā persona</span>
+						<div class="form-subgroup">
+							<span class="form-label">Vārds</span>
+							<input class="form-input" formControlName="name" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Uzvārds</span>
+							<input class="form-input" formControlName="surname" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Personas kods</span>
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Dzīvesvietas adrese</span>
+							<input class="form-input" formControlName="address" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Tālrunis</span>
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+						</div>
+					</div>
+					<div formGroupName="support" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+						<span class="form-label">Kārtības uzturētāja persona</span>
+						<div class="form-subgroup">
+							<span class="form-label">Vārds</span>
+							<input class="form-input" formControlName="name" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Uzvārds</span>
+							<input class="form-input" formControlName="surname" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Personas kods</span>
+							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+								[autoClear]="false" required></p-inputMask>
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Dzīvesvietas adrese</span>
+							<input class="form-input" formControlName="address" type="text" pInputText required />
+						</div>
+						<div class="form-subgroup">
+							<span class="form-label">Tālrunis</span>
+							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 						</div>
 					</div>
 					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
@@ -154,8 +313,6 @@
 					</div>
 					<button type="submit" pButton [disabled]="!requestForm.valid" label="Nosūtīt pieprasījumu"></button>
 				</form>
-			</p-tabPanel>
-			<p-tabPanel header="Juridiska persona" leftIcon="fa-briefcase">
 			</p-tabPanel>
 		</p-tabView>
 	</div>

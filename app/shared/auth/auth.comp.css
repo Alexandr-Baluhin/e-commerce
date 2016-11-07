@@ -1,0 +1,8 @@
+.auth-form {
+  text-align: center;  
+}
+
+.auth-form .form-input {
+  display: block;
+  margin: 10px auto;
+}

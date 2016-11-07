@@ -18,12 +18,3 @@
 .header .auth-btn {
   margin: auto 0;  
 }
-
-.auth-form {
-  text-align: center;  
-}
-
-.auth-form .form-input {
-  display: block;
-  margin: 10px auto;
-}

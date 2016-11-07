@@ -9,24 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var forms_1 = require('@angular/forms');
 var HeaderComp = (function () {
-    function HeaderComp(fb) {
-        this.fb = fb;
-        this.authForm = fb.group({
-            'login': ['', forms_1.Validators.required],
-            'password': ['', forms_1.Validators.required]
-        });
+    function HeaderComp() {
     }
     HeaderComp.prototype.ngOnInit = function () {
-        this.displayAuth = false;
+        this.isDisplayAuth = false;
     };
     HeaderComp.prototype.ngOnDestroy = function () { };
-    HeaderComp.prototype.showDialog = function () {
-        this.displayAuth = true;
+    HeaderComp.prototype.toggleDisplay = function (value) {
+        this.isDisplayAuth = value;
     };
-    HeaderComp.prototype.formSubmit = function (values) {
-        console.log(values);
+    HeaderComp.prototype.showDialog = function () {
+        this.isDisplayAuth = true;
     };
     HeaderComp = __decorate([
         core_1.Component({
@@ -35,7 +29,7 @@ var HeaderComp = (function () {
             styleUrls: ['./header.comp.css'],
             templateUrl: './header.comp.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder])
+        __metadata('design:paramtypes', [])
     ], HeaderComp);
     return HeaderComp;
 }());

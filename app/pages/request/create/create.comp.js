@@ -15,6 +15,7 @@ var CreateComp = (function () {
     function CreateComp(_service, fb) {
         this._service = _service;
         this.fb = fb;
+        // Form for usual persons
         this.requestForm = fb.group({
             'organizer': fb.group({
                 'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
@@ -55,12 +56,55 @@ var CreateComp = (function () {
             'dangerous': ['', forms_1.Validators.maxLength(250)],
             'gov_callback': ['', forms_1.Validators.maxLength(250)]
         });
+        // Form for law persons
+        this.requestLawForm = fb.group({
+            'organizer': fb.group({
+                'law_name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'register_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'law_address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'guard': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'social_guard': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'support': fb.group({
+                'name': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'surname': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(50)])],
+                'person_code': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+                'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+                'phone': ['', forms_1.Validators.compose([forms_1.Validators.minLength(8), forms_1.Validators.pattern('^\d+$')])]
+            }),
+            'description': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(250)])],
+            'address': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(100)])],
+            'start_date': ['', forms_1.Validators.required],
+            'end_date': ['', forms_1.Validators.required],
+            'start_time': ['', forms_1.Validators.required],
+            'end_time': ['', forms_1.Validators.required],
+            'visitors': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(6), forms_1.Validators.pattern('^[0-9]+$')])],
+            'participiants': ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(6), forms_1.Validators.pattern('^[0-9]+$')])],
+            'dangerous': ['', forms_1.Validators.maxLength(250)],
+            'gov_callback': ['', forms_1.Validators.maxLength(250)]
+        });
     }
     CreateComp.prototype.ngOnInit = function () { };
     CreateComp.prototype.ngOnDestroy = function () { };
+    CreateComp.prototype.getBinaries = function (event) {
+        console.log(event);
+    };
     CreateComp.prototype.formSubmit = function (values) {
-        console.log(values);
-        // this._service.sendData();
+        this._service.sendData(values)
+            .subscribe(function (res) { return alert(res); });
     };
     CreateComp = __decorate([
         core_1.Component({

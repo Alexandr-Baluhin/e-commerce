@@ -9,15 +9,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var http_1 = require('@angular/http');
+var Observable_1 = require('rxjs/Observable');
+require('rxjs/add/operator/map');
+require('rxjs/add/operator/catch');
+var URL = 'http://localhost:8080/';
 var CreateService = (function () {
-    function CreateService() {
+    function CreateService(http) {
+        this.http = http;
     }
-    CreateService.prototype.sendData = function () {
-        alert('Data send!');
+    /**
+     * @param
+     * data - Object with data from form
+     * @return
+     * Response from server
+     */
+    CreateService.prototype.sendData = function (data) {
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        var options = new http_1.RequestOptions({ headers: headers, body: data });
+        return this.http.post(URL + 'request', options)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    /**
+     * @param
+     * error - Any error response
+     * @return
+     * Observable.throw with error
+     */
+    CreateService.prototype.handleError = function (error) {
+        console.log('error occured');
+        var errMsg = (error.message) ? error.message :
+            error.status ? error.status + " - " + error.statusText : 'Server error';
+        console.error(errMsg);
+        return Observable_1.Observable.throw(errMsg);
     };
     CreateService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [http_1.Http])
     ], CreateService);
     return CreateService;
 }());
