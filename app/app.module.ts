@@ -12,10 +12,15 @@ import {
   DialogModule,
   TabViewModule,
   CalendarModule,
-  InputMaskModule
+  InputMaskModule,
+  GrowlModule,
+  ConfirmDialogModule,
+  ConfirmationService,
+  DataTableModule,
+  SharedModule
 } from 'primeng/primeng';
 
-// Components
+/* Components */
 import { AppComp } from './app.comp';
 import { routing } from './routes';
 // Pages
@@ -28,8 +33,14 @@ import { DetailComp } from './pages/request/detail/detail.comp';
 // Shared
 import { HeaderComp } from './shared/header/header.comp';
 import { AuthComp } from './shared/auth/auth.comp';
+import { MessagesComp } from './shared/messages/messages.comp';
 
+/* Services */
+// Pages
 import { CreateService } from './pages/request/create/create.service';
+import { ListService } from './pages/request/list/list.service';
+// Shared
+import { AuthService } from './shared/auth/auth.service';
 
 @NgModule({
   imports: [
@@ -47,7 +58,11 @@ import { CreateService } from './pages/request/create/create.service';
     DialogModule,
     TabViewModule,
     CalendarModule,
-    InputMaskModule
+    InputMaskModule,
+    GrowlModule,
+    ConfirmDialogModule,
+    DataTableModule,
+    SharedModule
   ],
   declarations: [
     AppComp,
@@ -60,9 +75,10 @@ import { CreateService } from './pages/request/create/create.service';
     DetailComp,
     // Shared
     HeaderComp,
-    AuthComp
+    AuthComp,
+    MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService]
+  providers: [CreateService, ListService, AuthService, ConfirmationService]
 })
 export class AppModule { }

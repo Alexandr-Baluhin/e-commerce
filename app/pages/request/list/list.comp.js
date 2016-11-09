@@ -9,10 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var list_service_1 = require('./list.service');
 var ListComp = (function () {
-    function ListComp() {
+    function ListComp(_service) {
+        this._service = _service;
     }
-    ListComp.prototype.ngOnInit = function () { };
+    ListComp.prototype.ngOnInit = function () {
+        var _this = this;
+        this._service.getList().subscribe(function (res) {
+            _this.requests = res;
+        });
+    };
     ListComp.prototype.ngOnDestroy = function () { };
     ListComp = __decorate([
         core_1.Component({
@@ -21,7 +28,7 @@ var ListComp = (function () {
             styleUrls: ['./list.comp.css'],
             templateUrl: './list.comp.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [list_service_1.ListService])
     ], ListComp);
     return ListComp;
 }());

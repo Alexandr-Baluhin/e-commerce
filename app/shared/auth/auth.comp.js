@@ -10,11 +10,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
+var router_1 = require('@angular/router');
+var auth_service_1 = require('./auth.service');
 var AuthComp = (function () {
-    function AuthComp(fb) {
+    function AuthComp(fb, router, _service) {
         this.fb = fb;
+        this.router = router;
+        this._service = _service;
         this.updateDisplay = new core_1.EventEmitter();
-        this.authForm = fb.group({
+        this.authUserForm = fb.group({
+            'type': ['user'],
+            'login': ['', forms_1.Validators.required],
+            'password': ['', forms_1.Validators.required]
+        });
+        this.authWorkerForm = fb.group({
+            'type': ['worker'],
             'login': ['', forms_1.Validators.required],
             'password': ['', forms_1.Validators.required]
         });
@@ -22,10 +32,21 @@ var AuthComp = (function () {
     AuthComp.prototype.ngOnInit = function () { };
     AuthComp.prototype.ngOnDestroy = function () { };
     AuthComp.prototype.closeModal = function () {
-        this.updateDisplay.emit(this.displayAuth);
+        this.updateDisplay.emit(false);
     };
     AuthComp.prototype.formSubmit = function (values) {
-        console.log(values);
+        var _this = this;
+        if (values.type == 'user') {
+            this._service.login(values).subscribe(function (res) {
+                if (res.hasOwnProperty('error')) {
+                    alert(res['error']);
+                }
+                else {
+                    _this.closeModal();
+                    _this.router.navigate(['/request/list', res['id']]);
+                }
+            });
+        }
     };
     __decorate([
         core_1.Input(), 
@@ -42,7 +63,7 @@ var AuthComp = (function () {
             styleUrls: ['./auth.comp.css'],
             templateUrl: './auth.comp.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, router_1.Router, auth_service_1.AuthService])
     ], AuthComp);
     return AuthComp;
 }());

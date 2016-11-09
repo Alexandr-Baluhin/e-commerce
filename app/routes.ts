@@ -12,7 +12,7 @@ export const routes: Routes = [
       { path: 'request', component: RequestComp, children: [
           { path: 'create', component: CreateComp },
           { path: 'view', component: ViewComp },
-          { path: 'list', component: ListComp },
+          { path: 'list/:id', component: ListComp },
           { path: ':id', component: DetailComp }
         ]
       }

@@ -14,7 +14,7 @@ var forms_1 = require('@angular/forms');
 var router_1 = require('@angular/router');
 var http_1 = require('@angular/http');
 var primeng_1 = require('primeng/primeng');
-// Components
+/* Components */
 var app_comp_1 = require('./app.comp');
 var routes_1 = require('./routes');
 // Pages
@@ -27,7 +27,13 @@ var detail_comp_1 = require('./pages/request/detail/detail.comp');
 // Shared
 var header_comp_1 = require('./shared/header/header.comp');
 var auth_comp_1 = require('./shared/auth/auth.comp');
+var messages_comp_1 = require('./shared/messages/messages.comp');
+/* Services */
+// Pages
 var create_service_1 = require('./pages/request/create/create.service');
+var list_service_1 = require('./pages/request/list/list.service');
+// Shared
+var auth_service_1 = require('./shared/auth/auth.service');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -48,7 +54,11 @@ var AppModule = (function () {
                 primeng_1.DialogModule,
                 primeng_1.TabViewModule,
                 primeng_1.CalendarModule,
-                primeng_1.InputMaskModule
+                primeng_1.InputMaskModule,
+                primeng_1.GrowlModule,
+                primeng_1.ConfirmDialogModule,
+                primeng_1.DataTableModule,
+                primeng_1.SharedModule
             ],
             declarations: [
                 app_comp_1.AppComp,
@@ -61,10 +71,11 @@ var AppModule = (function () {
                 detail_comp_1.DetailComp,
                 // Shared
                 header_comp_1.HeaderComp,
-                auth_comp_1.AuthComp
+                auth_comp_1.AuthComp,
+                messages_comp_1.MessagesComp
             ],
             bootstrap: [app_comp_1.AppComp],
-            providers: [create_service_1.CreateService]
+            providers: [create_service_1.CreateService, list_service_1.ListService, auth_service_1.AuthService, primeng_1.ConfirmationService]
         }), 
         __metadata('design:paramtypes', [])
     ], AppModule);

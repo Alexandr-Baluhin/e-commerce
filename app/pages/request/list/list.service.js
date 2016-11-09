@@ -14,21 +14,17 @@ var Observable_1 = require('rxjs/Observable');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 var URL = 'http://localhost:8080/';
-var CreateService = (function () {
-    function CreateService(http) {
+var ListService = (function () {
+    function ListService(http) {
         this.http = http;
     }
     /**
-     * @param
-     * data - Object with data from form
      * @return
      * Response from server
      */
-    CreateService.prototype.sendData = function (data) {
+    ListService.prototype.getList = function () {
         var headers = new http_1.Headers();
-        headers.append('Content-Type', 'application/json');
-        var options = new http_1.RequestOptions({ body: data, headers: headers });
-        return this.http.post(URL + 'request', options)
+        return this.http.get(URL + 'request/list')
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
@@ -38,18 +34,18 @@ var CreateService = (function () {
      * @return
      * Observable.throw with error
      */
-    CreateService.prototype.handleError = function (error) {
+    ListService.prototype.handleError = function (error) {
         console.log('error occured');
         var errMsg = (error.message) ? error.message :
             error.status ? error.status + " - " + error.statusText : 'Server error';
         console.error(errMsg);
         return Observable_1.Observable.throw(errMsg);
     };
-    CreateService = __decorate([
+    ListService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], CreateService);
-    return CreateService;
+    ], ListService);
+    return ListService;
 }());
-exports.CreateService = CreateService;
-//# sourceMappingURL=create.service.js.map
+exports.ListService = ListService;
+//# sourceMappingURL=list.service.js.map
