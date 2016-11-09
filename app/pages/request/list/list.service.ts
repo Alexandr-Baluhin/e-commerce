@@ -8,22 +8,18 @@ import 'rxjs/add/operator/catch';
 const URL: string = 'http://localhost:8080/'
 
 @Injectable()
-export class CreateService {
+export class ListService {
 
   constructor(private http: Http) { }
 
   /**
-   * @param
-   * data - Object with data from form
    * @return
    * Response from server
    */
-  public sendData(data: Object): Observable<String[]> {
+  public getList(): Observable<String[]> {
     let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    let options = new RequestOptions({ body: data, headers: headers });
 
-    return this.http.post(URL + 'request', options)
+    return this.http.get(URL + 'request/list')
       .map(res => res.json())
       .catch(this.handleError);
   }

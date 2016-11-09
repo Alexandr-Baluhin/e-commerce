@@ -2,17 +2,17 @@
 	[showEffect]="fade" (onAfterHide)="closeModal()">
 	<p-tabView>
 		<p-tabPanel header="Lietotājs" leftIcon="fa-user">
-			<form class="auth-form" [formGroup]="authForm" (ngSubmit)="formSubmit(authForm.value)">
+			<form class="auth-form" [formGroup]="authUserForm" (ngSubmit)="formSubmit(authUserForm.value)">
 				<input class="form-input" formControlName="login" type="text" pInputText placeholder="Lietotajvārds" />
 				<input class="form-input" formControlName="password" type="password" pInputText placeholder="Parole" />
-				<button type="submit" [disabled]="!authForm.valid" pButton label="Autorizēties" icon="fa-check" iconPos="left"></button>
+				<button type="submit" [disabled]="!authUserForm.valid" pButton label="Autorizēties" icon="fa-check" iconPos="left"></button>
 			</form>
 		</p-tabPanel>
 		<p-tabPanel header="Darbinieks" leftIcon="fa-briefcase">
-			<form class="auth-form" [formGroup]="authForm" (ngSubmit)="formSubmit(authForm.value)">
+			<form class="auth-form" [formGroup]="authWorkerForm" (ngSubmit)="formSubmit(authWorkerForm.value)">
 				<input class="form-input" formControlName="login" type="text" pInputText placeholder="Lietotajvārds" />
 				<input class="form-input" formControlName="password" type="password" pInputText placeholder="Parole" />
-				<button type="submit" [disabled]="!authForm.valid" pButton label="Autorizēties" icon="fa-check" iconPos="left"></button>
+				<button type="submit" [disabled]="!authWorkerForm.valid" pButton label="Autorizēties" icon="fa-check" iconPos="left"></button>
 			</form>
 		</p-tabPanel>
 	</p-tabView>

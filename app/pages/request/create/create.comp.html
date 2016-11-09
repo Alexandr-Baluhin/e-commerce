@@ -1,7 +1,17 @@
+<p-confirmDialog icon="fa fa-question-circle" width="425" [closable]="false" #cd>
+	<footer>
+		<button type="button" pButton icon="fa-close" label="Nē" (click)="cd.reject()"></button>
+		<button type="button" pButton icon="fa-check" label="Jā" (click)="cd.accept()"></button>
+	</footer>
+</p-confirmDialog>
+
+<msg-comp [msgs]="notifications" (hideNotificationEvent)="hideMessage($event)"></msg-comp>
+
 <div class="container">
 	<div class="ui-g">
 		<p-tabView class="request-form">
 			<p-tabPanel header="Fiziska persona" leftIcon="fa-user">
+				<button type="button" (click)="test()" pButton label="Test"></button>
 				<form [formGroup]="requestForm" (ngSubmit)="formSubmit(requestForm.value)">
 					<div formGroupName="organizer" class="form-group ui-g-12 ui-md-6 ui-lg-6">
 						<span class="form-label">Pasākuma organizators</span>
@@ -154,8 +164,7 @@
 							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
 							<li>citu saskaņojumu vai līgumu kopijas</li>
 						</ul>
-						<p-fileUpload [(name)]="files" url="http://localhost:8080/upload" multiple="multiple" 
-							(onBeforeUpload)="getBinaries($event)"></p-fileUpload>
+						<p-fileUpload [(name)]="files" url="http://localhost:8080/upload" multiple="multiple" (onBeforeUpload)="getBinaries($event)"></p-fileUpload>
 					</div>
 					<button type="submit" pButton [disabled]="!requestForm.valid" label="Nosūtīt pieprasījumu"></button>
 				</form>
@@ -311,7 +320,7 @@
 						</ul>
 						<p-fileUpload name="myfile[]" url="http://localhost:8080/upload" multiple="multiple"></p-fileUpload>
 					</div>
-					<button type="submit" pButton [disabled]="!requestForm.valid" label="Nosūtīt pieprasījumu"></button>
+					<button type="submit" pButton [disabled]="!requestLawForm.valid" label="Nosūtīt pieprasījumu"></button>
 				</form>
 			</p-tabPanel>
 		</p-tabView>

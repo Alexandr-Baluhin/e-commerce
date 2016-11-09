@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { ListService } from './list.service';
+
 @Component({
   moduleId: module.id,
   selector: 'list-comp',
@@ -9,9 +11,15 @@ import { Component } from '@angular/core';
 
 export class ListComp {
   
-  constructor() {}
+  private requests: Object[];
 
-  public ngOnInit(): void {}
+  constructor(private _service: ListService) {}
+
+  public ngOnInit(): void {
+    this._service.getList().subscribe(res => {
+      this.requests = res;
+    });
+  }
 
   public ngOnDestroy(): void {}
 

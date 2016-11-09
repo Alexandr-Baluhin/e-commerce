@@ -11,7 +11,7 @@ exports.routes = [
             { path: 'request', component: request_comp_1.RequestComp, children: [
                     { path: 'create', component: create_comp_1.CreateComp },
                     { path: 'view', component: view_comp_1.ViewComp },
-                    { path: 'list', component: list_comp_1.ListComp },
+                    { path: 'list/:id', component: list_comp_1.ListComp },
                     { path: ':id', component: detail_comp_1.DetailComp }
                 ]
             }
