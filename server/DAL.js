@@ -21,15 +21,30 @@ module.exports = class DAL {
     }
 
     // TODO: JOIN Persons and Requests
-    getList(requestID) {
+    getList(status, requestID) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM mydb.Users, mydb.Persons, mydb.Employees, mydb.Requests " +
-                "WHERE Requests.belongs_to = Users.UserId";
-            if (requestID) sql += " AND Requests.idRequests = " + requestID + ";";
+            let sql = "SELECT idRequests AS id, startDate AS create_date, gov_callback AS status FROM mydb.Requests " +
+                "WHERE 1 = 1 ";
+            if (status) sql += " AND Requests.gov_callback = '" + status + "'";
+            if (requestID) sql += " AND Requests.idRequests = " + requestID;
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
                 resolve(rows);
             })
+        })
+    }
+
+    postRequest(request) {
+        return new Promise((resolve, reject) => {
+            let guardPromise = this.createPerson(request.guard);
+            let organizerPromise = this.createPerson(request.organizer);
+            let socialGuardPromise = this.createPerson(request.social_guard);
+            let supportPromise = this.createPerson(request.support);
+            Promise.all([guardPromise, organizerPromise, socialGuardPromise, supportPromise]).then(
+                res => {
+                    return this.createRequest(request, res[0], res[1], res[2], res[3])
+                }
+            )
         })
     }
 
@@ -46,12 +61,22 @@ module.exports = class DAL {
         })
     }
 
-    createRequest(request) {
+    /**
+     * Is User and Organizer the same person?
+     * */
+    createRequest(request, guardID, organizerID, socialGuardID, supportID, UserID) {
         return new Promise((resolve, reject) => {
             let sql = "INSERT INTO `Requests` " +
-                "(`startTime`,`startDate`,`endTime`,`address`,`dangerous`,`gov_callback`," +
-                "`participants`,`visitors`,`organizer_id`,`social_guard_id`,`support_id`,`checked_by`,`belongs_to`) " +
-                "VALUES ('2','3','4','5','6','7',8,9,0,1,2,3,4);";
+                "(`startTime`,`startDate`,`createDate`," +
+                "`endTime`,`endDate`,`address`," +
+                "`dangerous`,`gov_callback`,`participants`," +
+                "`visitors`,`organizer_id`,`social_guard_id`," +
+                "`support_id`,`checked_by`,`belongs_to`) " +
+                "VALUES ('" + request.start_time + "','" + request.start_date + "','" + Date.now() + "'," +
+                "'" + request.end_time + "','" + request.end_date + "','" + request.address + "'," +
+                "'" + request.dangerous + "','" + request.gov_callback + "'," + request.participiants + "," +
+                request.visitors + "," + organizerID + "," + socialGuardID + "," +
+                supportID + ",null," + UserID + ");";
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
                 resolve(rows);
@@ -59,11 +84,20 @@ module.exports = class DAL {
         })
     }
 
-    createPerson(erson) {
+    /**
+     * Works for these fellas:
+     *  guard
+     *  organizer
+     *  social_guard
+     *  support
+     *
+     * */
+    createPerson(person) {
         return new Promise((resolve, reject) => {
             let sql = "INSERT INTO `Persons` " +
-                "(`idPersons`,`address`,`name`,`surname`,`person_code`,`phone`) " +
-                "VALUES (1,'2','3','4','5','6');";
+                "(`address`,`name`,`surname`,`person_code`,`phone`) " +
+                "VALUES ('" + person.address + "','" + person.name + "','" +
+                person.surname + "','" + person.code + "','" + person.phone + "');";
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
                 resolve(rows);
