@@ -23,4 +23,7 @@ export class ListComp {
 
   public ngOnDestroy(): void {}
 
+  public gotoDetail(): void { 
+    console.log(123);
+  }
 }

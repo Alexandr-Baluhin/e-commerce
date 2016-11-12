@@ -17,7 +17,8 @@ import {
   ConfirmDialogModule,
   ConfirmationService,
   DataTableModule,
-  SharedModule
+  SharedModule,
+  TooltipModule
 } from 'primeng/primeng';
 
 /* Components */
@@ -41,6 +42,7 @@ import { CreateService } from './pages/request/create/create.service';
 import { ListService } from './pages/request/list/list.service';
 // Shared
 import { AuthService } from './shared/auth/auth.service';
+import { AuthGuard } from './shared/auth/auth-guard.service';
 
 @NgModule({
   imports: [
@@ -62,7 +64,8 @@ import { AuthService } from './shared/auth/auth.service';
     GrowlModule,
     ConfirmDialogModule,
     DataTableModule,
-    SharedModule
+    SharedModule,
+    TooltipModule
   ],
   declarations: [
     AppComp,
@@ -79,6 +82,6 @@ import { AuthService } from './shared/auth/auth.service';
     MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService, ListService, AuthService, ConfirmationService]
+  providers: [CreateService, ListService, AuthService, AuthGuard, ConfirmationService]
 })
 export class AppModule { }

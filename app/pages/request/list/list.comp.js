@@ -21,6 +21,9 @@ var ListComp = (function () {
         });
     };
     ListComp.prototype.ngOnDestroy = function () { };
+    ListComp.prototype.gotoDetail = function () {
+        console.log(123);
+    };
     ListComp = __decorate([
         core_1.Component({
             moduleId: module.id,

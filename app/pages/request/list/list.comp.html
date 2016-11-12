@@ -1,11 +1,13 @@
 <div class="container">
   <div class="ui-g">
     <p-dataTable [value]="requests">
-      <p-column field="id" header="Pieprasījuma numurs"></p-column>
-      <p-column field="create_date" header="Izveidošanas datums"></p-column>
-      <p-column field="status" header="Statuss"></p-column>
+      <p-column field="id" header="Pieprasījuma numurs" [sortable]="true"></p-column>
+      <p-column field="create_date" header="Izveidošanas datums" [sortable]="true"></p-column>
+      <p-column field="status" header="Statuss" [sortable]="true"></p-column>
       <p-column header="Pieejamas operācijas">
-        <button type="button" pButton label="Detail"></button>
+        <template let-car="rowData" pTemplate type="body">
+            <button type="button" pButton (click)="gotoDetail()" icon="fa-eye" pTooltip="Apskatīt"></button>
+        </template>
       </p-column>
     </p-dataTable>
   </div>

@@ -34,6 +34,7 @@ var create_service_1 = require('./pages/request/create/create.service');
 var list_service_1 = require('./pages/request/list/list.service');
 // Shared
 var auth_service_1 = require('./shared/auth/auth.service');
+var auth_guard_service_1 = require('./shared/auth/auth-guard.service');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -58,7 +59,8 @@ var AppModule = (function () {
                 primeng_1.GrowlModule,
                 primeng_1.ConfirmDialogModule,
                 primeng_1.DataTableModule,
-                primeng_1.SharedModule
+                primeng_1.SharedModule,
+                primeng_1.TooltipModule
             ],
             declarations: [
                 app_comp_1.AppComp,
@@ -75,7 +77,7 @@ var AppModule = (function () {
                 messages_comp_1.MessagesComp
             ],
             bootstrap: [app_comp_1.AppComp],
-            providers: [create_service_1.CreateService, list_service_1.ListService, auth_service_1.AuthService, primeng_1.ConfirmationService]
+            providers: [create_service_1.CreateService, list_service_1.ListService, auth_service_1.AuthService, auth_guard_service_1.AuthGuard, primeng_1.ConfirmationService]
         }), 
         __metadata('design:paramtypes', [])
     ], AppModule);
