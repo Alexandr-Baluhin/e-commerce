@@ -1,0 +1,35 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+/* PRIMENG */
+.ui-tabview-nav {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.request-form .ui-tabview-nav > li {
+  width: 100% !important;
+}
+
+.request-form > .ui-tabview > .ui-tabview-panels {
+  border: 1px solid !important;
+}
+
+p-calendar.ng-invalid > span.ui-calendar > input,
+p-inputmask.ng-invalid > input[pInputText] {
+  border-bottom-color: #d6d6d6 !important;
+}
+
+p-calendar.ng-invalid[required] > span.ui-calendar > input,
+p-inputmask.ng-invalid[required] > input[pInputText] {
+  border-left: 5px solid #a94442;
+}
+
+p-calendar.ng-valid[required] > span.ui-calendar > input,
+p-inputmask.ng-valid[required] > input[pInputText] {
+  border-left: 5px solid #42A948;
+}
+
+.ui-datatable-data {
+  text-align: center !important;
+}
