@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
 import {
@@ -21,9 +20,10 @@ import {
   TooltipModule
 } from 'primeng/primeng';
 
+/* Modules */
+import { RoutingModule } from './routing.module';  
 /* Components */
 import { AppComp } from './app.comp';
-import { routing } from './routes';
 // Pages
 import { PagesComp } from './pages/pages.comp';
 import { RequestComp } from './pages/request/request.comp';
@@ -48,10 +48,9 @@ import { AuthGuard } from './shared/auth/auth-guard.service';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    RouterModule,
     HttpModule,
     // routes
-    routing,    
+    RoutingModule,
     // primeng
     ButtonModule,
     InputTextModule, 

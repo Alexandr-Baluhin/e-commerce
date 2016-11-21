@@ -7,7 +7,7 @@ var view_comp_1 = require('./pages/request/view/view.comp');
 var list_comp_1 = require('./pages/request/list/list.comp');
 var detail_comp_1 = require('./pages/request/detail/detail.comp');
 var auth_guard_service_1 = require('./shared/auth/auth-guard.service');
-exports.routes = [
+var routes = [
     { path: '', component: pages_comp_1.PagesComp, children: [
             { path: 'request', component: request_comp_1.RequestComp, children: [
                     { path: 'create', component: create_comp_1.CreateComp },
@@ -20,5 +20,5 @@ exports.routes = [
     },
     { path: '**', redirectTo: 'request/create', pathMatch: 'full' }
 ];
-exports.routing = router_1.RouterModule.forRoot(exports.routes);
+exports.routing = router_1.RouterModule.forRoot(routes);
 //# sourceMappingURL=routes.js.map

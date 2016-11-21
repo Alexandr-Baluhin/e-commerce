@@ -11,12 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
-var router_1 = require('@angular/router');
 var http_1 = require('@angular/http');
 var primeng_1 = require('primeng/primeng');
+/* Modules */
+var routing_module_1 = require('./routing.module');
 /* Components */
 var app_comp_1 = require('./app.comp');
-var routes_1 = require('./routes');
 // Pages
 var pages_comp_1 = require('./pages/pages.comp');
 var request_comp_1 = require('./pages/request/request.comp');
@@ -43,10 +43,9 @@ var AppModule = (function () {
             imports: [
                 platform_browser_1.BrowserModule,
                 forms_1.ReactiveFormsModule,
-                router_1.RouterModule,
                 http_1.HttpModule,
                 // routes
-                routes_1.routing,
+                routing_module_1.RoutingModule,
                 // primeng
                 primeng_1.ButtonModule,
                 primeng_1.InputTextModule,

@@ -1,3 +1,4 @@
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { PagesComp } from './pages/pages.comp';
@@ -9,7 +10,7 @@ import { DetailComp } from './pages/request/detail/detail.comp';
 
 import { AuthGuard } from './shared/auth/auth-guard.service';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', component: PagesComp, children: [
       { path: 'request', component: RequestComp, children: [
           { path: 'create', component: CreateComp },
@@ -23,4 +24,9 @@ export const routes: Routes = [
   { path: '**', redirectTo: 'request/create', pathMatch: 'full' }
 ];
 
-export const routing = RouterModule.forRoot(routes);
+@NgModule({
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
+})
+
+export class RoutingModule {}
