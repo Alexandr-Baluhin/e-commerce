@@ -1,6 +1,8 @@
 'use strict';
 
 const mysql = require('mysql');
+const randomWord = require('random-word');
+const nodemailer = require('nodemailer');
 
 module.exports = class DAL {
 
@@ -40,6 +42,7 @@ module.exports = class DAL {
             let organizerPromise = this.createPerson(request.organizer);
             let socialGuardPromise = this.createPerson(request.social_guard);
             let supportPromise = this.createPerson(request.support);
+            let userPromise = this.createUser(request)
             Promise.all([guardPromise, organizerPromise, socialGuardPromise, supportPromise]).then(
                 res => {
                     return this.createRequest(request, res[0], res[1], res[2], res[3])
@@ -51,14 +54,40 @@ module.exports = class DAL {
 
     //private
 
-    createUser(user) {
+    createUser(email, login) {
+        let password = randomWord();
+        // TODO: generate salt and hash password for better security
+        this.sendEmail(email, "You username is " + login + " and password is " + password);
+
         return new Promise((resolve, reject) => {
             this.connection.query('INSERT INTO `Users` (`email`,`username`,`password`) ' +
-                'VALUES (' + user.email + ',' + user.login + ',' + user.password + ');', (err, rows, fields) => {
+                'VALUES (' + email + ',' + login + ',' + password + ');', (err, rows, fields) => {
                 if (err) reject(err);
                 resolve(rows);
             })
         })
+    }
+
+    sendEmail(email, text) {
+        // TODO: setup mail plugin
+        var transporter = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
+
+// setup e-mail data with unicode symbols
+        var mailOptions = {
+            from: '"Fred Foo 👥" <foo@blurdybloop.com>', // sender address
+            to: 'bar@blurdybloop.com, baz@blurdybloop.com', // list of receivers
+            subject: 'Hello ✔', // Subject line
+            text: 'Hello world 🐴', // plaintext body
+            html: '<b>Hello world 🐴</b>' // html body
+        };
+
+// send mail with defined transport object
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
+        });
     }
 
     /**
