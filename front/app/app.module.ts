@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
 import {
@@ -17,12 +16,14 @@ import {
   ConfirmDialogModule,
   ConfirmationService,
   DataTableModule,
-  SharedModule
+  SharedModule,
+  TooltipModule
 } from 'primeng/primeng';
 
+/* Modules */
+import { RoutingModule } from './routing.module';  
 /* Components */
 import { AppComp } from './app.comp';
-import { routing } from './routes';
 // Pages
 import { PagesComp } from './pages/pages.comp';
 import { RequestComp } from './pages/request/request.comp';
@@ -41,15 +42,15 @@ import { CreateService } from './pages/request/create/create.service';
 import { ListService } from './pages/request/list/list.service';
 // Shared
 import { AuthService } from './shared/auth/auth.service';
+import { AuthGuard } from './shared/auth/auth-guard.service';
 
 @NgModule({
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    RouterModule,
     HttpModule,
     // routes
-    routing,    
+    RoutingModule,
     // primeng
     ButtonModule,
     InputTextModule, 
@@ -62,7 +63,8 @@ import { AuthService } from './shared/auth/auth.service';
     GrowlModule,
     ConfirmDialogModule,
     DataTableModule,
-    SharedModule
+    SharedModule,
+    TooltipModule
   ],
   declarations: [
     AppComp,
@@ -79,6 +81,6 @@ import { AuthService } from './shared/auth/auth.service';
     MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService, ListService, AuthService, ConfirmationService]
+  providers: [CreateService, ListService, AuthService, AuthGuard, ConfirmationService]
 })
 export class AppModule { }

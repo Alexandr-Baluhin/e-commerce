@@ -29,3 +29,7 @@ p-calendar.ng-valid[required] > span.ui-calendar > input,
 p-inputmask.ng-valid[required] > input[pInputText] {
   border-left: 5px solid #42A948;
 }
+
+.ui-datatable-data {
+  text-align: center !important;
+}
