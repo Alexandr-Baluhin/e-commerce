@@ -1,6 +1,7 @@
 'use strict';
 
 const mysql = require('mysql');
+const sha = require('sha256');
 const randomWord = require('random-word');
 const nodemailer = require('nodemailer');
 
@@ -54,6 +55,7 @@ module.exports = class DAL {
                 } else {
                     let userId = res;
                 }
+
                 Promise.all(promiseArr).then(res => {
                         this._createRequest(request, res[0], res[1], res[2], res[3],
                             res.length == 5 ? res[4] : userId).then(
@@ -87,9 +89,14 @@ module.exports = class DAL {
 
     _createUser(email) {
         let password = randomWord();
-        // TODO: generate salt and hash password for better security
-        // this.sendEmail(email, "You username is " + login + " and password is " + password);
 
+        // generate salt and hash password for better security
+        let salt = sha(Date.now().toString());
+        let crypted_password = sha(salt + password);
+
+        // this.sendEmail(email, MESSAGES.REQUEST_APPROVED);
+
+        // TODO: write crypted_password and salt to DB
         return new Promise((resolve, reject) => {
             this.connection.query('INSERT INTO `Users` (`email`,`password`) ' +
                 'VALUES ("' + email + '","' + password + '");', (err, rows, fields) => {
@@ -105,7 +112,7 @@ module.exports = class DAL {
             from: '"Pašvaldība 👥" <jn.riekp@gmail.com>', // sender address
             to: email, // receiver
             subject: 'Publisko pasākumu organizēšanas atļauju izskatīšana', // subject
-            html: MESSAGES.REQUEST_APPROVED // email body
+            html: text // email body
         };
 
         if (file) {
