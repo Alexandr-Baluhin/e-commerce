@@ -1,6 +1,7 @@
 'use strict';
 
 const mysql = require('mysql');
+const sha = require('sha256');
 const randomWord = require('random-word');
 const nodemailer = require('nodemailer');
 
@@ -44,7 +45,7 @@ module.exports = class DAL {
             let supportPromise = this.createPerson(request.support);
             let userPromise = this.createUser(request)
             Promise.all([guardPromise, organizerPromise, socialGuardPromise, supportPromise]).then(
-                res => {
+                    res => {
                     return this.createRequest(request, res[0], res[1], res[2], res[3])
                 }
             )
@@ -56,9 +57,14 @@ module.exports = class DAL {
 
     createUser(email, login) {
         let password = randomWord();
-        // TODO: generate salt and hash password for better security
+
+        // generate salt and hash password for better security
+        let salt = sha(Date.now().toString());
+        let crypted_password = sha(salt + password);
+
         this.sendEmail(email, "You username is " + login + " and password is " + password);
 
+        // TODO: write crypted_password and salt to DB
         return new Promise((resolve, reject) => {
             this.connection.query('INSERT INTO `Users` (`email`,`username`,`password`) ' +
                 'VALUES (' + email + ',' + login + ',' + password + ');', (err, rows, fields) => {
@@ -82,8 +88,8 @@ module.exports = class DAL {
         };
 
 // send mail with defined transport object
-        transporter.sendMail(mailOptions, function(error, info){
-            if(error){
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
                 return console.log(error);
             }
             console.log('Message sent: ' + info.response);
