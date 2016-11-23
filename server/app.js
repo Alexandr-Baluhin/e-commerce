@@ -14,9 +14,13 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    database.test(response => {
-        res.send('From database - ' + response);
-    })
+    // database.test(response => {
+    //     res.send('From database - ' + response);
+    // });
+    database._getUser('anna@test.ru').then(
+        result => res.send(result),
+        err => res.send(err)
+        );
 });
 
 app.get('/request/list', (req, res) => {
@@ -54,16 +58,22 @@ app.get('/request/:id', (req, res) => {
 });
 
 app.post('/request', (req, res) => {
-    database.postRequest(JSON.parse(req.body)).then(
+    let request = req.body.request;
+    let email = req.body.email;
+    database.postRequest(request, email).then(
             res => res.send({success: "Jūsu pieprasījums tiek saglabāts!"}),
-            err => res.send({error: "Jūsu pieprasījums nētiek saglabāts!"})
+            err => res.send(err)
+            // err => res.send({error: "Jūsu pieprasījums nētiek saglabāts!"})
     )
-
 });
 
 app.post('/login', (req, res) => {
     // generate token
     let body = req.body.body;
+    database.postLogin(body.email, body.password, body.type).then(
+        result => res.send(resolve),
+        err => res.send(err)
+    );
     if (body.login == 'Jānis' && body.password == 'Grābis') {
         res.send({id: 1, type: body.type, token: "my_token"});
     } else {

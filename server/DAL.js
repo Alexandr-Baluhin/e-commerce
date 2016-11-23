@@ -4,6 +4,11 @@ const mysql = require('mysql');
 const randomWord = require('random-word');
 const nodemailer = require('nodemailer');
 
+const MESSAGES = require('./messages.js');
+
+const mail_server = nodemailer.createTransport('smtps://jn.riekp%40gmail.com:pasvaldiba@smtp.gmail.com');
+const PATH_TO_FILES = 'files/';
+
 module.exports = class DAL {
 
     constructor() {
@@ -36,79 +41,105 @@ module.exports = class DAL {
         })
     }
 
-    postRequest(request) {
+    postRequest(request, email) {
         return new Promise((resolve, reject) => {
-            let guardPromise = this.createPerson(request.guard);
-            let organizerPromise = this.createPerson(request.organizer);
-            let socialGuardPromise = this.createPerson(request.social_guard);
-            let supportPromise = this.createPerson(request.support);
-            let userPromise = this.createUser(request)
-            Promise.all([guardPromise, organizerPromise, socialGuardPromise, supportPromise]).then(
-                res => {
-                    return this.createRequest(request, res[0], res[1], res[2], res[3])
+            let promiseArr = [];
+            promiseArr.push(this._createPerson(request.organizer));
+            promiseArr.push(this._createPerson(request.guard));
+            promiseArr.push(this._createPerson(request.social_guard));
+            promiseArr.push(this._createPerson(request.support));
+            this._getUser(email).then(res => {
+                if (res.length == 0) {
+                    promiseArr.push(this._createUser(email));
+                } else {
+                    let userId = res;
                 }
-            )
-        })
+                Promise.all(promiseArr).then(res => {
+                        this._createRequest(request, res[0], res[1], res[2], res[3],
+                            res.length == 5 ? res[4] : userId).then(
+                                res => resolve(res),
+                                err => reject(err)
+                            );
+                    },
+                    err => reject(err));
+            },
+            err => reject(err));
+        });
+    }
+
+    postLogin(login, password) {
+        return new Promise((resolve, reject) => {
+            this.connection.query('SELECT * FROM `Users` ')
+        });
     }
 
 
     //private
 
-    createUser(email, login) {
+    _getUser(email) {
+        return new Promise((resolve, reject) => {
+            this.connection.query('SELECT * FROM `Users` WHERE email = "' + email + '"', (err, rows, fields) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+    }
+
+    _createUser(email) {
         let password = randomWord();
         // TODO: generate salt and hash password for better security
-        this.sendEmail(email, "You username is " + login + " and password is " + password);
+        // this.sendEmail(email, "You username is " + login + " and password is " + password);
 
         return new Promise((resolve, reject) => {
-            this.connection.query('INSERT INTO `Users` (`email`,`username`,`password`) ' +
-                'VALUES (' + email + ',' + login + ',' + password + ');', (err, rows, fields) => {
+            this.connection.query('INSERT INTO `Users` (`email`,`password`) ' +
+                'VALUES ("' + email + '","' + password + '");', (err, rows, fields) => {
                 if (err) reject(err);
-                resolve(rows);
+                else resolve(rows.insertId);
             })
         })
     }
 
-    sendEmail(email, text) {
-        // TODO: setup mail plugin
-        var transporter = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
+    sendEmail(email, text, file) {
 
-// setup e-mail data with unicode symbols
         var mailOptions = {
-            from: '"Fred Foo 👥" <foo@blurdybloop.com>', // sender address
-            to: 'bar@blurdybloop.com, baz@blurdybloop.com', // list of receivers
-            subject: 'Hello ✔', // Subject line
-            text: 'Hello world 🐴', // plaintext body
-            html: '<b>Hello world 🐴</b>' // html body
+            from: '"Pašvaldība 👥" <jn.riekp@gmail.com>', // sender address
+            to: email, // receiver
+            subject: 'Publisko pasākumu organizēšanas atļauju izskatīšana', // subject
+            html: MESSAGES.REQUEST_APPROVED // email body
         };
 
-// send mail with defined transport object
-        transporter.sendMail(mailOptions, function(error, info){
-            if(error){
-                return console.log(error);
-            }
-            console.log('Message sent: ' + info.response);
+        if (file) {
+            mailOptions.attachments = [{ path: PATH_TO_FILES + file }]
+        }
+
+        // send mail through mail_server
+        return new Promise((resolve, reject) => {
+            mail_server.sendMail(mailOptions, (error, info) => {
+                if (error) reject(error);
+                else resolve('Message successfuly sent: ' + info.response);
+            });
         });
     }
 
     /**
      * Is User and Organizer the same person?
      * */
-    createRequest(request, guardID, organizerID, socialGuardID, supportID, UserID) {
+    _createRequest(request, organizerID, guardID, socialGuardID, supportID, UserID) {
         return new Promise((resolve, reject) => {
-            let sql = "INSERT INTO `Requests` " +
-                "(`startTime`,`startDate`,`createDate`," +
-                "`endTime`,`endDate`,`address`," +
-                "`dangerous`,`gov_callback`,`participants`," +
-                "`visitors`,`organizer_id`,`social_guard_id`," +
-                "`support_id`,`checked_by`,`belongs_to`) " +
-                "VALUES ('" + request.start_time + "','" + request.start_date + "','" + Date.now() + "'," +
-                "'" + request.end_time + "','" + request.end_date + "','" + request.address + "'," +
-                "'" + request.dangerous + "','" + request.gov_callback + "'," + request.participiants + "," +
-                request.visitors + "," + organizerID + "," + socialGuardID + "," +
-                supportID + ",null," + UserID + ");";
+            request.organizer_id = organizerID;
+            delete request.organizer;
+            request.guard_id = guardID;
+            delete request.guard;
+            request.social_guard_id = socialGuardID;
+            delete request.social_guard;
+            request.support_id = supportID;
+            delete request.support;
+            request.belongs_to = UserID;
+            let sql = "INSERT INTO `Requests` (" + Object.keys(request).join(',') + ") " +
+                " VALUES ('" + this._getValuesFromObject(request).join("','") + ");";
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
-                resolve(rows);
+                else resolve(rows);
             })
         })
     }
@@ -119,19 +150,40 @@ module.exports = class DAL {
      *  organizer
      *  social_guard
      *  support
-     *
      * */
-    createPerson(person) {
+    _createPerson(person) {
         return new Promise((resolve, reject) => {
-            let sql = "INSERT INTO `Persons` " +
-                "(`address`,`name`,`surname`,`person_code`,`phone`) " +
-                "VALUES ('" + person.address + "','" + person.name + "','" +
-                person.surname + "','" + person.code + "','" + person.phone + "');";
+            let type = person.hasOwnProperty('legal_name') ? 'legal' : 'physical';
+
+            let sql = "INSERT INTO `" + this._firstCharToUpperCase(type) + "Persons` (" + Object.keys(person).join(',') + ")" +
+                " VALUES ('" + this._getValuesFromObject(person).join("','") + "');";
+
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
-                resolve(rows);
-            })
+                else {
+                    let sql = "INSERT INTO `Persons` (" + type + "_person_id" + ") VALUES ('" + rows.insertId + "')";
+                    this.connection.query(sql, (err, rows, fields) => {
+                        if (err) reject(err);
+                        else resolve(rows.insertId);
+                    });
+                };
+            });
         })
+    }
+
+    /**
+    * e.g. testString -> TestString
+    * */
+    _firstCharToUpperCase(str) {
+        return str.charAt(0).toUpperCase() + str.substr(1);
+    }
+
+    _getValuesFromObject(obj) {
+        let values = [];
+        for (let key in obj) {
+            values.push(obj[key]);
+        }
+        return values;
     }
 
 
