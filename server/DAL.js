@@ -5,6 +5,7 @@ const sha = require('sha256');
 const randomWord = require('random-word');
 const nodemailer = require('nodemailer');
 
+const Helpers = require('./helpers.js');
 const MESSAGES = require('./messages.js');
 
 const mail_server = nodemailer.createTransport('smtps://jn.riekp%40gmail.com:pasvaldiba@smtp.gmail.com');
@@ -49,19 +50,22 @@ module.exports = class DAL {
             promiseArr.push(this._createPerson(request.guard));
             promiseArr.push(this._createPerson(request.social_guard));
             promiseArr.push(this._createPerson(request.support));
+
             this._getUser(email).then(res => {
+                let userId;
+                
                 if (res.length == 0) {
                     promiseArr.push(this._createUser(email));
                 } else {
-                    let userId = res;
+                    userId = res[0]['id'];
                 }
-
+                
                 Promise.all(promiseArr).then(res => {
-                        this._createRequest(request, res[0], res[1], res[2], res[3],
-                            res.length == 5 ? res[4] : userId).then(
-                                res => resolve(res),
-                                err => reject(err)
-                            );
+                    this._createRequest(request, res[0], res[1], res[2], res[3],
+                        res.length == 5 ? res[4] : userId).then(
+                            res => resolve(res),
+                            err => reject(err)
+                        );
                     },
                     err => reject(err));
             },
@@ -76,7 +80,7 @@ module.exports = class DAL {
     }
 
 
-    //private
+    /** Private functions */
 
     _getUser(email) {
         return new Promise((resolve, reject) => {
@@ -94,38 +98,15 @@ module.exports = class DAL {
         let salt = sha(Date.now().toString());
         let crypted_password = sha(salt + password);
 
-        // this.sendEmail(email, MESSAGES.REQUEST_APPROVED);
+        // this._sendEmail(email, MESSAGES.REQUEST_APPROVED);
 
-        // TODO: write crypted_password and salt to DB
         return new Promise((resolve, reject) => {
-            this.connection.query('INSERT INTO `Users` (`email`,`password`) ' +
-                'VALUES ("' + email + '","' + password + '");', (err, rows, fields) => {
+            this.connection.query('INSERT INTO `Users` (email,password,salt) ' +
+                'VALUES ("' + email + '","' + crypted_password + '","' + salt + '");', (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows.insertId);
             })
         })
-    }
-
-    sendEmail(email, text, file) {
-
-        var mailOptions = {
-            from: '"Pašvaldība 👥" <jn.riekp@gmail.com>', // sender address
-            to: email, // receiver
-            subject: 'Publisko pasākumu organizēšanas atļauju izskatīšana', // subject
-            html: text // email body
-        };
-
-        if (file) {
-            mailOptions.attachments = [{ path: PATH_TO_FILES + file }]
-        }
-
-        // send mail through mail_server
-        return new Promise((resolve, reject) => {
-            mail_server.sendMail(mailOptions, (error, info) => {
-                if (error) reject(error);
-                else resolve('Message successfuly sent: ' + info.response);
-            });
-        });
     }
 
     /**
@@ -142,8 +123,15 @@ module.exports = class DAL {
             request.support_id = supportID;
             delete request.support;
             request.belongs_to = UserID;
-            let sql = "INSERT INTO `Requests` (" + Object.keys(request).join(',') + ") " +
-                " VALUES ('" + this._getValuesFromObject(request).join("','") + ");";
+
+            /** TODO: make files processed 
+            *  Hack for mysql, because field 'files' in the schema can't be null 
+            * */
+            request.files = '1.txt';
+
+            let sql = "INSERT INTO `Requests` (" + Object.keys(request).join(',') + ")" +
+                " VALUES ('" + Helpers._getValuesFromObject(request).join("','") + "');";
+
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows);
@@ -152,6 +140,13 @@ module.exports = class DAL {
     }
 
     /**
+     * @param
+     * person:Object - object with specific person data
+     * @return
+     * resolve:Number - new created person id
+     * reject:Error - error message from database
+     * @WhatItDoes
+     * Create persons for request
      * Works for these fellas:
      *  guard
      *  organizer
@@ -162,12 +157,13 @@ module.exports = class DAL {
         return new Promise((resolve, reject) => {
             let type = person.hasOwnProperty('legal_name') ? 'legal' : 'physical';
 
-            let sql = "INSERT INTO `" + this._firstCharToUpperCase(type) + "Persons` (" + Object.keys(person).join(',') + ")" +
-                " VALUES ('" + this._getValuesFromObject(person).join("','") + "');";
+            let sql = "INSERT INTO `" + Helpers._firstCharToUpperCase(type) + "Persons` (" + Object.keys(person).join(',') + ")" +
+                " VALUES ('" + Helpers._getValuesFromObject(person).join("','") + "');";
 
             this.connection.query(sql, (err, rows, fields) => {
-                if (err) reject(err);
-                else {
+                if (err) {
+                    reject(err);
+                } else {
                     let sql = "INSERT INTO `Persons` (" + type + "_person_id" + ") VALUES ('" + rows.insertId + "')";
                     this.connection.query(sql, (err, rows, fields) => {
                         if (err) reject(err);
@@ -179,19 +175,37 @@ module.exports = class DAL {
     }
 
     /**
-    * e.g. testString -> TestString
-    * */
-    _firstCharToUpperCase(str) {
-        return str.charAt(0).toUpperCase() + str.substr(1);
+     * @param
+     * email:String - receiver email address
+     * text:String - email text
+     * file:String - filename in folder 'files', which need to be attached to email
+     * @return
+     * resolve:String - succesful response from server
+     * reject:Error - error message from SMTP server
+     * @WhatItDoes
+     * Send email to specific address from 'jn.riekp@gmail.com'
+     * Need to be send in 2 situations:
+     *  * when user created a new request
+     *  * when request status changed (approved or not)
+     * */
+    _sendEmail(email, text, file) {
+        return new Promise((resolve, reject) => {
+            var mailOptions = {
+                from: '"Pašvaldība 👥" <jn.riekp@gmail.com>', // sender address
+                to: email, // receiver
+                subject: 'Publisko pasākumu organizēšanas atļauju izskatīšana', // subject
+                html: text // email body
+            };
+
+            if (file) {
+                mailOptions.attachments = [{ path: PATH_TO_FILES + file }]
+            }
+
+            // send mail through mail_server
+            mail_server.sendMail(mailOptions, (error, info) => {
+                if (error) reject(error);
+                else resolve('Message successfuly sent: ' + info.response);
+            });
+        });
     }
-
-    _getValuesFromObject(obj) {
-        let values = [];
-        for (let key in obj) {
-            values.push(obj[key]);
-        }
-        return values;
-    }
-
-
 };

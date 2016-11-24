@@ -10,7 +10,14 @@ app.use(bodyParser.json());
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type");
-    next();
+    database.test(res => {
+        if (res == 2) {
+            console.log('Connection with database established!');
+            next();
+        } else {
+            console.log('There ir error with database connection!');
+        }
+    });
 });
 
 app.get('/', (req, res) => {
@@ -18,9 +25,9 @@ app.get('/', (req, res) => {
     //     res.send('From database - ' + response);
     // });
     database._getUser('anna@test.ru').then(
-        result => res.send(result),
-        err => res.send(err)
-        );
+        result  => res.send(result),
+        err     => res.send(err)
+    );
 });
 
 app.get('/request/list', (req, res) => {
@@ -61,9 +68,8 @@ app.post('/request', (req, res) => {
     let request = req.body.request;
     let email = req.body.email;
     database.postRequest(request, email).then(
-            res => res.send({success: "Jūsu pieprasījums tiek saglabāts!"}),
-            err => res.send(err)
-            // err => res.send({error: "Jūsu pieprasījums nētiek saglabāts!"})
+            result => res.send({success: "Jūsu pieprasījums tiek saglabāts!"}),
+            err => res.send({error: "Jūsu pieprasījums nētiek saglabāts!", message: err})
     )
 });
 
