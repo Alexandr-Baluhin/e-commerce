@@ -190,7 +190,7 @@ module.exports = class DAL {
      * */
     _sendEmail(email, text, file) {
         return new Promise((resolve, reject) => {
-            var mailOptions = {
+            let mailOptions = {
                 from: '"Pašvaldība 👥" <jn.riekp@gmail.com>', // sender address
                 to: email, // receiver
                 subject: 'Publisko pasākumu organizēšanas atļauju izskatīšana', // subject

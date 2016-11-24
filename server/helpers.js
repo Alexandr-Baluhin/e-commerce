@@ -16,4 +16,4 @@ module.exports = class Helpers {
         }
         return values;
     }
-}
+};
