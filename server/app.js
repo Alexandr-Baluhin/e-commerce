@@ -64,17 +64,14 @@ app.post('/request', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    // generate token
-    let body = req.body.body;
-    database.postLogin(body.email, body.password, body.type).then(
-        result => res.send(resolve),
+    let type = req.body.type;
+    let email = req.body.email;
+    let password = req.body.password;
+
+    database.postLogin(type, email, password).then(
+        result => res.send(result),
         err => res.send(err)
     );
-    if (body.login == 'Jānis' && body.password == 'Grābis') {
-        res.send({id: 1, type: body.type, token: "my_token"});
-    } else {
-        res.send({error: "Nepareizs lietotājvards vai pārole!"});
-    }
 });
 
 app.listen(8080, () => {

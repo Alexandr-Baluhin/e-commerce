@@ -97,9 +97,33 @@ module.exports = class DAL {
         });
     }
 
-    postLogin(login, password) {
+    /**
+     * Post login
+     * @param
+     * type:String - user type
+     * email:String - user email
+     * password:String - user password
+     * @WhatItDoes
+     * Check if user exist and then check his password
+     */
+    postLogin(type, email, password) {
         return new Promise((resolve, reject) => {
-            this.connection.query('SELECT * FROM `Users` ')
+            this['_get' + Helpers._firstCharToUpperCase(type.toLowerCase())](email).then(
+                res => {
+                    if (res.length == 0) {
+                        reject({error: 'Lietotājs nēeksistē!'});
+                    } else {
+                        let crypted_password = sha(res[0]['salt'] + password);
+                        if (crypted_password == res[0]['password']) {
+                            // TODO: do we need token?
+                            resolve({ id: res[0]['id'], token: "my_token" });
+                        } else {
+                            reject({error: 'Nepareiza parole!'});
+                        }
+                    }
+                },
+                err => reject(err)
+            )
         });
     }
 
@@ -118,6 +142,24 @@ module.exports = class DAL {
     _getUser(email) {
         return new Promise((resolve, reject) => {
             this.connection.query('SELECT * FROM `Users` WHERE email = "' + email + '"', (err, rows, fields) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+    }
+
+    /**
+     * @param
+     * email:String - user email
+     * @return
+     * resolve:Array<Object> - array with selected rows from table `Employees`
+     * reject:Error - error message from database
+     * @WhatItDoes
+     * Get employee from database by email
+     */
+    _getEmployee(email) {
+        return new Promise((resolve, reject) => {
+            this.connection.query('SELECT * FROM `Employees` WHERE email = "' + email + '"', (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows);
             });
