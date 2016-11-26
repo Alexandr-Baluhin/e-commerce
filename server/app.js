@@ -7,24 +7,14 @@ const DAL = require('./DAL');
 let database = new DAL();
 
 app.use(bodyParser.json());
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type");
-    database.test(res => {
-        if (res == 2) {
-            console.log('Connection with database established!');
-            next();
-        } else {
-            console.log('There ir error with database connection!');
-        }
-    });
+    next();
 });
 
 app.get('/', (req, res) => {
-    // database.test(response => {
-    //     res.send('From database - ' + response);
-    // });
-    database._getUser('anna@test.ru').then(
+    database._createUser('victor@test.ru').then(
         result  => res.send(result),
         err     => res.send(err)
     );
@@ -88,5 +78,14 @@ app.post('/login', (req, res) => {
 });
 
 app.listen(8080, () => {
-    console.log('Example app listening on port 8080!');
+    database.test().then(
+        res => {
+            console.log('Connection with database established!');
+            console.log('App listening on port 8080!');
+        },
+        err => {
+            console.log('There ir error with database connection! Error: ' + err.code);
+            console.log('App is closing');
+            process.exit();
+        });
 });

@@ -2,7 +2,7 @@
 
 const mysql = require('mysql');
 const sha = require('sha256');
-const randomWord = require('random-word');
+const passGenerator = require('generate-password');
 const nodemailer = require('nodemailer');
 
 const Helpers = require('./helpers.js');
@@ -22,10 +22,13 @@ module.exports = class DAL {
         });
     }
 
-    test(callback) {
-        this.connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
-            if (err) throw err;
-            callback(rows[0].solution);
+    /** Test function to check database connection */
+    test() {
+        return new Promise((resolve, reject) => {
+            this.connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
+                if (err) reject(err);
+                else resolve(rows[0].solution);
+            });
         });
     }
 
@@ -43,6 +46,14 @@ module.exports = class DAL {
         })
     }
 
+    /**
+     * Post request
+     * @param
+     * request:Object - request body
+     * email:String - user email
+     * @WhatItDoes
+     * Step-by-step post request to database and when send email to user
+     */
     postRequest(request, email) {
         return new Promise((resolve, reject) => {
             let promiseArr = [];
@@ -51,23 +62,36 @@ module.exports = class DAL {
             promiseArr.push(this._createPerson(request.social_guard));
             promiseArr.push(this._createPerson(request.support));
 
+            // Get user from database by email
             this._getUser(email).then(res => {
                 let userId;
-                
+                let message;
+
+                // If user doesn't exist, then create it!
                 if (res.length == 0) {
                     promiseArr.push(this._createUser(email));
+                    message = 'FIRST';
+                // If user already exist, then use it id
                 } else {
                     userId = res[0]['id'];
+                    message = 'NEXT';
                 }
-                
+
+                // Create in first Promise.all scope all persons and user if necessary
                 Promise.all(promiseArr).then(res => {
-                    this._createRequest(request, res[0], res[1], res[2], res[3],
-                        res.length == 5 ? res[4] : userId).then(
-                            res => resolve(res),
-                            err => reject(err)
-                        );
-                    },
-                    err => reject(err));
+                    // In second scope create request and send email to user
+                    Promise.all([
+                        this._createRequest(request, res[0], res[1], res[2], res[3],
+                            res.length == 5 ? res[4]['id'] : userId),
+                        this._sendEmail(email,
+                            Helpers._replaceSubstr(MESSAGES['REQUEST_SUBMITTED_' + message], email, 
+                            res.length == 5 ? res[4]['pass'] : undefined, 'Rīgas pašvaldība'))
+                    ]).then(
+                        res => resolve(res),
+                        err => reject(err)
+                    )
+                },
+                err => reject(err));
             },
             err => reject(err));
         });
@@ -82,6 +106,15 @@ module.exports = class DAL {
 
     /** Private functions */
 
+    /**
+     * @param
+     * email:String - user email
+     * @return
+     * resolve:Array<Object> - array with selected rows from table `Users`
+     * reject:Error - error message from database
+     * @WhatItDoes
+     * Get user from database by email
+     */
     _getUser(email) {
         return new Promise((resolve, reject) => {
             this.connection.query('SELECT * FROM `Users` WHERE email = "' + email + '"', (err, rows, fields) => {
@@ -91,21 +124,32 @@ module.exports = class DAL {
         });
     }
 
+    /**
+     * @param
+     * email:String - user email
+     * @return
+     * resolve:Object - object with new user id and it "plain" password (to send it after to user email)
+     * reject:Error - error message from database
+     * @WhatItDoes
+     * Create user and insert it in database
+     */
     _createUser(email) {
-        let password = randomWord();
+        // generate password
+        let password = passGenerator.generate({
+            numbers: true,
+            strict: true
+        });
 
         // generate salt and hash password for better security
         let salt = sha(Date.now().toString());
         let crypted_password = sha(salt + password);
 
-        // this._sendEmail(email, MESSAGES.REQUEST_APPROVED);
-
         return new Promise((resolve, reject) => {
             this.connection.query('INSERT INTO `Users` (email,password,salt) ' +
                 'VALUES ("' + email + '","' + crypted_password + '","' + salt + '");', (err, rows, fields) => {
-                if (err) reject(err);
-                else resolve(rows.insertId);
-            })
+                    if (err) reject(err);
+                    else resolve({ id: rows.insertId, pass: password });
+                })
         })
     }
 

@@ -16,4 +16,21 @@ module.exports = class Helpers {
         }
         return values;
     }
+
+    /**
+     * Replace placeholders EMAIL, PASSWORD, LOCATION to their actual values
+     */
+    static _replaceSubstr(source, email, pass, location) {
+        let newStr = source.replace(/(EMAIL)|(PASSWORD)|(LOCATION)/g, (match) => {
+            switch (match) {
+                case 'EMAIL':
+                    return email;
+                case 'PASSWORD':
+                    return pass;
+                case 'LOCATION':
+                    return location;
+            }
+        });
+        return newStr;
+    }
 };
