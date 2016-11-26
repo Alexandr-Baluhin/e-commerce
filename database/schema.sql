@@ -1,6 +1,12 @@
 CREATE DATABASE  IF NOT EXISTS `mydb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `mydb`;
 
+-- MySQL dump 10.13  Distrib 5.7.16, for Linux (x86_64)
+--
+-- Host: 127.0.0.1    Database: mydb
+-- ------------------------------------------------------
+-- Server version	5.7.16-0ubuntu0.16.04.1
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -13,20 +19,6 @@ USE `mydb`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Locations`
---
-
-DROP TABLE IF EXISTS `Locations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Locations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `Employees`
 --
 
@@ -35,9 +27,9 @@ DROP TABLE IF EXISTS `Employees`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Employees` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(32) NOT NULL,
-  `salt` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `salt` varchar(64) NOT NULL,
   `location_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `location_id_idx` (`location_id`),
@@ -63,19 +55,15 @@ CREATE TABLE `LegalPersons` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `PhysicalPersons`
+-- Table structure for table `Locations`
 --
 
-DROP TABLE IF EXISTS `PhysicalPersons`;
+DROP TABLE IF EXISTS `Locations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `PhysicalPersons` (
+CREATE TABLE `Locations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `surname` varchar(45) NOT NULL,
-  `person_code` varchar(45) NOT NULL,
-  `address` varchar(45) NOT NULL,
-  `phone` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -94,24 +82,25 @@ CREATE TABLE `Persons` (
   PRIMARY KEY (`id`),
   KEY `physical_person_id_idx` (`physical_person_id`),
   KEY `legal_person_id_idx` (`legal_person_id`),
-  CONSTRAINT `physical_person_id` FOREIGN KEY (`physical_person_id`) REFERENCES `PhysicalPersons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `legal_person_id` FOREIGN KEY (`legal_person_id`) REFERENCES `LegalPersons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `legal_person_id` FOREIGN KEY (`legal_person_id`) REFERENCES `LegalPersons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `physical_person_id` FOREIGN KEY (`physical_person_id`) REFERENCES `PhysicalPersons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Users`
+-- Table structure for table `PhysicalPersons`
 --
 
-DROP TABLE IF EXISTS `Users`;
+DROP TABLE IF EXISTS `PhysicalPersons`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Users` (
+CREATE TABLE `PhysicalPersons` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  `salt` varchar(45) NOT NULL,
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(45) NOT NULL,
+  `surname` varchar(45) NOT NULL,
+  `person_code` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  `phone` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -131,10 +120,10 @@ CREATE TABLE `Requests` (
   `support_id` int(11) NOT NULL,
   `description` varchar(300) NOT NULL,
   `address` varchar(150) NOT NULL,
-  `start_date` datetime NOT NULL,
-  `start_time` datetime NOT NULL,
-  `end_date` datetime NOT NULL,
-  `end_time` datetime NOT NULL,
+  `start_date` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_date` date NOT NULL,
+  `end_time` time NOT NULL,
   `visitors` int(11) NOT NULL,
   `participants` int(11) NOT NULL,
   `dangerous` varchar(300) DEFAULT NULL,
@@ -143,8 +132,8 @@ CREATE TABLE `Requests` (
   `belongs_to` int(11) NOT NULL,
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `checked_by` int(11) DEFAULT NULL,
-  `gov_callback_text` varchar(45) DEFAULT NULL,
-  `checked_date` datetime DEFAULT NULL,
+  `gov_callback_text` varchar(150) DEFAULT NULL,
+  `checked_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `organizer_id_idx` (`organizer_id`),
   KEY `guard_id_idx` (`guard_id`),
@@ -152,15 +141,31 @@ CREATE TABLE `Requests` (
   KEY `support_id_idx` (`support_id`),
   KEY `user_id_idx` (`belongs_to`),
   KEY `employee_id_idx` (`checked_by`),
-  CONSTRAINT `organizer_id` FOREIGN KEY (`organizer_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `employee_id` FOREIGN KEY (`checked_by`) REFERENCES `Employees` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `guard_id` FOREIGN KEY (`guard_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `organizer_id` FOREIGN KEY (`organizer_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `social_guard_id` FOREIGN KEY (`social_guard_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `support_id` FOREIGN KEY (`support_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `user_id` FOREIGN KEY (`belongs_to`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `employee_id` FOREIGN KEY (`checked_by`) REFERENCES `Employees` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION 
+  CONSTRAINT `user_id` FOREIGN KEY (`belongs_to`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `Users`
+--
+
+DROP TABLE IF EXISTS `Users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `salt` varchar(64) NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -170,3 +175,5 @@ CREATE TABLE `Requests` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-11-26 12:25:33
