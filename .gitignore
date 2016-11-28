@@ -3,3 +3,5 @@ server/npm-debug.log
 node_modules/
 typings/
 **.js.map
+front/app/**/*.js
+.vscode/

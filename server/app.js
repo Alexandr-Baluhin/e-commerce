@@ -59,7 +59,7 @@ app.post('/request', (req, res) => {
     let email = req.body.email;
     database.postRequest(request, email).then(
             result => res.send({success: "Jūsu pieprasījums tiek saglabāts!"}),
-            err => res.send({error: "Jūsu pieprasījums nētiek saglabāts!", message: err})
+            err => res.send({error: "Jūsu pieprasījums netiek saglabāts!", message: err})
     )
 });
 

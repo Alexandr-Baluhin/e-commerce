@@ -6,3 +6,9 @@
   display: block;
   margin: 10px auto;
 }
+
+.error {
+  margin-left: 25%;
+  color: red;
+  font-weight: 600;
+}

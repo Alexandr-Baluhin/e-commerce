@@ -21,9 +21,9 @@ export class AuthService {
   public login(data): Observable<String[]> {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    let options = new RequestOptions({ body: data, headers: headers });
+    let options = new RequestOptions({ headers: headers });
 
-    return this.http.post(URL + 'login', options)
+    return this.http.post(URL + 'login', data, options)
       .map(res => res.json())
       .catch(this.handleError);
   }

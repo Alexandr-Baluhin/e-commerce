@@ -14,7 +14,10 @@ import { AuthService } from './auth.service';
 export class AuthComp {
 
   public authUserForm: FormGroup;
-  public authWorkerForm: FormGroup;
+  public authEmployeeForm: FormGroup;
+
+  private userError: string;
+  private employeeError: string;
 
   @Input() displayAuth: boolean;
   @Output() updateDisplay = new EventEmitter();
@@ -22,13 +25,13 @@ export class AuthComp {
   constructor(private fb: FormBuilder, private router: Router, private _service: AuthService) {
     this.authUserForm = fb.group({
       'type': ['user'],
-      'login': ['', Validators.required],
-      'password': ['', Validators.required]
+      'email': ['', Validators.required],
+      'password': ['', Validators.compose([Validators.required, Validators.minLength(10)])]
     });
-    this.authWorkerForm = fb.group({
-      'type': ['worker'],
-      'login': ['', Validators.required],
-      'password': ['', Validators.required]
+    this.authEmployeeForm = fb.group({
+      'type': ['employee'],
+      'email': ['', Validators.required],
+      'password': ['', Validators.compose([Validators.required, Validators.minLength(10)])]
     });
   }
 
@@ -41,15 +44,13 @@ export class AuthComp {
   }
 
   private formSubmit(values: any) {
-    if (values.type == 'user') {
-      this._service.login(values).subscribe(res => {
-        if (res.hasOwnProperty('error')) {
-          alert(res['error']);
-        } else {
-          this.closeModal();
-          this.router.navigate(['/request/list', res['id']]);
-        }
-      });
-    }
+    this._service.login(values).subscribe(res => {
+      if (res.hasOwnProperty('error')) {
+        this[values.type + 'Error'] = res['error'];
+      } else {
+        this.closeModal();
+        this.router.navigate(['/request/list', res['id']]);
+      }
+    });
   }
 }

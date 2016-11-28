@@ -10,6 +10,14 @@
   margin: 5px 0;
 }
 
+.form-group > .form-header {
+  display: inline-block;
+  font-weight: 500;
+  padding-bottom: 3px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid #696969;
+}
+
 .form-subgroup > .form-input.ng-invalid,
 .form-subgroup > [pInputTextArea].ui-inputtext.ng-invalid {
   border-left: 5px solid #a94442;

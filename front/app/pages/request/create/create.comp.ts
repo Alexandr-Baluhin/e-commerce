@@ -58,36 +58,34 @@ export class CreateComp {
       'start_time': ['', Validators.required],
       'end_time': ['', Validators.required],
       'visitors': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
-      'participiants': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
+      'participants': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
       'dangerous': ['', Validators.maxLength(250)],
-      'gov_callback': ['', Validators.maxLength(250)]
+      'gov_dangerous_response': ['', Validators.maxLength(250)],
+      'email': ['', Validators.required]
     });
     // Form for law persons
     this.requestLawForm = fb.group({
       'organizer': fb.group({
-        'law_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+        'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
         'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
-        'law_address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
+        'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
         'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
       }),
       'guard': fb.group({
-        'name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-        'surname': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-        'person_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+        'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+        'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
         'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
       }),
       'social_guard': fb.group({
-        'name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-        'surname': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-        'person_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+        'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+        'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
         'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
       }),
       'support': fb.group({
-        'name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-        'surname': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
-        'person_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
+        'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+        'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
         'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
       }),
@@ -98,9 +96,10 @@ export class CreateComp {
       'start_time': ['', Validators.required],
       'end_time': ['', Validators.required],
       'visitors': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
-      'participiants': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
+      'participants': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
       'dangerous': ['', Validators.maxLength(250)],
-      'gov_callback': ['', Validators.maxLength(250)]
+      'gov_dangerous_response': ['', Validators.maxLength(250)],
+      'email': ['', Validators.required]
     });
     this.notifications = [];
   }
@@ -118,9 +117,9 @@ export class CreateComp {
       address: "Imantas kultūras centrs",
       dangerous: "tekts",
       description: "Party   \"RedHeads\"↵Ballīte↵Pārveidot ballīte↵",
-      end_date: null,
-      end_time: null,
-      gov_callback: "tekts",
+      end_date: new Date(2016, 10, 25),
+      end_time: new Date(2016, 10, 25, 22, 30, 0),
+      gov_dangerous_response: "tekts",
       guard: {
         address: "Lāčplēša iela 91",
         name: "Sofija",
@@ -135,7 +134,7 @@ export class CreateComp {
         phone: "20220491",
         surname: "Baluhins"
       },
-      participiants: "30",
+      participants: "30",
       social_guard: {
         address: "Sadovaja ulica 1",
         name: "Viktors",
@@ -143,8 +142,8 @@ export class CreateComp {
         phone: "20000011",
         surname: "Burdžanadze"
       },
-      start_date: null,
-      start_time: null,
+      start_date: new Date(2016, 10, 24),
+      start_time: new Date(2016, 10, 24, 10, 0, 0),
       support: {
         address: "Piedrujas iela 90",
         name: "Anna",
@@ -152,24 +151,33 @@ export class CreateComp {
         phone: "20175342",
         surname: "Mammadzada"
       },
-      visitors: "201"
+      visitors: "201",
+      email: "baluhins@inbox.lv"
     };
     this.requestForm.setValue(test_object);
   }
 
   private formSubmit(values: any) {
-    this.confService.confirm({
-      message: 'Jūs tieši gribāt turpināt?',
-      accept: () => {
-        this._service.sendData(values)
-          .subscribe(res => {
-            if (res.hasOwnProperty('success')) {
-              this.notifications.push({ severity: 'success', detail: res['success'] });
-            } else {
-              this.notifications.push({ severity: 'error', detail: res['error'] });              
-            }
-          });
-      }
-    });
+    this._service.formatDates(values).then(
+      res => {
+        let data = {};
+        data['email'] = res['email'];
+        delete res['email'];
+        data['request'] = res;
+        this.confService.confirm({
+          message: 'Jūs tieši gribāt turpināt?',
+          accept: () => {
+            this._service.sendData(data)
+              .subscribe(res => {
+                if (res.hasOwnProperty('success')) {
+                  this.notifications.push({ severity: 'success', detail: res['success'] });
+                } else {
+                  this.notifications.push({ severity: 'error', detail: res['error'] });
+                }
+              },
+              err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
+          }
+        });
+      });
   }
 }
