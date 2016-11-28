@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const Helpers = require('./helpers.js');
 const MESSAGES = require('./messages.js');
 
-const mail_server = nodemailer.createTransport('smtps://jn.riekp%40gmail.com:pasvaldiba@smtp.gmail.com');
+const mail_server = nodemailer.createTransport('smtps://epasvaldiba%40gmail.com:rtupasvaldiba@smtp.gmail.com');
 const PATH_TO_FILES = 'files/';
 
 module.exports = class DAL {
@@ -28,6 +28,17 @@ module.exports = class DAL {
             this.connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows[0].solution);
+            });
+        });
+    }
+
+    getLocations() {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM mydb.Locations";
+
+            this.connection.query(sql, (err, rows, fields) => {
+                if (err) reject (err);
+                else resolve(rows);
             });
         });
     }
@@ -115,8 +126,7 @@ module.exports = class DAL {
                     } else {
                         let crypted_password = sha(res[0]['salt'] + password);
                         if (crypted_password == res[0]['password']) {
-                            // TODO: do we need token?
-                            resolve({ id: res[0]['id'], token: "my_token" });
+                            resolve({id: res[0]['id']});
                         } else {
                             reject({error: 'Nepareiza parole!'});
                         }
@@ -128,7 +138,7 @@ module.exports = class DAL {
     }
 
 
-    /** Private functions */
+    /** PRIVATE FUNCTIONS */
 
     /**
      * @param

@@ -63,7 +63,12 @@ DROP TABLE IF EXISTS `Locations`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Locations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `address` varchar(200) NOT NULL,
+  `city_loc` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `phone` varchar(45) NOT NULL,
+  `zip` varchar(8) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -130,6 +135,7 @@ CREATE TABLE `Requests` (
   `gov_dangerous_response` varchar(300) DEFAULT NULL,
   `files` varchar(3000) NOT NULL,
   `belongs_to` int(11) NOT NULL,
+  `written_to` int(11) NOT NULL,
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `checked_by` int(11) DEFAULT NULL,
   `gov_callback_text` varchar(150) DEFAULT NULL,
@@ -140,13 +146,15 @@ CREATE TABLE `Requests` (
   KEY `social_guard_id_idx` (`social_guard_id`),
   KEY `support_id_idx` (`support_id`),
   KEY `user_id_idx` (`belongs_to`),
+  KEY `location_id_idx` (`written_to`),
   KEY `employee_id_idx` (`checked_by`),
   CONSTRAINT `employee_id` FOREIGN KEY (`checked_by`) REFERENCES `Employees` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `guard_id` FOREIGN KEY (`guard_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `organizer_id` FOREIGN KEY (`organizer_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `social_guard_id` FOREIGN KEY (`social_guard_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `support_id` FOREIGN KEY (`support_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `user_id` FOREIGN KEY (`belongs_to`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `user_id` FOREIGN KEY (`belongs_to`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `request_location_id` FOREIGN KEY (`written_to`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -4,16 +4,18 @@ USE `mydb`;
 -- Dumping data for table `Locations`
 --
 
-INSERT INTO `Locations` (name) VALUES ('Rīgas pašvaldība'),('Latgales pašvaldība');
-
+INSERT INTO `Locations` (name, address, city_loc, email, phone, zip) VALUES 
+('Rīgas pilsētas dome', 'Rātslaukums 1, Rīga', 'Rīgā', 'riga@riga.lv', '67026101', 'LV-1539'),
+('Jūrmalas pilsētas dome', 'Jomas ielā 1/5, Jūrmala', 'Jūrmalā', 'pasts@jurmala.lv', '67093816', 'LV-2015'),
+('Bauskas novada pašvaldība', 'Uzvaras ielā 1, Bauska, Bauskas novads', 'Bauskā', 'dome@bauska.lv', '63922238', 'LV-3901'),
+('Smiltenes novada pašvaldība', 'Dārza ielā 3, Smiltene, Smiltenes novads', 'Smiltenē', 'dome@smiltene.lv', '64774844', 'LV-4729'),
+('Liepājas pilsētas dome', 'Rožu ielā 6, Liepāja', 'Liepājā', 'edoc@dome.liepaja.lv', '63404750', 'LV-3401');
 --
 -- Dumping data for table `Employees`
 --
 
 INSERT INTO `Employees` (email, password, salt, location_id) VALUES 
-('baluhins@test.ru','29c39ddb11cd6a9ac41cbc8345c1c7dee274afa4044cc86b17ed29a5a5c65b73','e01d05d44a0e582298b91059be3cef5775171e16593465e8693bf128da5c5115',1),
-('victor@test.ru','1d38a16acc29bf8e9d353e61bac4a56d23a47888d347ff10c779eb2a4b63349d','c43781cf500cd9e882cdd4fc839aec23c87eb7e39ac33f935f8a3b6fc4a83b38',1);
-
+('jn.riekp@gmail.com', '98475bf2acf4afd89fb58429e10d1f1ae7ad783e7589e0a362384f5e203eaad5', '631215350ba97b8fbd396d4c202742ded21b5a777c808271bf8bd65cbfbe18d9', 1);
 --
 -- Dumping data for table `LegalPersons`
 --
@@ -30,7 +32,7 @@ INSERT INTO `Employees` (email, password, salt, location_id) VALUES
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (email, password, salt) VALUES ('anna@test.ru','annasPass','annasSalt');
+-- INSERT INTO `Users` (email, password, salt) VALUES ('anna@test.ru','annasPass','annasSalt');
 
 --
 -- Dumping data for table `Requests`

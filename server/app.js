@@ -13,10 +13,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => {
-    database._createUser('victor@test.ru').then(
-        result  => res.send(result),
-        err     => res.send(err)
+app.get('/', (req, res) => res.send('Hello from server!'));
+
+app.get('/locations', (req, res) => {
+    database.getLocations().then(
+        result => res.send(result),
+        err => res.send(err)
     );
 });
 
