@@ -10,6 +10,15 @@
   margin: 5px 0;
 }
 
+.form-group .form-subgroup.no-flex {
+  display: block;
+  margin: 5px 0;
+}
+
+.no-flex > p-dropdown {
+  float: right;  
+}
+
 .form-group > .form-header {
   display: inline-block;
   font-weight: 500;

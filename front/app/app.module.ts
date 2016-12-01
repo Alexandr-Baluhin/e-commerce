@@ -17,7 +17,8 @@ import {
   ConfirmationService,
   DataTableModule,
   SharedModule,
-  TooltipModule
+  TooltipModule,
+  DropdownModule
 } from 'primeng/primeng';
 
 /* Modules */
@@ -64,7 +65,8 @@ import { AuthGuard } from './shared/auth/auth-guard.service';
     ConfirmDialogModule,
     DataTableModule,
     SharedModule,
-    TooltipModule
+    TooltipModule,
+    DropdownModule    
   ],
   declarations: [
     AppComp,

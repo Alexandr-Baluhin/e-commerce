@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/fo
 
 import { CreateService } from './create.service';
 
-import { ConfirmationService, Message } from 'primeng/primeng';
+import { ConfirmationService, Message, SelectItem } from 'primeng/primeng';
 
 @Component({
   moduleId: module.id,
@@ -19,6 +19,8 @@ export class CreateComp {
 
   private files: Array<any>;
   private notifications: Message[];
+
+  private locations: SelectItem[];
 
   constructor(private _service: CreateService, private fb: FormBuilder, private confService: ConfirmationService) {
     // Form for usual persons
@@ -61,7 +63,8 @@ export class CreateComp {
       'participants': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
       'dangerous': ['', Validators.maxLength(250)],
       'gov_dangerous_response': ['', Validators.maxLength(250)],
-      'email': ['', Validators.required]
+      'email': ['', Validators.required],
+      'location': ['', Validators.required]
     });
     // Form for law persons
     this.requestLawForm = fb.group({
@@ -99,12 +102,24 @@ export class CreateComp {
       'participants': ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern('^[0-9]+$')])],
       'dangerous': ['', Validators.maxLength(250)],
       'gov_dangerous_response': ['', Validators.maxLength(250)],
-      'email': ['', Validators.required]
+      'email': ['', Validators.required],
+      'location': ['', Validators.required]      
     });
     this.notifications = [];
+    this.locations = [];
   }
 
-  public ngOnInit(): void { }
+  public ngOnInit(): void {
+    this._service.getLocations()
+      .subscribe(res => {
+        res.forEach((el) => {
+          this.locations.push({ label: el['name'], value: el['id'] });
+        });
+        this.requestForm.controls['location'].setValue(this.locations[0]['value']);
+        this.requestLawForm.controls['location'].setValue(this.locations[0]['value']);
+      },
+      err => console.log(err))
+  }
 
   public ngOnDestroy(): void { }
 
@@ -152,7 +167,8 @@ export class CreateComp {
         surname: "Mammadzada"
       },
       visitors: "201",
-      email: "baluhins@inbox.lv"
+      email: "baluhins@inbox.lv",
+      location: 3
     };
     this.requestForm.setValue(test_object);
   }

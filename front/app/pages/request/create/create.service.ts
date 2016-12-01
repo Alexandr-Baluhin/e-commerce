@@ -14,6 +14,22 @@ export class CreateService {
 
   /**
    * @param
+   * null
+   * @return
+   * Response from server
+   */
+  public getLocations(): Observable<String[]> {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.get(URL + 'locations', options)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+
+  /**
+   * @param
    * data - Object with data from form
    * @return
    * Response from server
