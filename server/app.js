@@ -16,6 +16,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.send('Hello from server!'));
 
 app.get('/locations', (req, res) => {
+    // get locations from DB
     database.getLocations().then(
         result => res.send(result),
         err => res.send(err)
@@ -23,7 +24,7 @@ app.get('/locations', (req, res) => {
 });
 
 app.get('/request/list', (req, res) => {
-    //get list from DB
+    // get list from DB
     database.getList('Procesā').then(
             result => res.send({lists: result}),
             err    => res.send({err: err})

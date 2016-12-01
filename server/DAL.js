@@ -223,6 +223,8 @@ module.exports = class DAL {
             request.written_to = request.location;
             delete request.location;
 
+            request.status = 'Procesā';
+
             /** TODO: make files processed 
             *  Hack for mysql, because field 'files' in the schema can't be null 
             * */
