@@ -220,6 +220,9 @@ module.exports = class DAL {
             delete request.support;
             request.belongs_to = UserID;
 
+            request.written_to = request.location;
+            delete request.location;
+
             /** TODO: make files processed 
             *  Hack for mysql, because field 'files' in the schema can't be null 
             * */
