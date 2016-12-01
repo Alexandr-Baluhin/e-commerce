@@ -137,6 +137,7 @@ CREATE TABLE `Requests` (
   `belongs_to` int(11) NOT NULL,
   `written_to` int(11) NOT NULL,
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(45) NOT NULL,
   `checked_by` int(11) DEFAULT NULL,
   `gov_callback_text` varchar(150) DEFAULT NULL,
   `checked_date` timestamp NULL DEFAULT NULL,
