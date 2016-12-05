@@ -4,6 +4,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const DAL = require('./DAL');
 
+const https = require('https');
+const fs = require('fs');
+
+var options = {
+    key: fs.readFileSync('./key.pem', 'utf8'),
+    cert: fs.readFileSync('./server.crt', 'utf8')
+};
+
+
 let database = new DAL();
 
 app.use(bodyParser.json());
@@ -26,34 +35,17 @@ app.get('/locations', (req, res) => {
 app.get('/request/list', (req, res) => {
     // get list from DB
     database.getList('Procesā').then(
-            result => res.send({lists: result}),
-            err    => res.send({err: err})
+        result => res.send({ lists: result }),
+        err => res.send({ err: err })
     );
-    //let lists = [
-    //    {
-    //        id: "101",
-    //        create_date: "07.11.2016 12:00",
-    //        status: "Procesā"
-    //    },
-    //    {
-    //        id: "102",
-    //        create_date: "01.11.2016 22:54",
-    //        status: "Apstiprināts"
-    //    },
-    //    {
-    //        id: "211",
-    //        create_date: "05.10.2016 07:11",
-    //        status: "Noraidīts"
-    //    }
-    //]
 });
 
 app.get('/request/:id', (req, res) => {
     // get request from DB
     // TODO: format request
     database.getList(req.params.id).then(
-            result => res.send({data: result}),
-            err    => res.send({err: err})
+        result => res.send({ data: result }),
+        err => res.send({ err: err })
     )
 });
 
@@ -61,8 +53,8 @@ app.post('/request', (req, res) => {
     let request = req.body.request;
     let email = req.body.email;
     database.postRequest(request, email).then(
-            result => res.send({success: "Jūsu pieprasījums tiek saglabāts!"}),
-            err => res.send({error: "Jūsu pieprasījums netiek saglabāts!", message: err})
+        result => res.send({ success: "Jūsu pieprasījums tiek saglabāts!" }),
+        err => res.send({ error: "Jūsu pieprasījums netiek saglabāts!", message: err })
     )
 });
 
@@ -70,14 +62,17 @@ app.post('/login', (req, res) => {
     let type = req.body.type;
     let email = req.body.email;
     let password = req.body.password;
-
+    console.log("post login")
     database.postLogin(type, email, password).then(
         result => res.send(result),
         err => res.send(err)
     );
 });
 
-app.listen(8080, () => {
+let httpsServer = https.createServer(options, app);
+
+
+httpsServer.listen(8080, () => {
     database.test().then(
         res => {
             console.log('Connection with database established!');

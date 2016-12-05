@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-const URL: string = 'http://localhost:8080/'
+const URL: string = 'https://localhost:8443/'
 
 @Injectable()
 export class AuthService {
