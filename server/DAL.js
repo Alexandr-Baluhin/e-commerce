@@ -471,4 +471,8 @@ FROM
    WHERE (support_id = Persons.id
           AND legal_person_id = LegalPersons.id) ) AS sup,
      Requests
+WHERE Requests.organizer_id = org.organizer_id
+  AND Requests.support_id = sup.support_id
+  AND Requests.guard_id = guard.guard_id
+  AND Requests.social_guard_id = soc.social_guard_id;
 `;
