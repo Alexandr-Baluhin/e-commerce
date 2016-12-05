@@ -32,29 +32,42 @@ module.exports = class DAL {
         });
     }
 
-    getLocations() {
+    getLocations(where) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM mydb.Locations";
+            let sql = 'SELECT * FROM Locations';
+            if (where) sql += ' WHERE ' + where;
 
             this.connection.query(sql, (err, rows, fields) => {
-                if (err) reject (err);
+                if (err) reject(err);
                 else resolve(rows);
             });
         });
     }
 
-    // TODO: JOIN Persons and Requests
-    getList(status, requestID) {
+    getRequest(requestID) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT idRequests AS id, startDate AS create_date, gov_callback AS status FROM mydb.Requests " +
-                "WHERE 1 = 1 ";
-            if (status) sql += " AND Requests.gov_callback = '" + status + "'";
-            if (requestID) sql += " AND Requests.idRequests = " + requestID;
+            let sql = REQUEST_SQL + 'WHERE id = ' + requestID;
+
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
-                resolve(rows);
-            })
-        })
+                else resolve(rows);
+            });
+        });
+    }
+
+    getList(type, id, status) {
+        return new Promise((resolve, reject) => {
+            let sql = 'SELECT id, create_date, status FROM Requests ' +
+                'WHERE 1 = 1 ';
+
+            if (status) sql += ' AND Requests.status = "' + status + '"';
+            if (requestID) sql += ' AND Requests.idRequests = ' + requestID;
+            
+            this.connection.query(sql, (err, rows, fields) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
     }
 
     /**
@@ -78,11 +91,14 @@ module.exports = class DAL {
                 let userId;
                 let message;
 
+                // get location name, to send it after with email
+                promiseArr.push(this.getLocations('id = ' + request['location']));
+
                 // If user doesn't exist, then create it!
                 if (res.length == 0) {
                     promiseArr.push(this._createUser(email));
                     message = 'FIRST';
-                // If user already exist, then use it id
+                    // If user already exist, then use it id
                 } else {
                     userId = res[0]['id'];
                     message = 'NEXT';
@@ -93,14 +109,14 @@ module.exports = class DAL {
                     // In second scope create request and send email to user
                     Promise.all([
                         this._createRequest(request, res[0], res[1], res[2], res[3],
-                            res.length == 5 ? res[4]['id'] : userId),
+                            res.length == 6 ? res[5]['id'] : userId),
                         this._sendEmail(email,
-                            Helpers._replaceSubstr(MESSAGES['REQUEST_SUBMITTED_' + message], email, 
-                            res.length == 5 ? res[4]['pass'] : undefined, 'Rīgas pašvaldība'))
+                            Helpers._replaceSubstr(MESSAGES['REQUEST_SUBMITTED_' + message], email,
+                                res.length == 6 ? res[5]['pass'] : undefined, res[4][0]['name']))
                     ]).then(
                         res => resolve(res),
                         err => reject(err)
-                    )
+                        )
                 },
                 err => reject(err));
             },
@@ -114,6 +130,9 @@ module.exports = class DAL {
      * type:String - user type
      * email:String - user email
      * password:String - user password
+     * @return
+     * resolve:Object - object with authorized user from table `Users`
+     * reject:Error - error message from database
      * @WhatItDoes
      * Check if user exist and then check his password
      */
@@ -122,13 +141,13 @@ module.exports = class DAL {
             this['_get' + Helpers._firstCharToUpperCase(type.toLowerCase())](email).then(
                 res => {
                     if (res.length == 0) {
-                        reject({error: 'Lietotājs nēeksistē!'});
+                        reject({ error: 'Lietotājs nēeksistē!' });
                     } else {
                         let crypted_password = sha(res[0]['salt'] + password);
                         if (crypted_password == res[0]['password']) {
-                            resolve({id: res[0]['id']});
+                            resolve({ id: res[0]['id'] });
                         } else {
-                            reject({error: 'Nepareiza parole!'});
+                            reject({ error: 'Nepareiza parole!' });
                         }
                     }
                 },
@@ -206,8 +225,19 @@ module.exports = class DAL {
     }
 
     /**
-     * Is User and Organizer the same person?
-     * */
+     * @param
+     * request:String - request body
+     * organizerID:String - organizer foreign key
+     * guardID:String - guard foreign key
+     * socialGuardID:String - social guard foreign key
+     * supportID:String - support foreign key
+     * UserID:String - user foreign key
+     * @return
+     * resolve:Object - array with inserted rows
+     * reject:Error - error message from database
+     * @WhatItDoes
+     * Insert request to database (final create request stage)
+     */
     _createRequest(request, organizerID, guardID, socialGuardID, supportID, UserID) {
         return new Promise((resolve, reject) => {
             request.organizer_id = organizerID;
@@ -310,3 +340,88 @@ module.exports = class DAL {
         });
     }
 };
+
+const REQUEST_SQL = `
+SELECT org.*,
+       guard.*,
+       soc.*,
+       sup.*,
+       Requests.*
+FROM
+  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS organizer_name,
+          PhysicalPersons.person_code AS organizer_person_code,
+          PhysicalPersons.address AS organizer_address,
+          PhysicalPersons.phone AS organizer_phone
+   FROM Requests,
+        Persons,
+        PhysicalPersons
+   WHERE (organizer_id = Persons.id
+          AND physical_person_id = PhysicalPersons.id)
+   UNION SELECT LegalPersons.legal_name AS organizer_legal_name,
+                LegalPersons.register_code AS organizer_register_code,
+                LegalPersons.address AS organizer_address,
+                LegalPersons.phone AS organizer_phone
+   FROM Requests,
+        Persons,
+        LegalPersons
+   WHERE (organizer_id = Persons.id
+          AND legal_person_id = LegalPersons.id) ) AS org,
+
+  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS guard_name,
+          PhysicalPersons.person_code AS guard_person_code,
+          PhysicalPersons.address AS guard_address,
+          PhysicalPersons.phone AS guard_phone
+   FROM Requests,
+        Persons,
+        PhysicalPersons
+   WHERE (guard_id = Persons.id
+          AND physical_person_id = PhysicalPersons.id)
+   UNION SELECT LegalPersons.legal_name AS guard_legal_name,
+                LegalPersons.register_code AS guard_register_code,
+                LegalPersons.address AS guard_address,
+                LegalPersons.phone AS guard_phone
+   FROM Requests,
+        Persons,
+        LegalPersons
+   WHERE (guard_id = Persons.id
+          AND legal_person_id = LegalPersons.id) ) AS guard,
+
+  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS social_guard_name,
+          PhysicalPersons.person_code AS social_guard_person_code,
+          PhysicalPersons.address AS social_guard_address,
+          PhysicalPersons.phone AS social_guard_phone
+   FROM Requests,
+        Persons,
+        PhysicalPersons
+   WHERE (social_guard_id = Persons.id
+          AND physical_person_id = PhysicalPersons.id)
+   UNION SELECT LegalPersons.legal_name AS social_guard_legal_name,
+                LegalPersons.register_code AS social_guard_register_code,
+                LegalPersons.address AS social_guard_address,
+                LegalPersons.phone AS social_guard_phone
+   FROM Requests,
+        Persons,
+        LegalPersons
+   WHERE (social_guard_id = Persons.id
+          AND legal_person_id = LegalPersons.id) ) AS soc,
+
+  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS support_name,
+          PhysicalPersons.person_code AS support_person_code,
+          PhysicalPersons.address AS support_address,
+          PhysicalPersons.phone AS support_phone
+   FROM Requests,
+        Persons,
+        PhysicalPersons
+   WHERE (support_id = Persons.id
+          AND physical_person_id = PhysicalPersons.id)
+   UNION SELECT LegalPersons.legal_name AS support_legal_name,
+                LegalPersons.register_code AS support_register_code,
+                LegalPersons.address AS support_address,
+                LegalPersons.phone AS support_phone
+   FROM Requests,
+        Persons,
+        LegalPersons
+   WHERE (support_id = Persons.id
+          AND legal_person_id = LegalPersons.id) ) AS sup,
+     Requests
+`;

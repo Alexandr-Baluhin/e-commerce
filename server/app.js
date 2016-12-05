@@ -8,10 +8,9 @@ const https = require('https');
 const fs = require('fs');
 
 var options = {
-    key: fs.readFileSync('./key.pem', 'utf8'),
-    cert: fs.readFileSync('./server.crt', 'utf8')
+    key: fs.readFileSync('ssl/key.pem', 'utf8'),
+    cert: fs.readFileSync('ssl/server.crt', 'utf8')
 };
-
 
 let database = new DAL();
 
@@ -25,8 +24,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.send('Hello from server!'));
 
 app.get('/locations', (req, res) => {
-    // get locations from DB
-    database.getLocations().then(
+    database.getLocations(null).then(
         result => res.send(result),
         err => res.send(err)
     );
@@ -35,17 +33,15 @@ app.get('/locations', (req, res) => {
 app.get('/request/list', (req, res) => {
     // get list from DB
     database.getList('Procesā').then(
-        result => res.send({ lists: result }),
-        err => res.send({ err: err })
+        result => res.send(result),
+        err => res.send(err)
     );
 });
 
 app.get('/request/:id', (req, res) => {
-    // get request from DB
-    // TODO: format request
-    database.getList(req.params.id).then(
-        result => res.send({ data: result }),
-        err => res.send({ err: err })
+    database.getRequest(req.params.id).then(
+        result => res.send(result),
+        err => res.send(err)
     )
 });
 
@@ -62,7 +58,7 @@ app.post('/login', (req, res) => {
     let type = req.body.type;
     let email = req.body.email;
     let password = req.body.password;
-    console.log("post login")
+
     database.postLogin(type, email, password).then(
         result => res.send(result),
         err => res.send(err)
@@ -72,11 +68,11 @@ app.post('/login', (req, res) => {
 let httpsServer = https.createServer(options, app);
 
 
-httpsServer.listen(8080, () => {
+httpsServer.listen(8443, () => {
     database.test().then(
         res => {
             console.log('Connection with database established!');
-            console.log('App listening on port 8080!');
+            console.log('App listening on port 8443!');
         },
         err => {
             console.log('There ir error with database connection! Error: ' + err.code);
