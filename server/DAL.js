@@ -4,6 +4,7 @@ const mysql = require('mysql');
 const sha = require('sha256');
 const passGenerator = require('generate-password');
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 const Helpers = require('./helpers.js');
 const MESSAGES = require('./messages.js');
@@ -62,7 +63,7 @@ module.exports = class DAL {
 
             if (status) sql += ' AND Requests.status = "' + status + '"';
             if (requestID) sql += ' AND Requests.idRequests = ' + requestID;
-            
+
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows);
@@ -118,9 +119,9 @@ module.exports = class DAL {
                         err => reject(err)
                         )
                 },
-                err => reject(err));
+                    err => reject(err));
             },
-            err => reject(err));
+                err => reject(err));
         });
     }
 
@@ -329,7 +330,14 @@ module.exports = class DAL {
             };
 
             if (file) {
-                mailOptions.attachments = [{ path: PATH_TO_FILES + file }]
+
+                var stream = fs.createWriteStream(PATH_TO_FILES + email + "_.html");
+                stream.once('open', function (fd) {
+                    stream.write(file);
+                    stream.end();
+                });
+
+                mailOptions.attachments = [{ path: PATH_TO_FILES + "my_file.html" }]
             }
 
             // send mail through mail_server
