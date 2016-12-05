@@ -31,15 +31,17 @@ app.get('/locations', (req, res) => {
 });
 
 app.get('/request/list', (req, res) => {
-    // get list from DB
-    database.getList('Procesā').then(
+    let type = req.headers.type;
+    let id = req.headers.id;
+    database.getList(type, id).then(
         result => res.send(result),
         err => res.send(err)
     );
 });
 
 app.get('/request/:id', (req, res) => {
-    database.getRequest(req.params.id).then(
+    let id = req.params.id;
+    database.getRequest(id).then(
         result => res.send(result),
         err => res.send(err)
     )
@@ -51,6 +53,16 @@ app.post('/request', (req, res) => {
     database.postRequest(request, email).then(
         result => res.send({ success: "Jūsu pieprasījums tiek saglabāts!" }),
         err => res.send({ error: "Jūsu pieprasījums netiek saglabāts!", message: err })
+    )
+});
+
+app.put('/request', (req, res) => {
+    let employee = req.body.employee;
+    let user = req.body.user;
+    let request = req.body.request;
+    database.putRequest(employee, user, request).then(
+        result => res.send({ success: "Jūsu lēmums tiek pieņemts!" }),
+        err => res.send({ error: "Jūsu lēmums netiek pieņemts!", message: err })
     )
 });
 
