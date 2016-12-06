@@ -64,7 +64,8 @@ export class CreateComp {
       'dangerous': ['', Validators.maxLength(250)],
       'gov_dangerous_response': ['', Validators.maxLength(250)],
       'email': ['', Validators.required],
-      'location': ['', Validators.required]
+      'location': ['', Validators.required],
+      'persons_type': ['physical']
     });
     // Form for law persons
     this.requestLawForm = fb.group({
@@ -103,7 +104,8 @@ export class CreateComp {
       'dangerous': ['', Validators.maxLength(250)],
       'gov_dangerous_response': ['', Validators.maxLength(250)],
       'email': ['', Validators.required],
-      'location': ['', Validators.required]      
+      'location': ['', Validators.required],
+      'persons_type': ['legal']
     });
     this.notifications = [];
     this.locations = [];
@@ -168,7 +170,8 @@ export class CreateComp {
       },
       visitors: "201",
       email: "baluhins@inbox.lv",
-      location: 3
+      location: 3,
+      persons_type: 'physical'
     };
     this.requestForm.setValue(test_object);
   }
@@ -210,7 +213,8 @@ export class CreateComp {
       },
       visitors: "201",
       email: "baluhins@inbox.lv",
-      location: 3
+      location: 3,
+      persons_type: 'legal'      
     };
     this.requestLawForm.setValue(test_object);
   }

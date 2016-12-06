@@ -1,0 +1,68 @@
+.container {
+  width: 960px;
+  padding: 20px;
+  margin: 20px auto;
+}
+
+.form-group .form-subgroup {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.form-group .form-subgroup.no-flex {
+  display: block;
+  margin: 5px 0;
+}
+
+.no-flex > p-dropdown {
+  float: right;  
+}
+
+.form-group > .form-header {
+  display: inline-block;
+  font-weight: 500;
+  padding-bottom: 3px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid #696969;
+}
+
+.form-subgroup > .form-input.ng-invalid,
+.form-subgroup > [pInputTextArea].ui-inputtext.ng-invalid {
+  border-left: 5px solid #a94442;
+  border-bottom-color: #d6d6d6;
+}
+
+.form-subgroup > .form-input.ng-valid[required],
+.form-subgroup > [pInputTextArea][required].ui-inputtext.ng-valid {
+  border-left: 5px solid #42A948;
+}
+
+.form-subgroup > .form-label {
+  line-height: 29px;
+}
+
+.form-subgroup > textarea {
+  float: left;
+  width: 100%;
+}
+
+.form-group .form-subgroup.column {
+  flex-direction: column;
+}
+
+.upload-list {
+  list-style: bullet;
+}
+
+.upload-list > li {
+  margin: 1em;
+  font-size: .8em;
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+form > [pButton] {
+  display: block;
+  margin: 0 8px 0 auto;
+}
