@@ -85,39 +85,39 @@ module.exports = class DAL {
 
             // Get user from database by email
             this._getUser(email).then(res => {
-                let userId;
-                let message;
+                    let userId;
+                    let message;
 
-                // get location name, to send it after with email
-                promiseArr.push(this.getLocations('id = ' + request['location']));
+                    // get location name, to send it after with email
+                    promiseArr.push(this.getLocations('id = ' + request['location']));
 
-                // If user doesn't exist, then create it!
-                if (res.length == 0) {
-                    promiseArr.push(this._createUser(email));
-                    message = 'FIRST';
-                    // If user already exist, then use it id
-                } else {
-                    userId = res[0]['id'];
-                    message = 'NEXT';
-                }
+                    // If user doesn't exist, then create it!
+                    if (res.length == 0) {
+                        promiseArr.push(this._createUser(email));
+                        message = 'FIRST';
+                        // If user already exist, then use it id
+                    } else {
+                        userId = res[0]['id'];
+                        message = 'NEXT';
+                    }
 
-                // Create in first Promise.all scope all persons and user if necessary
-                Promise.all(promiseArr).then(res => {
-                    // In second scope create request and send email to user
-                    Promise.all([
-                        this._createRequest(request, res[0], res[1], res[2], res[3],
-                            res.length == 6 ? res[5]['id'] : userId),
-                        this._sendEmail(email,
-                            Helpers._replaceSubstr(MESSAGES['REQUEST_SUBMITTED_' + message], email,
-                                res.length == 6 ? res[5]['pass'] : undefined, res[4][0]['name']))
-                    ]).then(
-                        res => resolve(res),
-                        err => reject(err)
-                        )
+                    // Create in first Promise.all scope all persons and user if necessary
+                    Promise.all(promiseArr).then(res => {
+                            // In second scope create request and send email to user
+                            Promise.all([
+                                this._createRequest(request, res[0], res[1], res[2], res[3],
+                                    res.length == 6 ? res[5]['id'] : userId),
+                                this._sendEmail(email,
+                                    Helpers._replaceSubstr(MESSAGES['REQUEST_SUBMITTED_' + message], email,
+                                        res.length == 6 ? res[5]['pass'] : undefined, res[4][0]['name']))
+                            ]).then(
+                                    res => resolve(res),
+                                    err => reject(err)
+                            )
+                        },
+                            err => reject(err));
                 },
                     err => reject(err));
-            },
-                err => reject(err));
         });
     }
 
@@ -135,9 +135,9 @@ module.exports = class DAL {
             Promise.all([
                 this._getUser(null, user),
                 this._getEmployee(null, employee).then(
-                    res => this.getLocations('id = ' + res[0]['location_id']))
+                        res => this.getLocations('id = ' + res[0]['location_id']))
             ]).then(
-                res => {
+                    res => {
                     let sql = 'UPDATE `Requests` SET status = "' + request['decision'] + '", checked_by = ' + employee;
                     if (request.hasOwnProperty('callbackText')) {
                         sql += ', gov_callback_text = "' + request['callbackText'] + '"';
@@ -148,20 +148,25 @@ module.exports = class DAL {
                     this.connection.query(sql, (err, rows, fields) => {
                         if (err) reject(err);
                         else {
-                            this._sendEmail(res[0][0]['email'],
-                                request['decision'] == 'Apstiprināts' ?
-                                    Helpers._replaceSubstr(MESSAGES.REQUEST_APPROVED, null, null, res[1][0]['name']) :
-                                    Helpers._replaceSubstr(MESSAGES.REQUEST_DECLINED, null, null, res[1][0]['name'])
-                                //TODO: send also a file
-                            ).then(
-                                res => resolve(rows),
-                                err => reject(err)
-                            )
-                        };
+                            this.getRequest(request['id']).then(
+                                    result => {
+                                    this._sendEmail(res[0][0]['email'],
+                                        request['decision'] == 'Apstiprināts' ?
+                                            Helpers._replaceSubstr(MESSAGES.REQUEST_APPROVED, null, null, res[1][0]['name']) :
+                                            Helpers._replaceSubstr(MESSAGES.REQUEST_DECLINED, null, null, res[1][0]['name']),
+                                        request['decision'] == 'Apstiprināts' ?
+                                            Helpers._replacePlchld(MESSAGES.REQUEST_APPROVED_FILE, result, res[1][0]) :
+                                            Helpers._replacePlchld(MESSAGES.REQUEST_DECLINED_FILE, result, res[1][0])
+                                    ).then(
+                                            res => resolve(rows),
+                                            err => reject(err)
+                                    )
+                                })
+                        }
                     });
                 },
-                err => reject(err)
-                )
+                    err => reject(err)
+            )
         });
     }
 
@@ -180,19 +185,19 @@ module.exports = class DAL {
     postLogin(type, email, password) {
         return new Promise((resolve, reject) => {
             this['_get' + Helpers._firstCharToUpperCase(type.toLowerCase())](email).then(
-                res => {
+                    res => {
                     if (res.length == 0) {
-                        reject({ error: 'Lietotājs nēeksistē!' });
+                        reject({error: 'Lietotājs nēeksistē!'});
                     } else {
                         let crypted_password = sha(res[0]['salt'] + password);
                         if (crypted_password == res[0]['password']) {
-                            resolve({ id: res[0]['id'] });
+                            resolve({id: res[0]['id']});
                         } else {
-                            reject({ error: 'Nepareiza parole!' });
+                            reject({error: 'Nepareiza parole!'});
                         }
                     }
                 },
-                err => reject(err)
+                    err => reject(err)
             )
         });
     }
@@ -265,9 +270,9 @@ module.exports = class DAL {
         return new Promise((resolve, reject) => {
             this.connection.query('INSERT INTO `Users` (email,password,salt) ' +
                 'VALUES ("' + email + '","' + crypted_password + '","' + salt + '");', (err, rows, fields) => {
-                    if (err) reject(err);
-                    else resolve({ id: rows.insertId, pass: password });
-                })
+                if (err) reject(err);
+                else resolve({id: rows.insertId, pass: password});
+            })
         })
     }
 
@@ -302,9 +307,9 @@ module.exports = class DAL {
 
             request.status = 'Procesā';
 
-            /** TODO: make files processed 
-            *  Hack for mysql, because field 'files' in the schema can't be null 
-            * */
+            /** TODO: make files processed
+             *  Hack for mysql, because field 'files' in the schema can't be null
+             * */
             request.files = '1.txt';
 
             let sql = "INSERT INTO `Requests` (" + Object.keys(request).join(',') + ")" +
@@ -347,7 +352,8 @@ module.exports = class DAL {
                         if (err) reject(err);
                         else resolve(rows.insertId);
                     });
-                };
+                }
+                ;
             });
         })
     }
@@ -383,7 +389,7 @@ module.exports = class DAL {
                     stream.end();
                 });
 
-                mailOptions.attachments = [{ path: PATH_TO_FILES + "my_file.html" }]
+                mailOptions.attachments = [{path: PATH_TO_FILES + "my_file.html"}]
             }
 
             // send mail through mail_server
