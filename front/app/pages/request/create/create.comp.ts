@@ -72,25 +72,25 @@ export class CreateComp {
         'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
         'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
+        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^[0-9]+$')])]
       }),
       'guard': fb.group({
         'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
         'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
+        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^[0-9]+$')])]
       }),
       'social_guard': fb.group({
         'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
         'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
+        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^[0-9]+$')])]
       }),
       'support': fb.group({
         'legal_name': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
         'register_code': ['', Validators.compose([Validators.required, Validators.pattern('[0-9]{6}\-[0-9]{5}')])],
         'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^\d+$')])]
+        'phone': ['', Validators.compose([Validators.minLength(8), Validators.pattern('^[0-9]+$')])]
       }),
       'description': ['', Validators.compose([Validators.required, Validators.maxLength(250)])],
       'address': ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
@@ -171,6 +171,48 @@ export class CreateComp {
       location: 3
     };
     this.requestForm.setValue(test_object);
+  }
+
+  private test2() {
+    let test_object = {
+      address: "Imantas kultūras centrs",
+      dangerous: "tekts",
+      description: "Party   \"RedHeads\"↵Ballīte↵Pārveidot ballīte↵",
+      end_date: new Date(2016, 10, 25),
+      end_time: new Date(2016, 10, 25, 22, 30, 0),
+      gov_dangerous_response: "tekts",
+      guard: {
+        address: "Lāčplēša iela 91",
+        legal_name: "Sofija Mēnese",
+        register_code: "011291-12993",
+        phone: "27991003"
+      },
+      organizer: {
+        address: "Slokas iela 108",
+        legal_name: "Aleksandrs Panajotovs",
+        register_code: "210395-17440",
+        phone: "20220491"
+      },
+      participants: "30",
+      social_guard: {
+        address: "Sadovaja ulica 1",
+        legal_name: "Viktors Kasparovs",
+        register_code: "290180-12099",
+        phone: "20000011"
+      },
+      start_date: new Date(2016, 10, 24),
+      start_time: new Date(2016, 10, 24, 10, 0, 0),
+      support: {
+        address: "Piedrujas iela 90",
+        legal_name: "Anna Jasiņecka",
+        register_code: "010191-23310",
+        phone: "20175342"
+      },
+      visitors: "201",
+      email: "baluhins@inbox.lv",
+      location: 3
+    };
+    this.requestLawForm.setValue(test_object);
   }
 
   private formSubmit(values: any) {

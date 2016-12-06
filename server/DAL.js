@@ -59,10 +59,34 @@ module.exports = class DAL {
 
     getRequest(requestID) {
         return new Promise((resolve, reject) => {
-            let sql = REQUEST_SQL + 'WHERE id = ' + requestID;
+            let sql = REQUEST_SQL + ' AND id = ' + requestID;
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
-                else resolve(rows);
+                else {
+                    let result = {};
+                    let organizer = {};
+                    let guard = {};
+                    let social_guard = {};
+                    let support = {};
+                    for (let key in rows[0]) {
+                        if (key.startsWith('organizer_')) {
+                            organizer[key.substr(10)] = rows[0][key];
+                        } else if (key.startsWith('guard_')) {
+                            guard[key.substr(6)] = rows[0][key];
+                        } else if (key.startsWith('social_guard_')) {
+                            social_guard[key.substr(13)] = rows[0][key];
+                        } else if (key.startsWith('support_')) {
+                            support[key.substr(8)] = rows[0][key];
+                        } else {
+                            result[key] = rows[0][key];
+                        }
+                    }
+                    result['organizer'] = organizer;
+                    result['guard'] = guard;
+                    result['social_guard'] = social_guard;
+                    result['support'] = support;
+                    resolve(result);
+                };
             });
         });
     }
@@ -402,7 +426,8 @@ SELECT org.*,
        sup.*,
        Requests.*
 FROM
-  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS organizer_name,
+  (SELECT Requests.organizer_id,
+          CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS organizer_name,
           PhysicalPersons.person_code AS organizer_person_code,
           PhysicalPersons.address AS organizer_address,
           PhysicalPersons.phone AS organizer_phone
@@ -411,7 +436,8 @@ FROM
         PhysicalPersons
    WHERE (organizer_id = Persons.id
           AND physical_person_id = PhysicalPersons.id)
-   UNION SELECT LegalPersons.legal_name AS organizer_legal_name,
+   UNION SELECT Requests.organizer_id,
+                LegalPersons.legal_name AS organizer_legal_name,
                 LegalPersons.register_code AS organizer_register_code,
                 LegalPersons.address AS organizer_address,
                 LegalPersons.phone AS organizer_phone
@@ -421,7 +447,8 @@ FROM
    WHERE (organizer_id = Persons.id
           AND legal_person_id = LegalPersons.id) ) AS org,
 
-  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS guard_name,
+  (SELECT Requests.guard_id,
+          CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS guard_name,
           PhysicalPersons.person_code AS guard_person_code,
           PhysicalPersons.address AS guard_address,
           PhysicalPersons.phone AS guard_phone
@@ -430,7 +457,8 @@ FROM
         PhysicalPersons
    WHERE (guard_id = Persons.id
           AND physical_person_id = PhysicalPersons.id)
-   UNION SELECT LegalPersons.legal_name AS guard_legal_name,
+   UNION SELECT Requests.guard_id,
+                LegalPersons.legal_name AS guard_legal_name,
                 LegalPersons.register_code AS guard_register_code,
                 LegalPersons.address AS guard_address,
                 LegalPersons.phone AS guard_phone
@@ -440,7 +468,8 @@ FROM
    WHERE (guard_id = Persons.id
           AND legal_person_id = LegalPersons.id) ) AS guard,
 
-  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS social_guard_name,
+  (SELECT Requests.social_guard_id,
+          CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS social_guard_name,
           PhysicalPersons.person_code AS social_guard_person_code,
           PhysicalPersons.address AS social_guard_address,
           PhysicalPersons.phone AS social_guard_phone
@@ -449,7 +478,8 @@ FROM
         PhysicalPersons
    WHERE (social_guard_id = Persons.id
           AND physical_person_id = PhysicalPersons.id)
-   UNION SELECT LegalPersons.legal_name AS social_guard_legal_name,
+   UNION SELECT Requests.social_guard_id,
+                LegalPersons.legal_name AS social_guard_legal_name,
                 LegalPersons.register_code AS social_guard_register_code,
                 LegalPersons.address AS social_guard_address,
                 LegalPersons.phone AS social_guard_phone
@@ -459,7 +489,8 @@ FROM
    WHERE (social_guard_id = Persons.id
           AND legal_person_id = LegalPersons.id) ) AS soc,
 
-  (SELECT CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS support_name,
+  (SELECT Requests.support_id,
+          CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS support_name,
           PhysicalPersons.person_code AS support_person_code,
           PhysicalPersons.address AS support_address,
           PhysicalPersons.phone AS support_phone
@@ -468,7 +499,8 @@ FROM
         PhysicalPersons
    WHERE (support_id = Persons.id
           AND physical_person_id = PhysicalPersons.id)
-   UNION SELECT LegalPersons.legal_name AS support_legal_name,
+   UNION SELECT Requests.support_id,
+                LegalPersons.legal_name AS support_legal_name,
                 LegalPersons.register_code AS support_register_code,
                 LegalPersons.address AS support_address,
                 LegalPersons.phone AS support_phone
@@ -481,5 +513,5 @@ FROM
 WHERE Requests.organizer_id = org.organizer_id
   AND Requests.support_id = sup.support_id
   AND Requests.guard_id = guard.guard_id
-  AND Requests.social_guard_id = soc.social_guard_id;
+  AND Requests.social_guard_id = soc.social_guard_id
 `;
