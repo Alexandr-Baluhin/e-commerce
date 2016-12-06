@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { ViewService } from './view.service';
 
 @Component({
   moduleId: module.id,
@@ -9,9 +12,18 @@ import { Component } from '@angular/core';
 
 export class ViewComp {
   
-  constructor() {}
+  private id: string;
+  private request: Object;
 
-  public ngOnInit(): void {}
+  constructor(private _service: ViewService, private route: ActivatedRoute) {}
+
+  public ngOnInit(): void {
+    this.id = this.route.params['id'];
+    this._service.getRequest(this.id)
+      .subscribe(res => {
+        this.request = res;
+      })
+  }
 
   public ngOnDestroy(): void {}
 

@@ -5,8 +5,10 @@
       <p-column field="create_date" header="Izveidošanas datums" [sortable]="true"></p-column>
       <p-column field="status" header="Statuss" [sortable]="true"></p-column>
       <p-column header="Pieejamas operācijas">
-        <template let-car="rowData" pTemplate type="body">
-            <button type="button" pButton (click)="gotoDetail()" icon="fa-eye" pTooltip="Apskatīt"></button>
+        <template let-req="rowData" pTemplate type="body">
+            <button type="button" pButton (click)="view(req)" icon="fa-eye" pTooltip="Apskatīt"></button>
+            <button type="button" pButton (click)="approve(req)" icon="fa-check-circle" pTooltip="Apstiprināt"></button>
+            <button type="button" pButton (click)="decline(req)" icon="fa-ban" pTooltip="Noraidīt"></button>            
         </template>
       </p-column>
     </p-dataTable>

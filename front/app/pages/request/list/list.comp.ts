@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { ListService } from './list.service';
 
@@ -13,17 +14,39 @@ export class ListComp {
   
   private requests: Object[];
 
-  constructor(private _service: ListService) {}
+  constructor(private _service: ListService, private router: Router) {}
 
   public ngOnInit(): void {
     this._service.getList().subscribe(res => {
-      this.requests = res;
+      this.formatDate(res).then(
+        res => this.requests = res
+      )
     });
   }
 
   public ngOnDestroy(): void {}
 
-  public gotoDetail(): void { 
-    console.log(123);
+  public view(request): void { 
+    this.router.navigate(['/request', request.id]);
+  }
+
+  public approve(): void {
+    console.log('Approved!');
+  }
+
+  public decline(): void {
+    console.log('Declined!');
+  }
+
+  private formatDate(list): Promise<Array<Object>> {
+    return new Promise((resolve, reject) => {
+      let result = [];
+      list.forEach((request) => {
+        let temp = request['create_date'].split('T');
+        request['create_date'] = temp[0] + ' ' + temp[1].split('.00')[0];
+        result.push(request);
+      });
+      resolve(result);
+    });
   }
 }
