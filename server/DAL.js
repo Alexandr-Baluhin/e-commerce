@@ -407,13 +407,13 @@ module.exports = class DAL {
 
             if (file) {
 
-                var stream = fs.createWriteStream(PATH_TO_FILES + email + "_.html");
+                var stream = fs.createWriteStream(PATH_TO_FILES + email + ".html");
                 stream.once('open', function (fd) {
                     stream.write(file);
                     stream.end();
                 });
 
-                mailOptions.attachments = [{path: PATH_TO_FILES + "my_file.html"}]
+                mailOptions.attachments = [{path: PATH_TO_FILES + email + ".html"}]
             }
 
             // send mail through mail_server
