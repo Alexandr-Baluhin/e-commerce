@@ -123,6 +123,7 @@ CREATE TABLE `Requests` (
   `guard_id` int(11) NOT NULL,
   `social_guard_id` int(11) NOT NULL,
   `support_id` int(11) NOT NULL,
+  `persons_type` varchar(45) NOT NULL,
   `description` varchar(300) NOT NULL,
   `address` varchar(150) NOT NULL,
   `start_date` date NOT NULL,
