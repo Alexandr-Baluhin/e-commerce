@@ -45,9 +45,10 @@ module.exports = class DAL {
         });
     }
 
-    getRequest(requestID) {
+    getList(type, id) {
         return new Promise((resolve, reject) => {
-            let sql = REQUEST_SQL + 'WHERE id = ' + requestID;
+            let sql = 'SELECT id, create_date, status FROM Requests WHERE status = "Procesā"';
+            if (type == 'user') sql += ' AND belongs_to = ' + id;
 
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
@@ -56,14 +57,9 @@ module.exports = class DAL {
         });
     }
 
-    getList(type, id, status) {
+    getRequest(requestID) {
         return new Promise((resolve, reject) => {
-            let sql = 'SELECT id, create_date, status FROM Requests ' +
-                'WHERE 1 = 1 ';
-
-            if (status) sql += ' AND Requests.status = "' + status + '"';
-            if (requestID) sql += ' AND Requests.idRequests = ' + requestID;
-
+            let sql = REQUEST_SQL + 'WHERE id = ' + requestID;
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows);
@@ -126,6 +122,50 @@ module.exports = class DAL {
     }
 
     /**
+     * Put request
+     * @param
+     * employee:String - employee id
+     * user:String - user id
+     * request:Object - request body
+     * @WhatItDoes
+     * Update request with employee decision and when send email to user
+     */
+    putRequest(employee, user, request) {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this._getUser(null, user),
+                this._getEmployee(null, employee).then(
+                    res => this.getLocations('id = ' + res[0]['location_id']))
+            ]).then(
+                res => {
+                    let sql = 'UPDATE `Requests` SET status = "' + request['decision'] + '", checked_by = ' + employee;
+                    if (request.hasOwnProperty('callbackText')) {
+                        sql += ', gov_callback_text = "' + request['callbackText'] + '"';
+                    }
+
+                    sql += ' WHERE id = ' + request['id'];
+
+                    this.connection.query(sql, (err, rows, fields) => {
+                        if (err) reject(err);
+                        else {
+                            this._sendEmail(res[0][0]['email'],
+                                request['decision'] == 'Apstiprināts' ?
+                                    Helpers._replaceSubstr(MESSAGES.REQUEST_APPROVED, null, null, res[1][0]['name']) :
+                                    Helpers._replaceSubstr(MESSAGES.REQUEST_DECLINED, null, null, res[1][0]['name'])
+                                //TODO: send also a file
+                            ).then(
+                                res => resolve(rows),
+                                err => reject(err)
+                            )
+                        };
+                    });
+                },
+                err => reject(err)
+                )
+        });
+    }
+
+    /**
      * Post login
      * @param
      * type:String - user type
@@ -169,9 +209,12 @@ module.exports = class DAL {
      * @WhatItDoes
      * Get user from database by email
      */
-    _getUser(email) {
+    _getUser(email, id) {
         return new Promise((resolve, reject) => {
-            this.connection.query('SELECT * FROM `Users` WHERE email = "' + email + '"', (err, rows, fields) => {
+            let where = '';
+            if (id) where = ' WHERE id = "' + id + '"';
+            else where = ' WHERE email = "' + email + '"';
+            this.connection.query('SELECT * FROM `Users`' + where, (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows);
             });
@@ -187,9 +230,12 @@ module.exports = class DAL {
      * @WhatItDoes
      * Get employee from database by email
      */
-    _getEmployee(email) {
+    _getEmployee(email, id) {
         return new Promise((resolve, reject) => {
-            this.connection.query('SELECT * FROM `Employees` WHERE email = "' + email + '"', (err, rows, fields) => {
+            let where = '';
+            if (id) where = ' WHERE id = "' + id + '"';
+            else where = ' WHERE email = "' + email + '"';
+            this.connection.query('SELECT * FROM `Employees`' + where, (err, rows, fields) => {
                 if (err) reject(err);
                 else resolve(rows);
             });
@@ -432,4 +478,8 @@ FROM
    WHERE (support_id = Persons.id
           AND legal_person_id = LegalPersons.id) ) AS sup,
      Requests
+WHERE Requests.organizer_id = org.organizer_id
+  AND Requests.support_id = sup.support_id
+  AND Requests.guard_id = guard.guard_id
+  AND Requests.social_guard_id = soc.social_guard_id;
 `;
