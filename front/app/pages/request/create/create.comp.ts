@@ -5,6 +5,18 @@ import { CreateService } from './create.service';
 
 import { ConfirmationService, Message, SelectItem } from 'primeng/primeng';
 
+const RESERVED_DATES = ['25.03', '08.05', '14.06', '04.07'];
+
+const DATE_WARN = `
+Atbilstoši publisku izklaides un svētku pasākumu drošības likumam, 4.pants:
+
+(1) Valsts un pašvaldību iestādes publiskus pasākumus nerīko, un pašvaldība neizsniedz atļauju šādu pasākumu rīkošanai 
+piemiņas dienās, kas noteiktas 25.martā, 8.maijā, 14.jūnijā un 4.jūlijā.
+
+(2) Šā panta pirmās daļas nosacījums neattiecas uz publiskiem pasākumiem, kuru veids un mērķis 
+atbilst šo piemiņas dienu raksturam.
+`;
+
 @Component({
   moduleId: module.id,
   selector: 'create-comp',
@@ -17,7 +29,11 @@ export class CreateComp {
   public requestForm: FormGroup;
   public requestLawForm: FormGroup;
 
+  private physicalMinDate: Date;
+  private physicalMaxDate: Date;  
+
   private files: Array<any>;
+  private lifeTime: number;
   private notifications: Message[];
 
   private locations: SelectItem[];
@@ -108,6 +124,7 @@ export class CreateComp {
       'persons_type': ['legal']
     });
     this.notifications = [];
+    this.lifeTime = 5000;
     this.locations = [];
   }
 
@@ -219,6 +236,25 @@ export class CreateComp {
     this.requestLawForm.setValue(test_object);
   }
 
+  private checkDate(event, type, endpoint) {
+    let month = event.getMonth() + 1 < 10 ? '0' + (event.getMonth() + 1) : event.getMonth() + 1;
+    let day = event.getDate() < 10 ? '0' + event.getDate() : event.getDate();
+    let date = day + '.' + month;
+    if (RESERVED_DATES.indexOf(date) != -1) {
+      this.lifeTime = 25000;      
+      this.notifications.push({ severity: 'warn', detail: DATE_WARN });
+    }
+
+    // TODO: finish with date intervals
+    if (type == 'physical') {
+      if (endpoint == 'start') {
+        this.physicalMinDate = new Date(event.getTime());
+      } else {
+        this.physicalMaxDate = new Date();
+      }
+    }
+  }
+
   private formSubmit(values: any) {
     this._service.formatDates(values).then(
       res => {
@@ -232,8 +268,10 @@ export class CreateComp {
             this._service.sendData(data)
               .subscribe(res => {
                 if (res.hasOwnProperty('success')) {
+                  this.lifeTime = 5000;                  
                   this.notifications.push({ severity: 'success', detail: res['success'] });
                 } else {
+                  this.lifeTime = 5000;                  
                   this.notifications.push({ severity: 'error', detail: res['error'] });
                 }
               },
