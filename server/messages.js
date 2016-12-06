@@ -64,7 +64,7 @@ PLCHLD_Requests_dangerous</SPAN></FONT></FONT></P>
 <P STYLE="margin-bottom: 0.11in"><BR><BR>
 </P>
 <P STYLE="margin-bottom: 0.11in"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">Atļauja
-derīga no PLCHLD_Requests_start_date PLCHLD_Requests_start_time līdz PLCHLD_Requests_start_date PLCHLD_Requests_start_time </SPAN></FONT></FONT></P><P ALIGN=CENTER STYLE="margin-bottom: 0.11in"><SPAN STYLE="background: #ffffff">
+derīga no PLCHLD_Requests_start_date PLCHLD_Requests_start_time līdz PLCHLD_Requests_finish_date PLCHLD_Requests_finish_time </SPAN></FONT></FONT></P><P ALIGN=CENTER STYLE="margin-bottom: 0.11in"><SPAN STYLE="background: #ffffff">
 <FONT FACE="Times New Roman, serif"><FONT SIZE=3>Dokuments ir
 sagatavots elektroniski un derīgs bez paraksta.</SPAN></FONT></FONT></P>
 <P STYLE="margin-bottom: 0.11in"><BR><BR>
