@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-const URL: string = 'https://localhost:8443/'
+const URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
 
 @Injectable()
 export class AuthService {
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, @Inject('config') private env: Object) { }
 
   /**
    * @param

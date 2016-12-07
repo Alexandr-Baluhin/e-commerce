@@ -45,6 +45,9 @@ import { ViewService } from './pages/request/view/view.service';
 import { AuthService } from './shared/auth/auth.service';
 import { AuthGuard } from './shared/auth/auth-guard.service';
 
+/** CONFIG */
+import { CONFIG } from '../config/config';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -82,6 +85,7 @@ import { AuthGuard } from './shared/auth/auth-guard.service';
     MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService, ListService, ViewService, AuthService, AuthGuard, ConfirmationService]
+  providers: [CreateService, ListService, ViewService, AuthService, AuthGuard, ConfirmationService,
+    {provide: 'config', useValue: CONFIG}]
 })
 export class AppModule { }
