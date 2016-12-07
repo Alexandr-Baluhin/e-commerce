@@ -10,7 +10,7 @@ import { ListComp } from './pages/request/list/list.comp';
 import { AuthGuard } from './shared/auth/auth-guard.service';
 
 const routes: Routes = [
-  { path: '**', redirectTo: 'request/create', pathMatch: 'full' },
+  { path: '', redirectTo: 'request/create', pathMatch: 'full' },
   { path: '', component: PagesComp, children: [
       { path: 'request', component: RequestComp, children: [
           { path: 'create', component: CreateComp },
