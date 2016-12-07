@@ -5,10 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-const URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
-
 @Injectable()
 export class ViewService {
+
+  private URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
 
   constructor(private http: Http, @Inject('config') private env: Object) { }
 
@@ -19,7 +19,7 @@ export class ViewService {
   public getRequest(id): Observable<String[]> {
     let headers = new Headers();
 
-    return this.http.get(URL + 'request/' + id)
+    return this.http.get(this.URL + 'request/' + id)
       .map(res => res.json())
       .catch(this.handleError);
   }

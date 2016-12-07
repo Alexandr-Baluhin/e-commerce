@@ -5,10 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-const URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
-
 @Injectable()
 export class CreateService {
+
+  private URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
 
   constructor(private http: Http, @Inject('config') private env: Object) { }
 
@@ -23,7 +23,7 @@ export class CreateService {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.get(URL + 'locations', options)
+    return this.http.get(this.URL + 'locations', options)
       .map(res => res.json())
       .catch(this.handleError);
   }
