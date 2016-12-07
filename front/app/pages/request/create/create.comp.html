@@ -164,7 +164,9 @@
 							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
 							<li>citu saskaņojumu vai līgumu kopijas</li>
 						</ul>
-						<p-fileUpload [(name)]="files" url="http://localhost:8080/upload" multiple="multiple" (onBeforeUpload)="getBinaries($event)"></p-fileUpload>
+						<p-fileUpload [chooseLabel]="'Izvelēties failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" 
+							name="files[]" url="https://localhost:8443/upload" multiple="multiple" 
+							(onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
 						<div class="form-subgroup ui-g-12 ui-md-8 ui-lg-4">
 							<span class="form-label">E-pasts</span>
 							<input class="form-input" formControlName="email" type="text" pInputText required />
@@ -315,7 +317,9 @@
 							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
 							<li>citu saskaņojumu vai līgumu kopijas</li>
 						</ul>
-						<p-fileUpload name="myfile[]" url="http://localhost:8080/upload" multiple="multiple"></p-fileUpload>
+						<p-fileUpload [chooseLabel]="'Izvelēties failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" 
+							name="files[]" url="https://localhost:8443/upload" multiple="multiple" 
+							(onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
 						<div class="form-subgroup ui-g-12 ui-md-8 ui-lg-4">
 							<span class="form-label">E-pasts</span>
 							<input class="form-input" formControlName="email" type="text" pInputText required />

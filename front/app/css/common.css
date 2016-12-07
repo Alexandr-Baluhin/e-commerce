@@ -33,3 +33,7 @@ p-inputmask.ng-valid[required] > input[pInputText] {
 .ui-datatable-data {
   text-align: center !important;
 }
+
+p-fileupload button[icon = fa-upload] {
+  /*display: none;*/
+}

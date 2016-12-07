@@ -6,6 +6,7 @@ const DAL = require('./DAL');
 
 const https = require('https');
 const fs = require('fs');
+const busboy = require('connect-busboy');
 
 var options = {
     key: fs.readFileSync('ssl/key.pem', 'utf8'),
@@ -15,6 +16,7 @@ var options = {
 let database = new DAL();
 
 app.use(bodyParser.json());
+app.use(busboy());
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -48,6 +50,18 @@ app.get('/request/:id', (req, res) => {
     )
 });
 
+app.post('/upload', (req, res) => {
+    let stream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', (fieldname, file, filename) => {
+        stream = fs.createWriteStream(__dirname + '/files/' + filename);
+        file.pipe(stream);
+    });
+    req.busboy.on('finish', () => {
+      res.send('Done!');
+    });
+});
+
 app.post('/request', (req, res) => {
     let request = req.body.request;
     let email = req.body.email;
@@ -79,7 +93,6 @@ app.post('/login', (req, res) => {
 });
 
 let httpsServer = https.createServer(options, app);
-
 
 httpsServer.listen(8443, () => {
     database.test().then(

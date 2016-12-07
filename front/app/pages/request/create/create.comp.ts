@@ -32,7 +32,7 @@ export class CreateComp {
   private physicalMinDate: Date;
   private physicalMaxDate: Date;  
 
-  private files: Array<any>;
+  private files: Array<File>;
   private lifeTime: number;
   private notifications: Message[];
 
@@ -123,8 +123,9 @@ export class CreateComp {
       'location': ['', Validators.required],
       'persons_type': ['legal']
     });
-    this.notifications = [];
+    this.files = [];
     this.lifeTime = 5000;
+    this.notifications = [];
     this.locations = [];
   }
 
@@ -142,8 +143,12 @@ export class CreateComp {
 
   public ngOnDestroy(): void { }
 
-  private getBinaries(event): void {
-    console.log(event);
+  private getBinaries(event) {
+    return false;
+  }
+
+  private uploadedBinaries(): void {
+    console.log('uploaded!')
   }
 
   private test() {
@@ -245,39 +250,45 @@ export class CreateComp {
       this.notifications.push({ severity: 'warn', detail: DATE_WARN });
     }
 
-    // TODO: finish with date intervals
     if (type == 'physical') {
       if (endpoint == 'start') {
         this.physicalMinDate = new Date(event.getTime());
       } else {
-        this.physicalMaxDate = new Date();
+        this.physicalMaxDate = new Date(event.getTime());
+      }
+    } else {
+      if (endpoint == 'start') {
+        this.physicalMinDate = new Date(event.getTime());
+      } else {
+        this.physicalMaxDate = new Date(event.getTime());
       }
     }
   }
 
   private formSubmit(values: any) {
-    this._service.formatDates(values).then(
-      res => {
-        let data = {};
-        data['email'] = res['email'];
-        delete res['email'];
-        data['request'] = res;
-        this.confService.confirm({
-          message: 'Jūs tieši gribāt turpināt?',
-          accept: () => {
-            this._service.sendData(data)
-              .subscribe(res => {
-                if (res.hasOwnProperty('success')) {
-                  this.lifeTime = 5000;                  
-                  this.notifications.push({ severity: 'success', detail: res['success'] });
-                } else {
-                  this.lifeTime = 5000;                  
-                  this.notifications.push({ severity: 'error', detail: res['error'] });
-                }
-              },
-              err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
-          }
-        });
-      });
+    console.log(this.files)
+    // this._service.formatDates(values).then(
+    //   res => {
+    //     let data = {};
+    //     data['email'] = res['email'];
+    //     delete res['email'];
+    //     data['request'] = res;
+    //     this.confService.confirm({
+    //       message: 'Jūs tieši gribāt turpināt?',
+    //       accept: () => {
+    //         this._service.sendData(data)
+    //           .subscribe(res => {
+    //             if (res.hasOwnProperty('success')) {
+    //               this.lifeTime = 5000;                  
+    //               this.notifications.push({ severity: 'success', detail: res['success'] });
+    //             } else {
+    //               this.lifeTime = 5000;                  
+    //               this.notifications.push({ severity: 'error', detail: res['error'] });
+    //             }
+    //           },
+    //           err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
+    //       }
+    //     });
+    //   });
   }
 }
