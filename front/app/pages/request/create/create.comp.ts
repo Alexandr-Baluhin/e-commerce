@@ -266,29 +266,28 @@ export class CreateComp {
   }
 
   private formSubmit(values: any) {
-    console.log(this.files)
-    // this._service.formatDates(values).then(
-    //   res => {
-    //     let data = {};
-    //     data['email'] = res['email'];
-    //     delete res['email'];
-    //     data['request'] = res;
-    //     this.confService.confirm({
-    //       message: 'Jūs tieši gribāt turpināt?',
-    //       accept: () => {
-    //         this._service.sendData(data)
-    //           .subscribe(res => {
-    //             if (res.hasOwnProperty('success')) {
-    //               this.lifeTime = 5000;                  
-    //               this.notifications.push({ severity: 'success', detail: res['success'] });
-    //             } else {
-    //               this.lifeTime = 5000;                  
-    //               this.notifications.push({ severity: 'error', detail: res['error'] });
-    //             }
-    //           },
-    //           err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
-    //       }
-    //     });
-    //   });
+    this._service.formatDates(values).then(
+      res => {
+        let data = {};
+        data['email'] = res['email'];
+        delete res['email'];
+        data['request'] = res;
+        this.confService.confirm({
+          message: 'Jūs tieši gribāt turpināt?',
+          accept: () => {
+            this._service.sendData(data)
+              .subscribe(res => {
+                if (res.hasOwnProperty('success')) {
+                  this.lifeTime = 5000;                  
+                  this.notifications.push({ severity: 'success', detail: res['success'] });
+                } else {
+                  this.lifeTime = 5000;                  
+                  this.notifications.push({ severity: 'error', detail: res['error'] });
+                }
+              },
+              err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
+          }
+        });
+      });
   }
 }
