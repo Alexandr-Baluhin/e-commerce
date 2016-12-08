@@ -39,7 +39,7 @@ export class CreateService {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.post(URL + 'request', data, options)
+    return this.http.post(this.URL + 'request', data, options)
       .map(res => res.json())
       .catch(this.handleError);
   }
