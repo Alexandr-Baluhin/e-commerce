@@ -5,7 +5,7 @@
 	</footer>
 </p-confirmDialog>
 
-<msg-comp [msgs]="notifications" (hideNotificationEvent)="hideMessage($event)"></msg-comp>
+<msg-comp [msgs]="notifications" [life]="5000" (hideNotificationEvent)="hideMessage($event)"></msg-comp>
 
 <div class="container">
 	<div *ngIf="sourceRequest" class="ui-g">
@@ -140,7 +140,7 @@
 					</div>
 					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
 						<div class="form-subgroup column">
-							<span class="form-label">Komentārijs savam lēmumam</span>
+							<span class="form-label">Komentārs savam lēmumam</span>
 							<textarea rows="5" cols="30" pInputTextarea #comment></textarea>						
 						</div>						
 						<div class="form-subgroup ui-g-6 column">
@@ -282,7 +282,7 @@
 					</div>
 					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
 						<div class="form-subgroup column">
-							<span class="form-label">Komentārijs savam lēmumam</span>
+							<span class="form-label">Komentārs savam lēmumam</span>
 							<textarea rows="5" cols="30" pInputTextarea #comment></textarea>						
 						</div>
 						<div class="form-subgroup ui-g-6 column">

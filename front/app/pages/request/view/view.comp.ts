@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/primeng';
 
 import { ViewService } from './view.service';
+import { BackendService } from '../../../shared/services/backend.service';
 
 @Component({
   moduleId: module.id,
@@ -22,7 +23,12 @@ export class ViewComp {
 
   private notifications: Message[];
 
-  constructor(private _service: ViewService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private confService: ConfirmationService) {
+  constructor(private _service: ViewService,
+    private backend: BackendService, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private confService: ConfirmationService) {
     // Form for usual persons
     this.requestForm = fb.group({
       'organizer': fb.group({
@@ -107,7 +113,7 @@ export class ViewComp {
   }
 
   public ngOnInit(): void {
-    this._service.getRequest(this.id)
+    this.backend.getRequest('request', [this.id])
       .subscribe(res => {
         this.sourceRequest = res;
         this.preFormatRequest(res).then(
@@ -142,7 +148,7 @@ export class ViewComp {
     this.confService.confirm({
       message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
       accept: () => {
-        this._service.sendData(response)
+        this.backend.putRequest('request', response)
           .subscribe(res => {
             if (res.hasOwnProperty('success')) {
               this.notifications.push({ severity: 'success', detail: res['success'] });
@@ -168,7 +174,7 @@ export class ViewComp {
     this.confService.confirm({
       message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
       accept: () => {
-        this._service.sendData(response)
+        this.backend.putRequest('request', response)
           .subscribe(res => {
             if (res.hasOwnProperty('success')) {
               this.notifications.push({ severity: 'success', detail: res['success'] });

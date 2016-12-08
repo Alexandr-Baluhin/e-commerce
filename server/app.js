@@ -94,7 +94,7 @@ app.post('/login', (req, res) => {
 
 let httpsServer = https.createServer(options, app);
 
-api.listen(8443, () => {
+app.listen(8443, () => {
     database.test().then(
         res => {
             console.log('Connection with database established!');

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ListService } from './list.service';
+import { BackendService } from '../../../shared/services/backend.service';
 
 @Component({
   moduleId: module.id,
@@ -11,22 +12,24 @@ import { ListService } from './list.service';
 })
 
 export class ListComp {
-  
+
   private requests: Object[];
 
-  constructor(private _service: ListService, private router: Router) {}
+  constructor(private _service: ListService, private backend: BackendService, private router: Router,) {
+    this.requests = [];
+  }
 
   public ngOnInit(): void {
-    this._service.getList().subscribe(res => {
-      this.formatDate(res).then(
-        res => this.requests = res
-      )
+    this.backend.getRequest('request/list').subscribe(res => {
+      if (res.length != 0) {
+        this.formatDate(res).then(res => this.requests = res);
+      }
     });
   }
 
-  public ngOnDestroy(): void {}
+  public ngOnDestroy(): void { }
 
-  public view(request): void { 
+  public view(request): void {
     this.router.navigate(['/request', request.id]);
   }
 

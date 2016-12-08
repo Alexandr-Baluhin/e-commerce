@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/forms';
 
 import { CreateService } from './create.service';
+import { BackendService } from '../../../shared/services/backend.service';
 
 import { ConfirmationService, Message, SelectItem } from 'primeng/primeng';
 
@@ -30,7 +31,7 @@ export class CreateComp {
   public requestLawForm: FormGroup;
 
   private physicalMinDate: Date;
-  private physicalMaxDate: Date;  
+  private physicalMaxDate: Date;
 
   private files: Array<File>;
   private lifeTime: number;
@@ -38,7 +39,13 @@ export class CreateComp {
 
   private locations: SelectItem[];
 
-  constructor(private _service: CreateService, private fb: FormBuilder, private confService: ConfirmationService) {
+  private url: string = this.env['API'] + ':' + this.env['API_PORT'] + '/upload';
+
+  constructor(private _service: CreateService,
+    private fb: FormBuilder,
+    private confService: ConfirmationService,
+    private backend: BackendService,
+    @Inject('config') private env: Object) {
     // Form for usual persons
     this.requestForm = fb.group({
       'organizer': fb.group({
@@ -130,7 +137,7 @@ export class CreateComp {
   }
 
   public ngOnInit(): void {
-    this._service.getLocations()
+    this.backend.getRequest('locations')
       .subscribe(res => {
         res.forEach((el) => {
           this.locations.push({ label: el['name'], value: el['id'] });
@@ -236,7 +243,7 @@ export class CreateComp {
       visitors: "201",
       email: "baluhins@inbox.lv",
       location: 3,
-      persons_type: 'legal'      
+      persons_type: 'legal'
     };
     this.requestLawForm.setValue(test_object);
   }
@@ -246,7 +253,7 @@ export class CreateComp {
     let day = event.getDate() < 10 ? '0' + event.getDate() : event.getDate();
     let date = day + '.' + month;
     if (RESERVED_DATES.indexOf(date) != -1) {
-      this.lifeTime = 25000;      
+      this.lifeTime = 25000;
       this.notifications.push({ severity: 'warn', detail: DATE_WARN });
     }
 
@@ -275,13 +282,13 @@ export class CreateComp {
         this.confService.confirm({
           message: 'Jūs tieši gribāt turpināt?',
           accept: () => {
-            this._service.sendData(data)
+            this.backend.postRequest('request', data)
               .subscribe(res => {
                 if (res.hasOwnProperty('success')) {
-                  this.lifeTime = 5000;                  
+                  this.lifeTime = 5000;
                   this.notifications.push({ severity: 'success', detail: res['success'] });
                 } else {
-                  this.lifeTime = 5000;                  
+                  this.lifeTime = 5000;
                   this.notifications.push({ severity: 'error', detail: res['error'] });
                 }
               },
