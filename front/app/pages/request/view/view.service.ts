@@ -35,7 +35,7 @@ export class ViewService {
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.put(URL + 'request', data, options)
+    return this.http.put(this.URL + 'request', data, options)
       .map(res => res.json())
       .catch(this.handleError);
   }
