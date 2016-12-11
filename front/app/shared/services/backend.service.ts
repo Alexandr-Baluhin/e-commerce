@@ -18,9 +18,16 @@ export class BackendService {
    * @return
    * Response from server
    */
-  public getRequest(node, paramsArr?): Observable<String[]> {
+  public getRequest(node, paramsArr?, headersArr?): Observable<String[]> {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    
+    if (headersArr) {
+      headersArr.forEach((head) => {
+        headers.append(head['name'], head['value']);
+      });
+    }
+
     let options = new RequestOptions({ headers: headers });
     let params = '/';
 

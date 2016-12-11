@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { ListService } from './list.service';
 import { BackendService } from '../../../shared/services/backend.service';
@@ -13,14 +13,21 @@ import { BackendService } from '../../../shared/services/backend.service';
 
 export class ListComp {
 
+  private userType: Object;
+  private id: Object;
+
   private requests: Object[];
 
-  constructor(private _service: ListService, private backend: BackendService, private router: Router,) {
+  constructor(private _service: ListService, private backend: BackendService, private router: Router, private route: ActivatedRoute) {
     this.requests = [];
+    this.route.params.subscribe(params => {
+      this.userType = { "name": "type", "value": params['user'] };
+      this.id = { "name": "id", "value": params['id'] };
+    });
   }
 
   public ngOnInit(): void {
-    this.backend.getRequest('request/list').subscribe(res => {
+    this.backend.getRequest('request/list', null, [this.userType, this.id]).subscribe(res => {
       if (res.length != 0) {
         this.formatDate(res).then(res => this.requests = res);
       }
