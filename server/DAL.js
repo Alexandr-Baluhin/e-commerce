@@ -47,8 +47,9 @@ module.exports = class DAL {
 
     getList(type, id) {
         return new Promise((resolve, reject) => {
-            let sql = 'SELECT id, create_date, status FROM Requests WHERE status = "Procesā"';
-            if (type == 'user') sql += ' AND belongs_to = ' + id;
+            let sql = 'SELECT id, create_date, status FROM Requests';
+            if (type == 'user') sql += ' WHERE belongs_to = ' + id;
+            else sql += ' WHERE status = "Procesā"';
 
             this.connection.query(sql, (err, rows, fields) => {
                 if (err) reject(err);

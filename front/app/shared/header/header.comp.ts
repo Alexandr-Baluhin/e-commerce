@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { AuthGuard } from '../guards/auth.guard';
 
 @Component({
   moduleId: module.id,
@@ -9,9 +12,22 @@ import { Component } from '@angular/core';
 
 export class HeaderComp {
 
+  private btnLabel: string;
+  private btnType: string;
+
   private isDisplayAuth: boolean;
   
-  constructor() {}
+  constructor(private guard: AuthGuard, private router: Router) {
+    this.guard.canGoToEndpoint$.subscribe(res => {
+      if (res) {
+        this.btnLabel = 'Iziet no profila';
+        this.btnType = 'logout';
+      } else {
+        this.btnLabel = 'Autorizēties';
+        this.btnType = 'login';                
+      }
+    });
+  }
 
   public ngOnInit(): void {
     this.isDisplayAuth = false;
@@ -23,7 +39,12 @@ export class HeaderComp {
     this.isDisplayAuth = value;
   }
 
-  private showDialog(): void {
-    this.isDisplayAuth = true;
+  private processAuth(): void {
+    if (this.btnType == 'login') {
+      this.isDisplayAuth = true;
+    } else {
+      this.guard.logout();
+      this.router.navigate(['/request/create']);
+    }
   }
 }

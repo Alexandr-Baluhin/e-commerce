@@ -42,9 +42,9 @@ import { CreateService } from './pages/request/create/create.service';
 import { ListService } from './pages/request/list/list.service';
 import { ViewService } from './pages/request/view/view.service';
 // Shared
-import { AuthService } from './shared/auth/auth.service';
-import { AuthGuard } from './shared/auth/auth-guard.service';
 import { BackendService } from './shared/services/backend.service';
+// Guards
+import { AuthGuard } from './shared/guards/auth.guard';
 
 /** CONFIG */
 import { CONFIG } from './configurations/config';
@@ -86,7 +86,7 @@ import { CONFIG } from './configurations/config';
     MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService, ListService, ViewService, AuthService, AuthGuard, BackendService, ConfirmationService,
+  providers: [CreateService, ListService, ViewService, AuthGuard, BackendService, ConfirmationService,
     {provide: 'config', useValue: CONFIG}]
 })
 export class AppModule { }
