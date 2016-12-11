@@ -166,11 +166,10 @@ export class ViewComp {
     let response = {};
     response['user'] = this.sourceRequest['belongs_to'];
     response['employee'] = 1;
-    let request = {};
-    request['id'] = this.sourceRequest['id'];
-    request['decision'] = 'Noraidīts';
-    request['callbackText'] = comment;
-    response['request'] = request;
+    response['request'] = {};
+    response['request']['id'] = this.sourceRequest['id'];
+    response['request']['decision'] = 'Noraidīts';
+    response['request']['callbackText'] = comment;
     this.confService.confirm({
       message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
       accept: () => {

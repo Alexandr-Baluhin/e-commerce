@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { ListService } from './list.service';
+import { ConfirmationService, Message } from 'primeng/primeng';
+
 import { BackendService } from '../../../shared/services/backend.service';
 
 @Component({
@@ -13,21 +14,27 @@ import { BackendService } from '../../../shared/services/backend.service';
 
 export class ListComp {
 
-  private userType: Object;
-  private id: Object;
+  private notifications: Message[];
+
+  private userType: string;
+  private userId: number;
 
   private requests: Object[];
 
-  constructor(private _service: ListService, private backend: BackendService, private router: Router, private route: ActivatedRoute) {
+  constructor(private backend: BackendService, private router: Router,
+    private route: ActivatedRoute, private confService: ConfirmationService) {
     this.requests = [];
     this.route.params.subscribe(params => {
-      this.userType = { "name": "type", "value": params['user'] };
-      this.id = { "name": "id", "value": params['id'] };
+      this.userType = params['user'];
+      this.userId = params['id'];
     });
+    this.notifications = [];
   }
 
   public ngOnInit(): void {
-    this.backend.getRequest('request/list', null, [this.userType, this.id]).subscribe(res => {
+    let userTypeHeader = { "name": "type", "value": this.userType };
+    let userIdHeader = { "name": "id", "value": this.userId };
+    this.backend.getRequest('request/list', null, [userTypeHeader, userIdHeader]).subscribe(res => {
       if (res.length != 0) {
         this.formatDate(res).then(res => this.requests = res);
       }
@@ -40,12 +47,50 @@ export class ListComp {
     this.router.navigate(['/request', request.id]);
   }
 
-  public approve(): void {
-    console.log('Approved!');
+  public approve(request: Object): void {
+    let response = {};
+    response['user'] = request['belongs_to'];
+    response['employee'] = this.userId;
+    response['request'] = {};
+    response['request']['id'] = request['id'];
+    response['request']['decision'] = 'Apstiprināts';
+    this.confService.confirm({
+      message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
+      accept: () => {
+        this.backend.putRequest('request', response)
+          .subscribe(res => {
+            if (res.hasOwnProperty('success')) {
+              this.notifications.push({ severity: 'success', detail: res['success'] });
+            } else {
+              this.notifications.push({ severity: 'error', detail: res['error'] });
+            }
+          },
+          err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
+      }
+    });
   }
 
-  public decline(): void {
-    console.log('Declined!');
+  public decline(request: Object): void {
+    let response = {};
+    response['user'] = request['belongs_to'];
+    response['employee'] = this.userId;
+    response['request'] = {};
+    response['request']['id'] = request['id'];
+    response['request']['decision'] = 'Noraidīts';
+    this.confService.confirm({
+      message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
+      accept: () => {
+        this.backend.putRequest('request', response)
+          .subscribe(res => {
+            if (res.hasOwnProperty('success')) {
+              this.notifications.push({ severity: 'success', detail: res['success'] });
+            } else {
+              this.notifications.push({ severity: 'error', detail: res['error'] });
+            }
+          },
+          err => this.notifications.push({ severity: 'error', detail: 'Kļūda savienojumā!' }));
+      }
+    });
   }
 
   private formatDate(list): Promise<Array<Object>> {

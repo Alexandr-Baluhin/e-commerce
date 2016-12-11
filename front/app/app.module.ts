@@ -39,7 +39,6 @@ import { MessagesComp } from './shared/messages/messages.comp';
 /* Services */
 // Pages
 import { CreateService } from './pages/request/create/create.service';
-import { ListService } from './pages/request/list/list.service';
 import { ViewService } from './pages/request/view/view.service';
 // Shared
 import { BackendService } from './shared/services/backend.service';
@@ -86,7 +85,7 @@ import { CONFIG } from './configurations/config';
     MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService, ListService, ViewService, AuthGuard, BackendService, ConfirmationService,
+  providers: [CreateService, ViewService, AuthGuard, BackendService, ConfirmationService,
     {provide: 'config', useValue: CONFIG}]
 })
 export class AppModule { }

@@ -37,3 +37,7 @@ p-inputmask.ng-valid[required] > input[pInputText] {
 p-fileupload button[icon = fa-upload] {
   /*display: none;*/
 }
+
+.ui-button-icon-only .fa {
+  margin-left: -10px !important;
+}

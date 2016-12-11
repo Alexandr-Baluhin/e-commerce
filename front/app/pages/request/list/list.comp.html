@@ -7,8 +7,8 @@
       <p-column header="Pieejamas operācijas">
         <template let-req="rowData" pTemplate type="body">
             <button type="button" pButton (click)="view(req)" icon="fa-eye" pTooltip="Apskatīt"></button>
-            <button type="button" pButton (click)="approve(req)" icon="fa-check-circle" pTooltip="Apstiprināt"></button>
-            <button type="button" pButton (click)="decline(req)" icon="fa-ban" pTooltip="Noraidīt"></button>            
+            <button *ngIf="userType == 'employee' && req['status'] == 'Procesā'" type="button" pButton (click)="approve(req)" icon="fa-check-circle" pTooltip="Apstiprināt" tooltipPosition="top"></button>
+            <button *ngIf="userType == 'employee' && req['status'] == 'Procesā'" type="button" pButton (click)="decline(req)" icon="fa-ban" pTooltip="Noraidīt" tooltipPosition="top"></button>            
         </template>
       </p-column>
     </p-dataTable>
