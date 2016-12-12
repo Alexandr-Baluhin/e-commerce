@@ -140,19 +140,21 @@
 						</div>
 					</div>
 					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
-						<div *ngIf="userType == 'user'" class="form-subgroup column">
+						<div *ngIf="userType == 'user' || (userType == 'employee' && sourceRequest['status'] != 'Procesā')" class="form-subgroup column">
 							<span class="form-label">Komentārs no pašvaldības</span>
-							<textarea rows="5" cols="30" pInputTextarea disabled>{{ comment }}</textarea>						
+							<textarea rows="5" cols="30" pInputTextarea disabled [innerHtml]="commentFromGov"></textarea>
 						</div>
-						<div *ngIf="userType == 'employee'" class="form-subgroup column">
-							<span class="form-label">Komentārs savam lēmumam</span>
-							<textarea rows="5" cols="30" pInputTextarea #comment></textarea>						
-						</div>
-						<div *ngIf="userType == 'employee'" class="form-subgroup ui-g-6 column">
-							<button type="button" icon="fa-check" iconPos="left" pButton label="Apstiprināt" (click)="approve(comment.value)"></button>
-						</div>
-						<div *ngIf="userType == 'employee'" class="form-subgroup ui-g-6 column">
-							<button type="button" icon="fa-ban" iconPos="left" pButton label="Noraidīt" (click)="decline(comment.value)"></button>
+						<div *ngIf="userType == 'employee' && sourceRequest['status'] == 'Procesā'">
+							<div class="form-subgroup column">
+								<span class="form-label">Komentārs savam lēmumam</span>
+								<textarea rows="5" cols="30" pInputTextarea #comment></textarea>
+							</div>
+							<div class="form-subgroup ui-g-6 column">
+								<button type="button" icon="fa-check" iconPos="left" pButton label="Apstiprināt" (click)="approve(comment.value)"></button>
+							</div>
+							<div class="form-subgroup ui-g-6 column">
+								<button type="button" icon="fa-ban" iconPos="left" pButton label="Noraidīt" (click)="decline(comment.value)"></button>
+							</div>
 						</div>
 					</div>
 				</form>
@@ -286,15 +288,21 @@
 						</div>
 					</div>
 					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
-						<div class="form-subgroup column">
-							<span class="form-label">Komentārs savam lēmumam</span>
-							<textarea rows="5" cols="30" pInputTextarea #comment></textarea>						
+						<div *ngIf="userType == 'user' || (userType == 'employee' && sourceRequest['status'] != 'Procesā')" class="form-subgroup column">
+							<span class="form-label">Komentārs no pašvaldības</span>
+							<textarea rows="5" cols="30" pInputTextarea disabled [innerHtml]="commentFromGov"></textarea>
 						</div>
-						<div class="form-subgroup ui-g-6 column">
-							<button type="button" icon="fa-check" iconPos="left" pButton label="Apstiprināt" (click)="approve(comment.value)"></button>
-						</div>
-						<div class="form-subgroup ui-g-6 column">
-							<button type="button" icon="fa-ban" iconPos="left" pButton label="Noraidīt" (click)="decline(comment.value)"></button>
+						<div *ngIf="userType == 'employee' && sourceRequest['status'] == 'Procesā'">
+							<div class="form-subgroup column">
+								<span class="form-label">Komentārs savam lēmumam</span>
+								<textarea rows="5" cols="30" pInputTextarea #comment></textarea>
+							</div>
+							<div class="form-subgroup ui-g-6 column">
+								<button type="button" icon="fa-check" iconPos="left" pButton label="Apstiprināt" (click)="approve(comment.value)"></button>
+							</div>
+							<div class="form-subgroup ui-g-6 column">
+								<button type="button" icon="fa-ban" iconPos="left" pButton label="Noraidīt" (click)="decline(comment.value)"></button>
+							</div>
 						</div>
 					</div>
 				</form>
