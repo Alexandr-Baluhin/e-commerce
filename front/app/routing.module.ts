@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: '', component: PagesComp, children: [
       { path: 'request', component: RequestComp, children: [
           { path: 'create', component: CreateComp },
-          { path: 'list/:user/:id', component: ListComp, canActivate: [AuthGuard] },
+          { path: 'list', component: ListComp, canActivate: [AuthGuard] },
           { path: ':id', component: ViewComp, canActivate: [AuthGuard] }
         ]
       }

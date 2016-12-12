@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { ConfirmationService, Message } from 'primeng/primeng';
 
 import { BackendService } from '../../../shared/services/backend.service';
+
+import { AuthGuard } from '../../../shared/guards/auth.guard';
 
 @Component({
   moduleId: module.id,
@@ -19,35 +21,39 @@ export class ListComp {
   private userType: string;
   private userId: number;
 
+  private userTypeHeader: Object;
+  private userIdHeader: Object;
+
   private requests: Object[];
 
-  constructor(private backend: BackendService, private router: Router,
-    private route: ActivatedRoute, private confService: ConfirmationService) {
+  constructor(private router: Router, private confService: ConfirmationService,
+    private backend: BackendService, private guard: AuthGuard) {
     this.requests = [];
-    this.route.params.subscribe(params => {
-      this.userType = params['user'];
-      this.userId = params['id'];
-    });
     this.notifications = [];
+    this.guard.userType$.subscribe(type => this.userType = type);
+    this.guard.userId$.subscribe(id => this.userId = id);
   }
 
   public ngOnInit(): void {
-    let userTypeHeader = { "name": "type", "value": this.userType };
-    let userIdHeader = { "name": "id", "value": this.userId };
-    this.backend.getRequest('request/list', null, [userTypeHeader, userIdHeader]).subscribe(res => {
+    this.userTypeHeader = { name: "type", value: this.userType };
+    this.userIdHeader = { name: "id", value: this.userId };
+  }
+
+  public ngOnDestroy(): void { }
+
+  private getList(): void {
+    this.backend.getRequest('request/list', null, [this.userTypeHeader, this.userIdHeader]).subscribe(res => {
       if (res.length != 0) {
         this.formatDate(res).then(res => this.requests = res);
       }
     });
   }
 
-  public ngOnDestroy(): void { }
-
-  public view(request): void {
+  private view(request): void {
     this.router.navigate(['/request', request.id]);
   }
 
-  public approve(request: Object): void {
+  private approve(request: Object): void {
     let response = {};
     response['user'] = request['belongs_to'];
     response['employee'] = this.userId;
@@ -61,6 +67,7 @@ export class ListComp {
           .subscribe(res => {
             if (res.hasOwnProperty('success')) {
               this.notifications.push({ severity: 'success', detail: res['success'] });
+              this.getList();
             } else {
               this.notifications.push({ severity: 'error', detail: res['error'] });
             }
@@ -70,7 +77,7 @@ export class ListComp {
     });
   }
 
-  public decline(request: Object): void {
+  private decline(request: Object): void {
     let response = {};
     response['user'] = request['belongs_to'];
     response['employee'] = this.userId;
@@ -84,6 +91,7 @@ export class ListComp {
           .subscribe(res => {
             if (res.hasOwnProperty('success')) {
               this.notifications.push({ severity: 'success', detail: res['success'] });
+              this.getList();              
             } else {
               this.notifications.push({ severity: 'error', detail: res['error'] });
             }

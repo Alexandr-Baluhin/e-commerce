@@ -1,3 +1,10 @@
+<p-confirmDialog icon="fa fa-question-circle" width="425" [closable]="false" #cd>
+	<footer>
+		<button type="button" pButton icon="fa-close" label="Nē" (click)="cd.reject()"></button>
+		<button type="button" pButton icon="fa-check" label="Jā" (click)="cd.accept()"></button>
+	</footer>
+</p-confirmDialog>
+
 <div class="container">
   <div class="ui-g">
     <p-dataTable [value]="requests">

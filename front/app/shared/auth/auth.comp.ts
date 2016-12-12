@@ -52,8 +52,8 @@ export class AuthComp {
         this[values.type + 'Error'] = res['error'];
       } else {
         this.closeModal();
-        this.guard.login();
-        this.router.navigate(['/request/list', values['type'], res['id']]);
+        this.guard.login(values['type'], res['id']);
+        this.router.navigate(['/request/list']);
       }
     });
   }
