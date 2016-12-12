@@ -37,6 +37,7 @@ export class ListComp {
   public ngOnInit(): void {
     this.userTypeHeader = { name: "type", value: this.userType };
     this.userIdHeader = { name: "id", value: this.userId };
+    this.getList();
   }
 
   public ngOnDestroy(): void { }
