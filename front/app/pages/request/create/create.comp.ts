@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/fo
 import { CreateService } from './create.service';
 import { BackendService } from '../../../shared/services/backend.service';
 
-import { ConfirmationService, Message, SelectItem } from 'primeng/primeng';
+import { ConfirmationService, Message, SelectItem, MenuItem } from 'primeng/primeng';
 
 const RESERVED_DATES = ['25.03', '08.05', '14.06', '04.07'];
 
@@ -27,6 +27,9 @@ atbilst šo piemiņas dienu raksturam.
 
 export class CreateComp {
 
+  private isBegin: boolean;
+  private formType: string;
+
   public requestForm: FormGroup;
   public requestLawForm: FormGroup;
 
@@ -36,6 +39,8 @@ export class CreateComp {
   private files: Array<File>;
   private lifeTime: number;
   private notifications: Message[];
+  private steps: MenuItem[];
+  private step: number;
 
   private locations: SelectItem[];
 
@@ -130,9 +135,12 @@ export class CreateComp {
       'location': ['', Validators.required],
       'persons_type': ['legal']
     });
+    this.isBegin = true;
     this.files = [];
     this.lifeTime = 5000;
     this.notifications = [];
+    this.steps = [];
+    this.step = 0;
     this.locations = [];
   }
 
@@ -145,10 +153,37 @@ export class CreateComp {
         this.requestForm.controls['location'].setValue(this.locations[0]['value']);
         this.requestLawForm.controls['location'].setValue(this.locations[0]['value']);
       },
-      err => console.log(err))
+      err => console.log(err));
+    
+    this.steps = [
+      { label: 'Personas apraksts' },
+      { label: 'Pasākuma informācija' },
+      { label: 'Pasākuma papildinformācija' },
+      { label: 'Kontaktinformācija ' }
+    ];
   }
 
   public ngOnDestroy(): void { }
+
+  private begin(type): void {
+    if (type == 'physical') {
+      this.formType = type;
+      this.isBegin = false;
+    } else if (type == 'legal') {
+      this.formType = type;
+      this.isBegin = false;
+    } else {
+      this.isBegin = true;
+    }
+  }
+
+  private nextStep(): void {
+    this.step++;
+  }
+
+  private previousStep(): void {
+    this.step--;
+  }
 
   private getBinaries(event) {
     return false;

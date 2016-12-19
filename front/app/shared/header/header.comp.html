@@ -1,6 +1,6 @@
 <nav class="header">
 	<div class="row">
-		<span class="logo">Publisko pasākumu organizēšanas atļauju iesniegšana</span>
+		<span class="logo" [innerHTML]="headerText"></span>
 		<button class="auth-btn" type="text" (click)="processAuth()" pButton icon="fa-external-link-square" [label]="btnLabel"></button>
 	</div>
 </nav>

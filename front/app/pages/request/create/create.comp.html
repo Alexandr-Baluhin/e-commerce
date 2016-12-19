@@ -9,329 +9,390 @@
 
 <div class="container">
 	<div class="ui-g">
-		<p-tabView class="request-form">
-			<p-tabPanel header="Fiziska persona" leftIcon="fa-user">
-				<button type="button" (click)="test()" pButton label="Test"></button>
+		<div *ngIf="isBegin" class="begin-phase">
+			<h1>Izvēlēties savu tipu:</h1>
+			<button pButton label="Fiziska persona" (click)="begin('physical')" icon="fa-user"></button>
+			<button pButton label="Juridiska persona" (click)="begin('legal')" icon="fa-briefcase"></button>
+		</div>
+		<div *ngIf="!isBegin && formType == 'physical'">
+			<p-steps [model]="steps" [(activeIndex)]="step" styleClass="steps-custom"></p-steps>
+			<div [ngSwitch]="step">
+				<!--<button type="button" (click)="test()" pButton label="Test"></button>-->
 				<form [formGroup]="requestForm" (ngSubmit)="formSubmit(requestForm.value)">
-					<div formGroupName="organizer" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Pasākuma organizators</span>
-						<div class="form-subgroup">
-							<span class="form-label">Vārds</span>
-							<input class="form-input" formControlName="name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Uzvārds</span>
-							<input class="form-input" formControlName="surname" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Dzīvesvietas adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div formGroupName="guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Tehnisko drošību atbildīgā persona</span>
-						<div class="form-subgroup">
-							<span class="form-label">Vārds</span>
-							<input class="form-input" formControlName="name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Uzvārds</span>
-							<input class="form-input" formControlName="surname" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Dzīvesvietas adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div formGroupName="social_guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Sabiedrisko kārtību un drošību atbildīgā persona</span>
-						<div class="form-subgroup">
-							<span class="form-label">Vārds</span>
-							<input class="form-input" formControlName="name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Uzvārds</span>
-							<input class="form-input" formControlName="surname" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Dzīvesvietas adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div formGroupName="support" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Kārtības uzturētāja persona</span>
-						<div class="form-subgroup">
-							<span class="form-label">Vārds</span>
-							<input class="form-input" formControlName="name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Uzvārds</span>
-							<input class="form-input" formControlName="surname" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Personas kods</span>
-							<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Dzīvesvietas adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma nosaukums, veids un mērķis</span>
-							<textarea formControlName="description" rows="5" cols="30" pInputTextarea required></textarea>
-						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma norises vieta</span>
-							<textarea formControlName="address" rows="5" cols="30" pInputTextarea required></textarea>
-						</div>
-					</div>
-					<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma sākuma datums</span>
-							<div>
-								<p-calendar [maxDate]="physicalMaxDate" (onSelect)="checkDate($event, 'physical', 'start')" [styleClass]="form-calendar" formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
-								<p-calendar formControlName="start_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+					<div *ngSwitchCase="0">
+						<div formGroupName="organizer" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Pasākuma organizators</span>
+							<div class="form-subgroup">
+								<span class="form-label">Vārds</span>
+								<input class="form-input" formControlName="name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Uzvārds</span>
+								<input class="form-input" formControlName="surname" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Personas kods</span>
+								<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Dzīvesvietas adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 							</div>
 						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma beiguma datums</span>
-							<div>
-								<p-calendar [minDate]="physicalMinDate" (onSelect)="checkDate($event, 'physical', 'end')" [styleClass]="form-calendar" formControlName="end_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
-								<p-calendar formControlName="end_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+						<div formGroupName="guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Tehnisko drošību atbildīgā persona</span>
+							<div class="form-subgroup">
+								<span class="form-label">Vārds</span>
+								<input class="form-input" formControlName="name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Uzvārds</span>
+								<input class="form-input" formControlName="surname" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Personas kods</span>
+								<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Dzīvesvietas adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 							</div>
 						</div>
+						<div formGroupName="social_guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Sabiedrisko kārtību un drošību atbildīgā persona</span>
+							<div class="form-subgroup">
+								<span class="form-label">Vārds</span>
+								<input class="form-input" formControlName="name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Uzvārds</span>
+								<input class="form-input" formControlName="surname" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Personas kods</span>
+								<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Dzīvesvietas adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+							</div>
+						</div>
+						<div formGroupName="support" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Kārtības uzturētāja persona</span>
+							<div class="form-subgroup">
+								<span class="form-label">Vārds</span>
+								<input class="form-input" formControlName="name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Uzvārds</span>
+								<input class="form-input" formControlName="surname" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Personas kods</span>
+								<p-inputMask class="form-mask" formControlName="person_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Dzīvesvietas adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+							</div>
+						</div>
+						<div class="btns ui-g-12">
+							<button pButton (click)="begin()" label="Atpakaļ"></button>
+							<button pButton (click)="nextStep()" label="Tālāk"></button>
+						</div>
 					</div>
-					<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<div class="form-subgroup column">
-							<span class="form-label">Plānotais pasākuma apmeklētāju skaits</span>
-							<input class="form-input" formControlName="visitors" type="text" pInputText required />
+					<div *ngSwitchCase="1">
+						<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma nosaukums, veids un mērķis</span>
+								<textarea formControlName="description" rows="5" cols="30" pInputTextarea required></textarea>
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma norises vieta</span>
+								<textarea formControlName="address" rows="5" cols="30" pInputTextarea required></textarea>
+							</div>
 						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Plānotais pasākuma dalībnieku skaits</span>
-							<input class="form-input" formControlName="participants" type="text" pInputText required />
+						<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma sākuma datums</span>
+								<div>
+									<p-calendar [maxDate]="physicalMaxDate" (onSelect)="checkDate($event, 'physical', 'start')" [styleClass]="form-calendar"
+										formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+									<p-calendar formControlName="start_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+								</div>
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma beiguma datums</span>
+								<div>
+									<p-calendar [minDate]="physicalMinDate" (onSelect)="checkDate($event, 'physical', 'end')" [styleClass]="form-calendar" formControlName="end_date"
+										required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+									<p-calendar formControlName="end_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+								</div>
+							</div>
+						</div>
+						<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<div class="form-subgroup column">
+								<span class="form-label">Plānotais pasākuma apmeklētāju skaits</span>
+								<input class="form-input" formControlName="visitors" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Plānotais pasākuma dalībnieku skaits</span>
+								<input class="form-input" formControlName="participants" type="text" pInputText required />
+							</div>
+						</div>
+						<div class="btns ui-g-12">
+							<button pButton (click)="previousStep()" label="Atpakaļ"></button>
+							<button pButton (click)="nextStep()" label="Tālāk"></button>
 						</div>
 					</div>
-					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākumā izmantojamās bīstamās iekārtas</span>
-							<textarea rows="5" cols="30" formControlName="dangerous" pInputTextarea></textarea>
+					<div *ngSwitchCase="2">
+						<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākumā izmantojamās bīstamās iekārtas</span>
+								<textarea rows="5" cols="30" formControlName="dangerous" pInputTextarea></textarea>
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma netraucētai un drošai norisei nepieciešamais valsts un pašvaldības iestāžu atbalsts</span>
+								<textarea rows="5" cols="30" formControlName="gov_dangerous_response" pInputTextarea></textarea>
+							</div>
+							<span class="form-label">Jums ir iespēja augšuielādēt sekojošus failus:</span>
+							<ul class="upload-list">
+								<li>Līguma kopija ar kārtības uzturētājiem</li>
+								<li>Līguma kopija ar personu, kas atbildīga par tehnisko drošību</li>
+								<li>Līguma kopija ar personu, kas atbildīga par sabiedrisko kārtību un drošību</li>
+								<li>Detalizēts pasākuma plāns</li>
+								<li>Līguma kopija ar pasākuma norises vietas īpašnieku, ja viņš nav pasākuma organizators.</li>
+								<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
+								<li>citu saskaņojumu vai līgumu kopijas</li>
+							</ul>
+							<p-fileUpload [chooseLabel]="'Pievienot failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" name="files[]"
+								[url]="url" multiple="multiple" (onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
 						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma netraucētai un drošai norisei nepieciešamais valsts un pašvaldības iestāžu atbalsts</span>
-							<textarea rows="5" cols="30" formControlName="gov_dangerous_response" pInputTextarea></textarea>
-						</div>
-						<span class="form-label">Jūs varēt augšupielādēt sekojošie faili:</span>
-						<ul class="upload-list">
-							<li>Līguma kopija ar kārtības uzturētājiem</li>
-							<li>Līguma kopija ar personu, kas atbildīga par tehnisko drošību</li>
-							<li>Līguma kopija ar personu, kas atbildīga par sabiedrisko kārtību un drošību</li>
-							<li>Detalizēts pasākuma plāns</li>
-							<li>Līguma kopija ar pasākuma norises vietas īpašnieku, ja viņš nav pasākuma organizators.</li>
-							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
-							<li>citu saskaņojumu vai līgumu kopijas</li>
-						</ul>
-						<p-fileUpload [chooseLabel]="'Pievienot failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" 
-							name="files[]" [url]="url" multiple="multiple" 
-							(onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
-						<div class="form-subgroup ui-g-12 ui-md-8 ui-lg-4">
-							<span class="form-label">E-pasts</span>
-							<input class="form-input" formControlName="email" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup no-flex ui-g-12 ui-md-8 ui-lg-6">
-							<span class="form-label">Pašvaldība</span>
-							<p-dropdown class="form-input" [options]="locations" formControlName="location" [autoWidth]="false" [style]="{'width': '100%'}"></p-dropdown>
+						<div class="btns ui-g-12">
+							<button pButton (click)="previousStep()" label="Atpakaļ"></button>
+							<button pButton (click)="nextStep()" label="Tālāk"></button>
 						</div>
 					</div>
-					<button type="submit" pButton [disabled]="!requestForm.valid" label="Nosūtīt pieprasījumu"></button>
+					<div *ngSwitchCase="3">
+						<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+							<div class="form-subgroup ui-g-12 ui-md-12 ui-lg-12">
+								<span class="form-label">E-pasts</span>
+								<input class="form-input" formControlName="email" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup ui-g-12 ui-md-12 ui-lg-12">
+								<span class="form-label">Pašvaldība</span>
+								<p-dropdown class="form-input" [options]="locations" formControlName="location" [autoWidth]="false" [style]="{'width': '207px'}"></p-dropdown>
+							</div>
+						</div>
+						<div class="btns ui-g-12">
+							<button pButton (click)="previousStep()" label="Atpakaļ"></button>
+							<button pButton type="submit" [disabled]="!requestForm.valid" label="Nosūtīt pieprasījumu"></button>
+						</div>
+					</div>
 				</form>
-			</p-tabPanel>
-			<p-tabPanel header="Juridiska persona" leftIcon="fa-briefcase">
-				<button type="button" (click)="test2()" pButton label="Test"></button>				
+			</div>
+		</div>
+		<div *ngIf="!isBegin && formType == 'legal'">
+			<p-steps [model]="steps" [(activeIndex)]="step" styleClass="steps-custom"></p-steps>
+			<div [ngSwitch]="step">
+				<!--<button type="button" (click)="test2()" pButton label="Test"></button>-->
 				<form [formGroup]="requestLawForm" (ngSubmit)="formSubmit(requestLawForm.value)">
-					<div formGroupName="organizer" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Pasākuma organizators</span>
-						<div class="form-subgroup">
-							<span class="form-label">Jūridiskā persona</span>
-							<input class="form-input" formControlName="legal_name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Reģistrācijas numurs</span>
-							<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Juridiskā adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div formGroupName="guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Tehnisko drošību atbildīgā persona</span>
-						<div class="form-subgroup">
-							<span class="form-label">Jūridiskā persona</span>
-							<input class="form-input" formControlName="legal_name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Reģistrācijas numurs</span>
-							<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Juridiskā adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div formGroupName="social_guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Sabiedrisko kārtību un drošību atbildīgā persona</span>
-						<div class="form-subgroup">
-							<span class="form-label">Jūridiskā persona</span>
-							<input class="form-input" formControlName="legal_name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Reģistrācijas numurs</span>
-							<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Juridiskā adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div formGroupName="support" class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<span class="form-label form-header">Kārtības uzturētāja persona</span>
-						<div class="form-subgroup">
-							<span class="form-label">Jūridiskā persona</span>
-							<input class="form-input" formControlName="legal_name" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Reģistrācijas kods</span>
-							<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
-								[autoClear]="false" required></p-inputMask>
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Juridiskā adrese</span>
-							<input class="form-input" formControlName="address" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup">
-							<span class="form-label">Tālrunis</span>
-							<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
-						</div>
-					</div>
-					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma nosaukums, veids un mērķis</span>
-							<textarea formControlName="description" rows="5" cols="30" pInputTextarea required></textarea>
-						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma norises vieta</span>
-							<textarea formControlName="address" rows="5" cols="30" pInputTextarea required></textarea>
-						</div>
-					</div>
-					<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma sākuma datums</span>
-							<div>
-								<p-calendar (onSelect)="checkDate($event, 'legal', 'start')" [styleClass]="form-calendar" formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
-								<p-calendar formControlName="start_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+					<div *ngSwitchCase="0">
+						<div formGroupName="organizer" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Pasākuma organizators</span>
+							<div class="form-subgroup">
+								<span class="form-label">Jūridiskā persona</span>
+								<input class="form-input" formControlName="legal_name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Reģistrācijas numurs</span>
+								<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Juridiskā adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 							</div>
 						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma beiguma datums</span>
-							<div>
-								<p-calendar (onSelect)="checkDate($event, 'legal', 'end')" [styleClass]="form-calendar" formControlName="end_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
-								<p-calendar formControlName="end_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+						<div formGroupName="guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Tehnisko drošību atbildīgā persona</span>
+							<div class="form-subgroup">
+								<span class="form-label">Jūridiskā persona</span>
+								<input class="form-input" formControlName="legal_name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Reģistrācijas numurs</span>
+								<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Juridiskā adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
 							</div>
 						</div>
+						<div formGroupName="social_guard" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Sabiedrisko kārtību un drošību atbildīgā persona</span>
+							<div class="form-subgroup">
+								<span class="form-label">Jūridiskā persona</span>
+								<input class="form-input" formControlName="legal_name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Reģistrācijas numurs</span>
+								<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Juridiskā adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+							</div>
+						</div>
+						<div formGroupName="support" class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<span class="form-label form-header">Kārtības uzturētāja persona</span>
+							<div class="form-subgroup">
+								<span class="form-label">Jūridiskā persona</span>
+								<input class="form-input" formControlName="legal_name" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Reģistrācijas kods</span>
+								<p-inputMask class="form-mask" formControlName="register_code" mask="999999-99999" placeholder="999999-99999" slotChar="x"
+									[autoClear]="false" required></p-inputMask>
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Juridiskā adrese</span>
+								<input class="form-input" formControlName="address" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup">
+								<span class="form-label">Tālrunis</span>
+								<p-inputMask class="form-mask" formControlName="phone" mask="29999999" placeholder="29999999" slotChar="x" [autoClear]="false"></p-inputMask>
+							</div>
+						</div>
+						<div class="btns ui-g-12">
+							<button pButton (click)="begin()" label="Atpakaļ"></button>
+							<button pButton (click)="nextStep()" label="Tālāk"></button>
+						</div>
 					</div>
-					<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
-						<div class="form-subgroup column">
-							<span class="form-label">Plānotais pasākuma apmeklētāju skaits</span>
-							<input class="form-input" formControlName="visitors" type="text" pInputText required />
+					<div *ngSwitchCase="1">
+						<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma nosaukums, veids un mērķis</span>
+								<textarea formControlName="description" rows="5" cols="30" pInputTextarea required></textarea>
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma norises vieta</span>
+								<textarea formControlName="address" rows="5" cols="30" pInputTextarea required></textarea>
+							</div>
 						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Plānotais pasākuma dalībnieku skaits</span>
-							<input class="form-input" formControlName="participants" type="text" pInputText required />
+						<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma sākuma datums</span>
+								<div>
+									<p-calendar (onSelect)="checkDate($event, 'legal', 'start')" [styleClass]="form-calendar" formControlName="start_date" required
+										dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+									<p-calendar formControlName="start_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+								</div>
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma beiguma datums</span>
+								<div>
+									<p-calendar (onSelect)="checkDate($event, 'legal', 'end')" [styleClass]="form-calendar" formControlName="end_date" required
+										dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+									<p-calendar formControlName="end_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
+								</div>
+							</div>
+						</div>
+						<div class="form-group ui-g-12 ui-md-6 ui-lg-6">
+							<div class="form-subgroup column">
+								<span class="form-label">Plānotais pasākuma apmeklētāju skaits</span>
+								<input class="form-input" formControlName="visitors" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Plānotais pasākuma dalībnieku skaits</span>
+								<input class="form-input" formControlName="participants" type="text" pInputText required />
+							</div>
+						</div>
+						<div class="btns ui-g-12">
+							<button pButton (click)="previousStep()" label="Atpakaļ"></button>
+							<button pButton (click)="nextStep()" label="Tālāk"></button>
 						</div>
 					</div>
-					<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākumā izmantojamās bīstamās iekārtas</span>
-							<textarea rows="5" cols="30" formControlName="dangerous" pInputTextarea></textarea>
+					<div *ngSwitchCase="2">
+						<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākumā izmantojamās bīstamās iekārtas</span>
+								<textarea rows="5" cols="30" formControlName="dangerous" pInputTextarea></textarea>
+							</div>
+							<div class="form-subgroup column">
+								<span class="form-label">Pasākuma netraucētai un drošai norisei nepieciešamais valsts un pašvaldības iestāžu atbalsts</span>
+								<textarea rows="5" cols="30" formControlName="gov_dangerous_response" pInputTextarea></textarea>
+							</div>
+							<span class="form-label">Jums ir iespēja augšuielādēt sekojošus failus:</span>
+							<ul class="upload-list">
+								<li>Līguma kopija ar kārtības uzturētājiem</li>
+								<li>Līguma kopija ar personu, kas atbildīga par tehnisko drošību</li>
+								<li>Līguma kopija ar personu, kas atbildīga par sabiedrisko kārtību un drošību</li>
+								<li>Detalizēts pasākuma plāns</li>
+								<li>Līguma kopija ar pasākuma norises vietas īpašnieku, ja viņš nav pasākuma organizators.</li>
+								<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
+								<li>citu saskaņojumu vai līgumu kopijas</li>
+							</ul>
+							<p-fileUpload [chooseLabel]="'Pievienot failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" name="files[]"
+								[url]="url" multiple="multiple" (onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
 						</div>
-						<div class="form-subgroup column">
-							<span class="form-label">Pasākuma netraucētai un drošai norisei nepieciešamais valsts un pašvaldības iestāžu atbalsts</span>
-							<textarea rows="5" cols="30" formControlName="gov_dangerous_response" pInputTextarea></textarea>
-						</div>
-						<span class="form-label">Jūs varēt augšupielādēt sekojošie faili:</span>
-						<ul class="upload-list">
-							<li>Līguma kopija ar kārtības uzturētājiem</li>
-							<li>Līguma kopija ar personu, kas atbildīga par tehnisko drošību</li>
-							<li>Līguma kopija ar personu, kas atbildīga par sabiedrisko kārtību un drošību</li>
-							<li>Detalizēts pasākuma plāns</li>
-							<li>Līguma kopija ar pasākuma norises vietas īpašnieku, ja viņš nav pasākuma organizators.</li>
-							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
-							<li>citu saskaņojumu vai līgumu kopijas</li>
-						</ul>
-						<p-fileUpload [chooseLabel]="'Pievienot failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" 
-							name="files[]" [url]="url" multiple="multiple" 
-							(onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
-						<div class="form-subgroup ui-g-12 ui-md-8 ui-lg-4">
-							<span class="form-label">E-pasts</span>
-							<input class="form-input" formControlName="email" type="text" pInputText required />
-						</div>
-						<div class="form-subgroup no-flex ui-g-12 ui-md-8 ui-lg-6">
-							<span class="form-label">Pašvaldība</span>
-							<p-dropdown class="form-input" [options]="locations" formControlName="location" [autoWidth]="false" [style]="{'width': '100%'}"></p-dropdown>
+						<div class="btns ui-g-12">
+							<button pButton (click)="previousStep()" label="Atpakaļ"></button>
+							<button pButton (click)="nextStep()" label="Tālāk"></button>
 						</div>
 					</div>
-					<button type="submit" pButton [disabled]="!requestLawForm.valid" label="Nosūtīt pieprasījumu"></button>
+					<div *ngSwitchCase="3">
+						<div class="form-group ui-g-12 ui-md-12 ui-lg-12">
+							<div class="form-subgroup ui-g-12 ui-md-12 ui-lg-12">
+								<span class="form-label">E-pasts</span>
+								<input class="form-input" formControlName="email" type="text" pInputText required />
+							</div>
+							<div class="form-subgroup no-flex ui-g-12 ui-md-12 ui-lg-12">
+								<span class="form-label">Pašvaldība</span>
+								<p-dropdown class="form-input" [options]="locations" formControlName="location" [autoWidth]="false" [style]="{'width': '207px'}"></p-dropdown>
+							</div>
+						</div>
+						<div class="btns ui-g-12">
+							<button pButton (click)="previousStep()" label="Atpakaļ"></button>
+							<button type="submit" pButton [disabled]="!requestLawForm.valid" label="Nosūtīt pieprasījumu"></button>
+						</div>
+					</div>
 				</form>
-			</p-tabPanel>
-		</p-tabView>
+			</div>
+		</div>
 	</div>
 </div>

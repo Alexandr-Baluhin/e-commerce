@@ -4,6 +4,22 @@
   margin: 20px auto;
 }
 
+.begin-phase {
+  width: 100%;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.begin-phase h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-between;
+}
+
 .form-group .form-subgroup {
   display: flex;
   justify-content: space-between;

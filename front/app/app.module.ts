@@ -18,7 +18,8 @@ import {
   DataTableModule,
   SharedModule,
   TooltipModule,
-  DropdownModule
+  DropdownModule,
+  StepsModule
 } from 'primeng/primeng';
 
 /* Modules */
@@ -68,7 +69,8 @@ import { CONFIG } from './configurations/config';
     DataTableModule,
     SharedModule,
     TooltipModule,
-    DropdownModule    
+    DropdownModule,
+    StepsModule  
   ],
   declarations: [
     AppComp,
