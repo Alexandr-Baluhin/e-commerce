@@ -47,13 +47,24 @@ module.exports = class DAL {
 
     getList(type, id) {
         return new Promise((resolve, reject) => {
-            let sql = 'SELECT id, create_date, status FROM Requests WHERE status = "Procesā"';
-            if (type == 'user') sql += ' AND belongs_to = ' + id;
+            let sql = 'SELECT id, create_date, status, belongs_to FROM Requests';
+            if (type == 'user') {
+            	sql += ' WHERE belongs_to = ' + id;
 
-            this.connection.query(sql, (err, rows, fields) => {
-                if (err) reject(err);
-                else resolve(rows);
-            });
+            	this.connection.query(sql, (err, rows, fields) => {
+                	if (err) reject(err);
+                	else resolve(rows);
+            	});
+            } else {
+            	this._getEmployee(null, id).then(res => {
+            		sql += ' WHERE written_to = ' + res[0]['location_id'];
+            		    
+            		this.connection.query(sql, (err, rows, fields) => {
+                		if (err) reject(err);
+                		else resolve(rows);
+            		});
+            	});
+            }
         });
     }
 

@@ -12,6 +12,7 @@ import { Message } from 'primeng/primeng';
 export class MessagesComp {
 
   @Input() msgs: Message[];
+  @Input() life: number;  
   @Output() hideNotificationEvent = new EventEmitter();
   
   constructor() {}

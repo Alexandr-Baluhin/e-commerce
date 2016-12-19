@@ -2,7 +2,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from './auth.service';
+import { BackendService } from '../services/backend.service';
+
+import { AuthGuard } from '../guards/auth.guard';
 
 @Component({
   moduleId: module.id,
@@ -22,7 +24,8 @@ export class AuthComp {
   @Input() displayAuth: boolean;
   @Output() updateDisplay = new EventEmitter();
 
-  constructor(private fb: FormBuilder, private router: Router, private _service: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private backend: BackendService,
+    private guard: AuthGuard) {
     this.authUserForm = fb.group({
       'type': ['user'],
       'email': ['', Validators.required],
@@ -44,12 +47,13 @@ export class AuthComp {
   }
 
   private formSubmit(values: any) {
-    this._service.login(values).subscribe(res => {
+    this.backend.postRequest('login', values).subscribe(res => {
       if (res.hasOwnProperty('error')) {
         this[values.type + 'Error'] = res['error'];
       } else {
         this.closeModal();
-        this.router.navigate(['/request/list', res['id']]);
+        this.guard.login(values['type'], res['id']);
+        this.router.navigate(['/request/list']);
       }
     });
   }

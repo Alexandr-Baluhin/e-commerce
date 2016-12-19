@@ -39,11 +39,13 @@ import { MessagesComp } from './shared/messages/messages.comp';
 /* Services */
 // Pages
 import { CreateService } from './pages/request/create/create.service';
-import { ListService } from './pages/request/list/list.service';
-import { ViewService } from './pages/request/view/view.service';
 // Shared
-import { AuthService } from './shared/auth/auth.service';
-import { AuthGuard } from './shared/auth/auth-guard.service';
+import { BackendService } from './shared/services/backend.service';
+// Guards
+import { AuthGuard } from './shared/guards/auth.guard';
+
+/** CONFIG */
+import { CONFIG } from './configurations/config';
 
 @NgModule({
   imports: [
@@ -82,6 +84,7 @@ import { AuthGuard } from './shared/auth/auth-guard.service';
     MessagesComp
   ],
   bootstrap: [AppComp],
-  providers: [CreateService, ListService, ViewService, AuthService, AuthGuard, ConfirmationService]
+  providers: [CreateService, AuthGuard, BackendService, ConfirmationService,
+    {provide: 'config', useValue: CONFIG}]
 })
 export class AppModule { }

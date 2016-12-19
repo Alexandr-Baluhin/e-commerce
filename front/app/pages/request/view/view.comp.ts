@@ -4,7 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { ConfirmationService, Message } from 'primeng/primeng';
 
-import { ViewService } from './view.service';
+import { BackendService } from '../../../shared/services/backend.service';
+
+import { AuthGuard } from '../../../shared/guards/auth.guard';
 
 @Component({
   moduleId: module.id,
@@ -16,13 +18,21 @@ import { ViewService } from './view.service';
 export class ViewComp {
 
   private id: string;
+  private userType: string;
+  private userId: number;
   private sourceRequest: String[];
   private requestForm: FormGroup;
   private requestLawForm: FormGroup;
+  private commentFromGov: string;
 
   private notifications: Message[];
 
-  constructor(private _service: ViewService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private confService: ConfirmationService) {
+  constructor(private backend: BackendService, 
+    private guard: AuthGuard, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private confService: ConfirmationService) {
     // Form for usual persons
     this.requestForm = fb.group({
       'organizer': fb.group({
@@ -100,16 +110,19 @@ export class ViewComp {
       'persons_type': ['legal']
     });
 
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-    });
+    this.route.params.subscribe(params => this.id = params['id']);
+    this.guard.userType$.subscribe(type => this.userType = type);
+    this.guard.userId$.subscribe(id => this.userId = id);    
     this.notifications = [];
+    this.commentFromGov = '';
   }
 
   public ngOnInit(): void {
-    this._service.getRequest(this.id)
+    this.backend.getRequest('request', [this.id])
       .subscribe(res => {
         this.sourceRequest = res;
+        if (this.userType == 'user' || (this.userType == 'employee' && res['status'] != 'Procesā')) 
+          this.commentFromGov = this.sourceRequest['gov_callback_text']
         this.preFormatRequest(res).then(
           res => {
             this.formatRequest(res).then(
@@ -131,10 +144,14 @@ export class ViewComp {
 
   public ngOnDestroy(): void { }
 
+  private return(): void {
+    this.router.navigate(['/request/list']);
+  }
+
   private approve(comment) {
     let response = {};
     response['user'] = this.sourceRequest['belongs_to'];
-    response['employee'] = 1;
+    response['employee'] = this.userId;
     response['request'] = {};
     response['request']['id'] = this.sourceRequest['id'];
     response['request']['decision'] = 'Apstiprināts';
@@ -142,11 +159,11 @@ export class ViewComp {
     this.confService.confirm({
       message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
       accept: () => {
-        this._service.sendData(response)
+        this.backend.putRequest('request', response)
           .subscribe(res => {
             if (res.hasOwnProperty('success')) {
               this.notifications.push({ severity: 'success', detail: res['success'] });
-              setTimeout(() => this.router.navigate(['/request/list/1']), 3000);
+              setTimeout(() => this.router.navigate(['/request/list']), 3000);
             } else {
               this.notifications.push({ severity: 'error', detail: res['error'] });
             }
@@ -159,20 +176,19 @@ export class ViewComp {
   private decline(comment) {
     let response = {};
     response['user'] = this.sourceRequest['belongs_to'];
-    response['employee'] = 1;
-    let request = {};
-    request['id'] = this.sourceRequest['id'];
-    request['decision'] = 'Noraidīts';
-    request['callbackText'] = comment;
-    response['request'] = request;
+    response['employee'] = this.userId;
+    response['request'] = {};
+    response['request']['id'] = this.sourceRequest['id'];
+    response['request']['decision'] = 'Noraidīts';
+    response['request']['callbackText'] = comment;
     this.confService.confirm({
       message: 'Jūs tieši gribāt pieņemt šo lēmumu?',
       accept: () => {
-        this._service.sendData(response)
+        this.backend.putRequest('request', response)
           .subscribe(res => {
             if (res.hasOwnProperty('success')) {
               this.notifications.push({ severity: 'success', detail: res['success'] });
-              setTimeout(() => this.router.navigate(['/request/list/1']), 3000);            
+              setTimeout(() => this.router.navigate(['/request/list']), 3000);            
             } else {
               this.notifications.push({ severity: 'error', detail: res['error'] });
             }

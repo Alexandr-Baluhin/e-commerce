@@ -1,3 +1,12 @@
+<p-confirmDialog icon="fa fa-question-circle" width="425" [closable]="false" #cd>
+	<footer>
+		<button type="button" pButton icon="fa-close" label="Nē" (click)="cd.reject()"></button>
+		<button type="button" pButton icon="fa-check" label="Jā" (click)="cd.accept()"></button>
+	</footer>
+</p-confirmDialog>
+
+<msg-comp [msgs]="notifications" [life]="5000" (hideNotificationEvent)="hideMessage($event)"></msg-comp>
+
 <div class="container">
   <div class="ui-g">
     <p-dataTable [value]="requests">
@@ -6,9 +15,9 @@
       <p-column field="status" header="Statuss" [sortable]="true"></p-column>
       <p-column header="Pieejamas operācijas">
         <template let-req="rowData" pTemplate type="body">
-            <button type="button" pButton (click)="view(req)" icon="fa-eye" pTooltip="Apskatīt"></button>
-            <button type="button" pButton (click)="approve(req)" icon="fa-check-circle" pTooltip="Apstiprināt"></button>
-            <button type="button" pButton (click)="decline(req)" icon="fa-ban" pTooltip="Noraidīt"></button>            
+            <button type="button" pButton (click)="view(req)" icon="fa-eye" pTooltip="Apskatīt" tooltipPosition="top"></button>
+            <button *ngIf="userType == 'employee' && req['status'] == 'Procesā'" type="button" pButton (click)="approve(req)" icon="fa-check-circle" pTooltip="Apstiprināt" tooltipPosition="top"></button>
+            <button *ngIf="userType == 'employee' && req['status'] == 'Procesā'" type="button" pButton (click)="decline(req)" icon="fa-ban" pTooltip="Noraidīt" tooltipPosition="top"></button>            
         </template>
       </p-column>
     </p-dataTable>

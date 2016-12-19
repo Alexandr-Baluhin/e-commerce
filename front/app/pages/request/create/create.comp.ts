@@ -1,9 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/forms';
 
 import { CreateService } from './create.service';
+import { BackendService } from '../../../shared/services/backend.service';
 
 import { ConfirmationService, Message, SelectItem } from 'primeng/primeng';
+
+const RESERVED_DATES = ['25.03', '08.05', '14.06', '04.07'];
+
+const DATE_WARN = `
+Atbilstoši publisku izklaides un svētku pasākumu drošības likumam, 4.pants:
+
+(1) Valsts un pašvaldību iestādes publiskus pasākumus nerīko, un pašvaldība neizsniedz atļauju šādu pasākumu rīkošanai 
+piemiņas dienās, kas noteiktas 25.martā, 8.maijā, 14.jūnijā un 4.jūlijā.
+
+(2) Šā panta pirmās daļas nosacījums neattiecas uz publiskiem pasākumiem, kuru veids un mērķis 
+atbilst šo piemiņas dienu raksturam.
+`;
 
 @Component({
   moduleId: module.id,
@@ -17,12 +30,22 @@ export class CreateComp {
   public requestForm: FormGroup;
   public requestLawForm: FormGroup;
 
-  private files: Array<any>;
+  private physicalMinDate: Date;
+  private physicalMaxDate: Date;
+
+  private files: Array<File>;
+  private lifeTime: number;
   private notifications: Message[];
 
   private locations: SelectItem[];
 
-  constructor(private _service: CreateService, private fb: FormBuilder, private confService: ConfirmationService) {
+  private url: string = this.env['API'] + ':' + this.env['API_PORT'] + '/upload';
+
+  constructor(private _service: CreateService,
+    private fb: FormBuilder,
+    private confService: ConfirmationService,
+    private backend: BackendService,
+    @Inject('config') private env: Object) {
     // Form for usual persons
     this.requestForm = fb.group({
       'organizer': fb.group({
@@ -107,12 +130,14 @@ export class CreateComp {
       'location': ['', Validators.required],
       'persons_type': ['legal']
     });
+    this.files = [];
+    this.lifeTime = 5000;
     this.notifications = [];
     this.locations = [];
   }
 
   public ngOnInit(): void {
-    this._service.getLocations()
+    this.backend.getRequest('locations')
       .subscribe(res => {
         res.forEach((el) => {
           this.locations.push({ label: el['name'], value: el['id'] });
@@ -125,8 +150,12 @@ export class CreateComp {
 
   public ngOnDestroy(): void { }
 
-  private getBinaries(event): void {
-    console.log(event);
+  private getBinaries(event) {
+    return false;
+  }
+
+  private uploadedBinaries(): void {
+    console.log('uploaded!')
   }
 
   private test() {
@@ -214,9 +243,33 @@ export class CreateComp {
       visitors: "201",
       email: "baluhins@inbox.lv",
       location: 3,
-      persons_type: 'legal'      
+      persons_type: 'legal'
     };
     this.requestLawForm.setValue(test_object);
+  }
+
+  private checkDate(event, type, endpoint) {
+    let month = event.getMonth() + 1 < 10 ? '0' + (event.getMonth() + 1) : event.getMonth() + 1;
+    let day = event.getDate() < 10 ? '0' + event.getDate() : event.getDate();
+    let date = day + '.' + month;
+    if (RESERVED_DATES.indexOf(date) != -1) {
+      this.lifeTime = 25000;
+      this.notifications.push({ severity: 'warn', detail: DATE_WARN });
+    }
+
+    if (type == 'physical') {
+      if (endpoint == 'start') {
+        this.physicalMinDate = new Date(event.getTime());
+      } else {
+        this.physicalMaxDate = new Date(event.getTime());
+      }
+    } else {
+      if (endpoint == 'start') {
+        this.physicalMinDate = new Date(event.getTime());
+      } else {
+        this.physicalMaxDate = new Date(event.getTime());
+      }
+    }
   }
 
   private formSubmit(values: any) {
@@ -229,11 +282,13 @@ export class CreateComp {
         this.confService.confirm({
           message: 'Jūs tieši gribāt turpināt?',
           accept: () => {
-            this._service.sendData(data)
+            this.backend.postRequest('request', data)
               .subscribe(res => {
                 if (res.hasOwnProperty('success')) {
+                  this.lifeTime = 5000;
                   this.notifications.push({ severity: 'success', detail: res['success'] });
                 } else {
+                  this.lifeTime = 5000;
                   this.notifications.push({ severity: 'error', detail: res['error'] });
                 }
               },

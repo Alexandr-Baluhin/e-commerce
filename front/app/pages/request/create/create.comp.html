@@ -5,7 +5,7 @@
 	</footer>
 </p-confirmDialog>
 
-<msg-comp [msgs]="notifications" (hideNotificationEvent)="hideMessage($event)"></msg-comp>
+<msg-comp [msgs]="notifications" [life]="lifeTime" (hideNotificationEvent)="hideMessage($event)"></msg-comp>
 
 <div class="container">
 	<div class="ui-g">
@@ -123,14 +123,14 @@
 						<div class="form-subgroup column">
 							<span class="form-label">Pasākuma sākuma datums</span>
 							<div>
-								<p-calendar [styleClass]="form-calendar" formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+								<p-calendar [maxDate]="physicalMaxDate" (onSelect)="checkDate($event, 'physical', 'start')" [styleClass]="form-calendar" formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
 								<p-calendar formControlName="start_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
 							</div>
 						</div>
 						<div class="form-subgroup column">
 							<span class="form-label">Pasākuma beiguma datums</span>
 							<div>
-								<p-calendar [styleClass]="form-calendar" formControlName="end_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+								<p-calendar [minDate]="physicalMinDate" (onSelect)="checkDate($event, 'physical', 'end')" [styleClass]="form-calendar" formControlName="end_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
 								<p-calendar formControlName="end_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
 							</div>
 						</div>
@@ -164,7 +164,9 @@
 							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
 							<li>citu saskaņojumu vai līgumu kopijas</li>
 						</ul>
-						<p-fileUpload [(name)]="files" url="http://localhost:8080/upload" multiple="multiple" (onBeforeUpload)="getBinaries($event)"></p-fileUpload>
+						<p-fileUpload [chooseLabel]="'Pievienot failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" 
+							name="files[]" [url]="url" multiple="multiple" 
+							(onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
 						<div class="form-subgroup ui-g-12 ui-md-8 ui-lg-4">
 							<span class="form-label">E-pasts</span>
 							<input class="form-input" formControlName="email" type="text" pInputText required />
@@ -274,14 +276,14 @@
 						<div class="form-subgroup column">
 							<span class="form-label">Pasākuma sākuma datums</span>
 							<div>
-								<p-calendar [styleClass]="form-calendar" formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+								<p-calendar (onSelect)="checkDate($event, 'legal', 'start')" [styleClass]="form-calendar" formControlName="start_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
 								<p-calendar formControlName="start_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
 							</div>
 						</div>
 						<div class="form-subgroup column">
 							<span class="form-label">Pasākuma beiguma datums</span>
 							<div>
-								<p-calendar [styleClass]="form-calendar" formControlName="end_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
+								<p-calendar (onSelect)="checkDate($event, 'legal', 'end')" [styleClass]="form-calendar" formControlName="end_date" required dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"></p-calendar>
 								<p-calendar formControlName="end_time" [timeOnly]="true" required placeholder="hh:mm"></p-calendar>
 							</div>
 						</div>
@@ -315,7 +317,9 @@
 							<li>Dokumenta kopija par bīstamo iekārtu ekspluatāciju, ja šādas iekārtas tiek izmantotas pasākumā</li>
 							<li>citu saskaņojumu vai līgumu kopijas</li>
 						</ul>
-						<p-fileUpload name="myfile[]" url="http://localhost:8080/upload" multiple="multiple"></p-fileUpload>
+						<p-fileUpload [chooseLabel]="'Pievienot failu'" [cancelLabel]="'Nodzēst visu'" [uploadLabel]="'Augšupielādēt'" 
+							name="files[]" [url]="url" multiple="multiple" 
+							(onBeforeUpload)="getBinaries($event)" (onUpload)="uploadedBinaries()"></p-fileUpload>
 						<div class="form-subgroup ui-g-12 ui-md-8 ui-lg-4">
 							<span class="form-label">E-pasts</span>
 							<input class="form-input" formControlName="email" type="text" pInputText required />

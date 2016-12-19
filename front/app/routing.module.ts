@@ -7,19 +7,19 @@ import { CreateComp } from './pages/request/create/create.comp';
 import { ViewComp } from './pages/request/view/view.comp';
 import { ListComp } from './pages/request/list/list.comp';
 
-import { AuthGuard } from './shared/auth/auth-guard.service';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'request/create', pathMatch: 'full' },
   { path: '', component: PagesComp, children: [
       { path: 'request', component: RequestComp, children: [
           { path: 'create', component: CreateComp },
-          { path: 'list/:id', component: ListComp, canActivate: [AuthGuard] },
-          { path: ':id', component: ViewComp }
+          { path: 'list', component: ListComp, canActivate: [AuthGuard] },
+          { path: ':id', component: ViewComp, canActivate: [AuthGuard] }
         ]
       }
     ]
-  },
-  { path: '**', redirectTo: 'request/create', pathMatch: 'full' }
+  }
 ];
 
 @NgModule({
