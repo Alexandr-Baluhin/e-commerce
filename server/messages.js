@@ -7,6 +7,15 @@ parole: PASSWORD<br><br>
 Ar cieņu,<br>
 LOCATION`;
 
+const CONST_REQUEST_NEW = `Jūsu publisko pasākumu organizēšanas pieprasījums 
+(DESCRIPTION) ir saņemts un tuvākā laikā tiks izskatīts. 
+Savu publisko pasākumu organizēšanas pieprasījumu Jūs variet apskatīt to, ieejot <www.atlauju.pieprasijums.lv>:<br>
+Jūsu lietotājvārds: EMAIL<br>
+Jūsu parole: PASSWORD<br>
+
+Ar cieņu,<br>
+LOCATION`;
+
 const REQUEST_SUBMITTED_NEXT = `Jūsu pieprasījums tiks <b>izskatīts!</b><br> 
 Jūs varāt apskātīt tā statusu online, izmantojot iepriekš atsūtītus rekvizītus.<br><br>
 
@@ -43,9 +52,9 @@ PLCHLD_Requests_organizer_name,<br>
 PLCHLD_Requests_organizer_code,<br>
 PLCHLD_Requests_organizer_address</SPAN></FONT></FONT></P>
 <P STYLE="margin-bottom: 0.11in"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">Pasākuma
-veids un mērķis: PLCHLD_Requests_description</SPAN></FONT></FONT></P>
+veids un mērķis: <br>PLCHLD_Requests_description</SPAN></FONT></FONT></P>
 <P STYLE="margin-bottom: 0.11in"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">Pasākuma
-norises vieta: PLCHLD_Requests_address</SPAN></FONT></FONT></P>
+norises vieta: <br>PLCHLD_Requests_address</SPAN></FONT></FONT></P>
 <P STYLE="margin-bottom: 0.11in"><BR><BR>
 </P>
 <P STYLE="margin-bottom: 0.11in"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">Par
@@ -103,8 +112,7 @@ atļauju publiska pasākuma PLCHLD_Requests_description rīkošanai.</SPAN></FON
 </P>
 <P STYLE="margin-bottom: 0.11in"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">Pasākuma
 organizators pašvaldības lēmumu var pārsūdzēt
-tiesā</SPAN></FONT></FONT><FONT FACE="Times New Roman, serif"><FONT SIZE=3>&nbsp;<A HREF="http://likumi.lv/ta/id/55567-administrativa-procesa-likums">Administratīvā
-procesa likumā</A>&nbsp;</FONT></FONT><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">noteiktajā
+tiesā</SPAN></FONT></FONT><FONT FACE="Times New Roman, serif"><FONT SIZE=3>&nbsp;</FONT></FONT><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN STYLE="background: #ffffff">noteiktajā
 kārtībā.</SPAN></FONT></FONT></P>
 <P STYLE="margin-bottom: 0.11in"><BR><BR>
 </P>
