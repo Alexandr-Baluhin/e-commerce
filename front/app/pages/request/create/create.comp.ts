@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormControlName, Validators } from '@angular/fo
 import { CreateService } from './create.service';
 import { BackendService } from '../../../shared/services/backend.service';
 
+import { AuthGuard } from '../../../shared/guards/auth.guard';
+
 import { ConfirmationService, Message, SelectItem, MenuItem } from 'primeng/primeng';
 
 const RESERVED_DATES = ['25.03', '08.05', '14.06', '04.07'];
@@ -50,6 +52,7 @@ export class CreateComp {
     private fb: FormBuilder,
     private confService: ConfirmationService,
     private backend: BackendService,
+    private guard: AuthGuard,
     @Inject('config') private env: Object) {
     // Form for usual persons
     this.requestForm = fb.group({
@@ -161,6 +164,13 @@ export class CreateComp {
       { label: 'Pasākuma papildinformācija' },
       { label: 'Kontaktinformācija ' }
     ];
+
+    this.guard.secret$.subscribe(secret => {
+      if (secret) {
+        this.test2();
+        this.test();
+      };
+    })
   }
 
   public ngOnDestroy(): void { }

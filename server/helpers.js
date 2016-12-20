@@ -20,15 +20,19 @@ module.exports = class Helpers {
     /**
      * Replace placeholders EMAIL, PASSWORD, LOCATION to their actual values
      */
-    static _replaceSubstr(source, email, pass, location) {
-        let newStr = source.replace(/(EMAIL)|(PASSWORD)|(LOCATION)/g, (match) => {
+    static _replaceSubstr(source, email, pass, description, location) {
+        let newStr = source.replace(/(EMAIL)|(PASSWORD)|(DESCRIPTION)|(LOCATION)|(DATE)/g, (match) => {
             switch (match) {
                 case 'EMAIL':
                     return email;
                 case 'PASSWORD':
                     return pass;
+                case 'DESCRIPTION':
+                    return description;
                 case 'LOCATION':
                     return location;
+                case 'DATE':
+                    return new Date().toISOString().substr(0,10);
             }
         });
         return newStr;
