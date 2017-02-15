@@ -1,0 +1,12 @@
+<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 99999; text-align: center;" *ngIf="!isLoaded">
+    <div style="
+    position: relative;
+    display: block;
+    min-height: 100%;
+    top: 45%;">
+        <i id="loading" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+        <div style="font-family: 'Open Sans', sans-serif; font-size: 14px; margin-top: 15px;">{{ errMsg }} {{ errMsgCounter }}</div>
+    </div>
+</div>
+<header-comp></header-comp>
+<router-outlet></router-outlet>
