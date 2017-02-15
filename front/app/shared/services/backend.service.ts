@@ -4,6 +4,7 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class BackendService {
@@ -11,6 +12,16 @@ export class BackendService {
   private URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
 
   constructor(private http: Http, @Inject('config') private env: Object) { }
+
+  /**
+   * Check server availability
+   * @returns {Observable<R>}
+   */
+  public checkServer(): Observable<String[]> {
+    return this.http.get(this.URL)
+        .map(res => res.json())
+        .catch(this.handleError);
+  }
 
   /**
    * @param
@@ -77,7 +88,7 @@ export class BackendService {
    * Observable.throw with error
    */
   private handleError(error: any) {
-    console.log('error occured')
+    console.log('error occured');
     let errMsg = (error.message) ? error.message :
       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg);
