@@ -126,6 +126,7 @@ CREATE TABLE `Requests` (
   `persons_type` varchar(45) NOT NULL,
   `description` varchar(300) NOT NULL,
   `address` varchar(150) NOT NULL,
+  `coordinates_id` int(11) NOT NULL,
   `start_date` date NOT NULL,
   `start_time` time NOT NULL,
   `end_date` date NOT NULL,
@@ -147,6 +148,7 @@ CREATE TABLE `Requests` (
   KEY `guard_id_idx` (`guard_id`),
   KEY `social_guard_id_idx` (`social_guard_id`),
   KEY `support_id_idx` (`support_id`),
+  KEY `coordinates_id_idx` (`coordinates_id`),
   KEY `user_id_idx` (`belongs_to`),
   KEY `location_id_idx` (`written_to`),
   KEY `employee_id_idx` (`checked_by`),
@@ -155,6 +157,7 @@ CREATE TABLE `Requests` (
   CONSTRAINT `organizer_id` FOREIGN KEY (`organizer_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `social_guard_id` FOREIGN KEY (`social_guard_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `support_id` FOREIGN KEY (`support_id`) REFERENCES `Persons` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `coordinates_id` FOREIGN KEY (`coordinates_id`) REFERENCES `Coordinates` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_id` FOREIGN KEY (`belongs_to`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `request_location_id` FOREIGN KEY (`written_to`) REFERENCES `Locations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -186,4 +189,26 @@ CREATE TABLE `Users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-26 12:25:33
+--
+-- Table structure for table `Coordinates`
+--
+
+DROP TABLE IF EXISTS `Coordinates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Coordinates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lat` double NOT NULL,
+  `long` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
