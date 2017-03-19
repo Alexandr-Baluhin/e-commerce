@@ -29,6 +29,8 @@ atbilst šo piemiņas dienu raksturam.
 
 export class CreateComp {
 
+  private LINK_LIKUMI_TEXT: string = 'Lauki ir doti attiecīgi ar Publisku izklaides un svētku pasākumu drošības likumu';
+
   private isBegin: boolean;
   private formType: string;
 
