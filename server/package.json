@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node src/app.js",
+    "test": "mocha tests/*.test.js",
+    "coverage": "istanbul cover node_modules/.bin/_mocha -- -- -u exports -R spec tests/*.test.js"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
@@ -19,5 +21,17 @@
     "nodemailer": "^2.6.4",
     "serve-favicon": "~2.3.0",
     "sha256": "^0.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.1.0",
+    "istanbul": "^0.4.5",
+    "jscs": "*",
+    "jsdoc": "*",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "random-word-generator": "^0.9.9",
+    "sinon": "^1.17.7",
+    "winston": "^2.3.1"
   }
+
 }
