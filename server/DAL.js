@@ -1,5 +1,6 @@
 'use strict';
 
+const http = require('http');
 const mysql = require('mysql');
 const sha = require('sha256');
 const passGenerator = require('generate-password');
@@ -113,19 +114,21 @@ module.exports = class DAL {
      */
     postRequest(request, email) {
         return new Promise((resolve, reject) => {
-            let promiseArr = [];
-            promiseArr.push(this._createPerson(request.organizer));
-            promiseArr.push(this._createPerson(request.guard));
-            promiseArr.push(this._createPerson(request.social_guard));
-            promiseArr.push(this._createPerson(request.support));
-
             // Get user from database by email
             this._getUser(email).then(res => {
+                let promiseArr = [];
                 let userId;
                 let message;
 
+                promiseArr.push(this._createPerson(request.organizer));
+                promiseArr.push(this._createPerson(request.guard));
+                promiseArr.push(this._createPerson(request.social_guard));
+                promiseArr.push(this._createPerson(request.support));
+
                 // get location name, to send it after with email
                 promiseArr.push(this.getLocations('id = ' + request['location']));
+
+                promiseArr.push(this._setCoordinates(request.address));
 
                 // If user doesn't exist, then create it!
                 if (res.length == 0) {
@@ -141,13 +144,13 @@ module.exports = class DAL {
                 Promise.all(promiseArr).then(res => {
                     // In second scope create request and send email to user
                     Promise.all([
-                        this._createRequest(request, res[0], res[1], res[2], res[3],
-                            res.length == 6 ? res[5]['id'] : userId),
+                        this._createRequest(request, res[0], res[1], res[2], res[3], res[5],
+                            res.length == 7 ? res[6]['id'] : userId),
                         this._sendEmail(email,
                             Helpers._replaceSubstr(
                                 MESSAGES['CONST_REQUEST_' + message],
                                 email,
-                                res.length == 6 ? res[5]['pass'] : undefined,
+                                res.length == 7 ? res[6]['pass'] : undefined,
                                 request['description'],
                                 res[4][0]['name']))
                     ]).then(
@@ -332,6 +335,7 @@ module.exports = class DAL {
      * guardID:String - guard foreign key
      * socialGuardID:String - social guard foreign key
      * supportID:String - support foreign key
+     * coordinatesID:String - coordinates foreign key
      * UserID:String - user foreign key
      * @return
      * resolve:Object - array with inserted rows
@@ -339,7 +343,7 @@ module.exports = class DAL {
      * @WhatItDoes
      * Insert request to database (final create request stage)
      */
-    _createRequest(request, organizerID, guardID, socialGuardID, supportID, UserID) {
+    _createRequest(request, organizerID, guardID, socialGuardID, supportID, coordinatesID, UserID) {
         return new Promise((resolve, reject) => {
             request.organizer_id = organizerID;
             delete request.organizer;
@@ -349,6 +353,7 @@ module.exports = class DAL {
             delete request.social_guard;
             request.support_id = supportID;
             delete request.support;
+            request.coordinates_id = coordinatesID;
             request.belongs_to = UserID;
 
             request.written_to = request.location;
@@ -402,9 +407,70 @@ module.exports = class DAL {
                         else resolve(rows.insertId);
                     });
                 }
-                ;
             });
         })
+    }
+
+  /**
+   * Set coordinates to database
+   * @param address
+   * @returns {Promise<T>|Promise}
+   * @private
+   */
+    _setCoordinates(address) {
+      return new Promise((resolve, reject) => {
+        this._getCoordinates(address).then(res => {
+          if (res.constructor === Array) {
+            let sql = 'INSERT INTO `Coordinates` (lat, long) VALUES ("' + res[0] + '","' + res[1] + '")';
+
+            this.connection.query(sql, (err, rows, fields) => {
+              if (err) {
+                console.log(err);
+                reject(err);
+              } else {
+                resolve(rows.insertId);
+              }
+            });
+          } else {
+            reject(res);
+          }
+        }, err => reject(err));
+      });
+    }
+
+  /**
+   * Get coordinates by address
+   * @param address
+   * @returns {Promise<T>|Promise}
+   */
+    _getCoordinates(address) {
+      return new Promise((resolve, reject) => {
+        if (typeof address == 'string') {
+          let preparedAddress = address.replace(/\s+/g, '%20');
+
+          let options = {
+            host: 'nominatim.openstreetmap.org',
+            path: '/search/' + preparedAddress + '?format=json&addressdetails=1&limit=1'
+          };
+
+          http.get(options, (res) => {
+            let response = '';
+
+            res.on('data', (chunk) => response += chunk);
+            res.on('end', () => {
+              let address = JSON.parse(response);
+              if (address.length == 0) {
+                reject('Address is not found');
+              } else {
+                let coordinates = [address[0]['lat'], address[0]['lon']];
+                resolve(coordinates);
+              }
+            });
+          });
+        } else {
+          reject('Address is not a string');
+        }
+      });
     }
 
     /**

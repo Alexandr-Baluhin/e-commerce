@@ -116,6 +116,7 @@ module.exports = class Helpers {
             }
             return substr;
         });
+        console.log(result)
         return result;
     }
 

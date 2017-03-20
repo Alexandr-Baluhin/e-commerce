@@ -24,7 +24,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => res.send('Hello from server!'));
+app.get('/', (req, res) => res.send({response: 'Hello from server!'}));
 
 app.get('/locations', (req, res) => {
     database.getLocations(null).then(
