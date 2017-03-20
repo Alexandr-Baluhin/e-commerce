@@ -36,6 +36,7 @@ import { ListComp } from './pages/request/list/list.comp';
 import { HeaderComp } from './shared/header/header.comp';
 import { AuthComp } from './shared/auth/auth.comp';
 import { MessagesComp } from './shared/messages/messages.comp';
+import { MapComp } from './shared/map/map.comp';
 
 /* Services */
 // Pages
@@ -83,7 +84,8 @@ import { CONFIG } from './configurations/config';
     // Shared
     HeaderComp,
     AuthComp,
-    MessagesComp
+    MessagesComp,
+    MapComp
   ],
   bootstrap: [AppComp],
   providers: [CreateService, AuthGuard, BackendService, ConfirmationService,
