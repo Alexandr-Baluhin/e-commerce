@@ -28,12 +28,14 @@
             // other libraries
             'rxjs': 'npm:rxjs',
             'primeng': 'npm:primeng',
+            'leaflet': 'npm:leaflet'
         },
 
         packages: {
             app: { main: './main.js', defaultExtension: 'js' },
             rxjs: { defaultExtension: 'js' },
-            'primeng': { defaultExtension: 'js' },
+            primeng: { defaultExtension: 'js' },
+            leaflet: { main: 'dist/leaflet.js', defaultExtension: 'js' }
         }
     })
 })(this);
