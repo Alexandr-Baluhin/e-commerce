@@ -8,7 +8,7 @@ const https = require('https');
 const fs = require('fs');
 const busboy = require('connect-busboy');
 
-var options = {
+let options = {
     key: fs.readFileSync('../ssl/key.pem', 'utf8'),
     cert: fs.readFileSync('../ssl/server.crt', 'utf8')
 };
@@ -40,6 +40,14 @@ app.get('/request/list', (req, res) => {
         result => res.send(result),
         err => res.send(err)
     );
+});
+
+app.get('/request/map', (req, res) => {
+  let id = req.headers.id;
+  database.getMap(id).then(
+    result => res.send(result),
+    err => res.send(err)
+  );
 });
 
 app.get('/request/:id', (req, res) => {
