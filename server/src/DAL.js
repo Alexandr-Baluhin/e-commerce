@@ -74,8 +74,9 @@ module.exports = class DAL {
     return new Promise((resolve, reject) => {
       this._getEmployee(null, id).then(res => {
         let location_id = res[0]['location_id'];
+        let sql = REQUEST_MAP_SQL.replace(/(LOCATION_ID)/g, match => { return location_id });
 
-        this.connection.query(REQUEST_MAP_SQL, (err, rows, fields) => {
+        this.connection.query(sql, (err, rows, fields) => {
           if (err) reject(err);
           else resolve(rows);
         });
@@ -87,8 +88,9 @@ module.exports = class DAL {
     return new Promise((resolve, reject) => {
       let sql = REQUEST_SQL + ' AND id = ' + requestID;
       this.connection.query(sql, (err, rows, fields) => {
-        if (err) reject(err);
-        else {
+        if (err) {
+          reject(err);
+        } else {
           let result = {};
           let organizer = {};
           let guard = {};
@@ -113,7 +115,6 @@ module.exports = class DAL {
           result['support'] = support;
           resolve(result);
         }
-        ;
       });
     });
   }
@@ -158,7 +159,7 @@ module.exports = class DAL {
           Promise.all(promiseArr).then(res => {
               // In second scope create request and send email to user
               Promise.all([
-                this._createRequest(request, res[0], res[1], res[2], res[3], res[5],
+                this._createRequest(request, res[0], res[1], res[2], res[3], typeof res[5] == 'string' ? null : res[5],
                   res.length == 7 ? res[6]['id'] : userId),
                 this._sendEmail(email,
                   Helpers._replaceSubstr(
@@ -435,7 +436,7 @@ module.exports = class DAL {
     return new Promise((resolve, reject) => {
       this._getCoordinates(address).then(res => {
         if (res.constructor === Array) {
-          let sql = 'INSERT INTO `Coordinates` (lat, long) VALUES ("' + res[0] + '","' + res[1] + '")';
+          let sql = 'INSERT INTO `Coordinates` (`lat`, `long`) VALUES ("' + res[0] + '","' + res[1] + '")';
 
           this.connection.query(sql, (err, rows, fields) => {
             if (err) {
@@ -448,7 +449,7 @@ module.exports = class DAL {
         } else {
           reject(res);
         }
-      }, err => reject(err));
+      }, err => resolve(err));
     });
   }
 
@@ -548,8 +549,8 @@ module.exports = class DAL {
 };
 
 let REQUEST_MAP_SQL = `
-SELECT 'id', 'description', 'address', 'start_date', 'start_time', 'end_date', 'end_time', 'status', 'org.*', 'coord.*', 'written_to'
-FROM (SELECT Requests.coordinates_id, lat, 'long' FROM Requests, Coordinates WHERE (Requests.coordinates_id = Coordinates.id)) AS coord,
+SELECT id, description, address, start_date, start_time, end_date, end_time, \`status\`, org.*, coord.*, written_to
+FROM (SELECT Requests.coordinates_id, lat, \`long\` FROM Requests, Coordinates WHERE (Requests.coordinates_id = Coordinates.id)) AS coord,
   (SELECT Requests.organizer_id,
           CONCAT(PhysicalPersons.name, " ", PhysicalPersons.surname) AS organizer_name,
           PhysicalPersons.person_code AS organizer_person_code,
@@ -573,7 +574,7 @@ FROM (SELECT Requests.coordinates_id, lat, 'long' FROM Requests, Coordinates WHE
 Requests
 WHERE Requests.organizer_id = org.organizer_id
 AND Requests.coordinates_id = coord.coordinates_id
-AND Requests.written_to = ${location_id};
+AND Requests.written_to = LOCATION_ID;
 `;
 
 const REQUEST_SQL = `

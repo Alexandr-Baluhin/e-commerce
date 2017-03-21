@@ -9,8 +9,8 @@ const fs = require('fs');
 const busboy = require('connect-busboy');
 
 let options = {
-    key: fs.readFileSync('../ssl/key.pem', 'utf8'),
-    cert: fs.readFileSync('../ssl/server.crt', 'utf8')
+    key: fs.readFileSync(__dirname + '/../ssl/key.pem', 'utf8'),
+    cert: fs.readFileSync(__dirname + '/../ssl/server.crt', 'utf8')
 };
 
 let database = new DAL();
