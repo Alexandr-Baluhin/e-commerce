@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import 'leaflet';
 
@@ -20,6 +20,8 @@ export class MapComp {
     private height: String;
     private markersScope: any;
 
+    @Input() data: any;
+
     constructor() {
         this.height = '380px';
     }
@@ -29,21 +31,43 @@ export class MapComp {
     public ngOnDestroy(): void {}
 
     public ngAfterViewInit(): void {
-        this.initMap();
-        this.addMarkers();
+        setTimeout(() => {
+            this.initMap();
+            let preparedData = this.formatDate(this.data);
+            this.addMarkers(preparedData);
+        }, 500);
     }
 
     private initMap(): void {
         this.map = L.map('map', {
             center: [56.945984, 24.080721],
-            zoom: 15,
+            zoom: 8,
             layers: [TILE_DETAILED]
         });
     }
 
-    private addMarkers(): void {
+    private addMarkers(data): void {
         this.markersScope = L.layerGroup().addTo(this.map);
-        L.marker([56.945984, 24.080721]).bindPopup('Visam vajag inženieri!<br><img height="100px" width="150px" src="../../../assets/cat/cat.jpg">').addTo(this.markersScope);
+        data.forEach(marker => {
+           L.marker([marker.lat, marker.long]).bindPopup('' +
+               '<strong>Norisīnas vieta: </strong> ' + marker.address + '<br>' +
+               '<strong>Datums: </strong> ' + marker.start_date + '-' + marker.end_date + '<br>' +
+               '<strong>Organizators: </strong> ' + marker.organizer_name + '<br>' +
+               '<strong>Statuss: </strong> <strong>' + marker.status + '</strong><br>' +
+               '<strong>Apraksts: </strong> ' + marker.description).addTo(this.markersScope);
+        });
+    }
+
+    private formatDate(data): Array<Object> {
+        let result = [];
+        data.forEach((request) => {
+            let temp = request['start_date'].split('T');
+            let temp2 = request['end_date'].split('T');
+            request['start_date'] = temp[0] + ' ' + temp[1].split('.00')[0];
+            request['end_date'] = temp2[0] + ' ' + temp2[1].split('.00')[0];
+            result.push(request);
+        });
+        return result;
     }
 
 }

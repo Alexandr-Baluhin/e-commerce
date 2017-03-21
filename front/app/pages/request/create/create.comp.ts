@@ -207,9 +207,9 @@ export class CreateComp {
 
   private test() {
     let test_object = {
-      address: "Imantas kultūras centrs",
+      address: "Meža iela 1",
       dangerous: "tekts",
-      description: "Party   \"RedHeads\"↵Ballīte↵Pārveidot ballīte↵",
+      description: "Parastais publiskais pasakums",
       end_date: new Date(2016, 10, 25),
       end_time: new Date(2016, 10, 25, 22, 30, 0),
       gov_dangerous_response: "tekts",
@@ -254,9 +254,9 @@ export class CreateComp {
 
   private test2() {
     let test_object = {
-      address: "Imantas kultūras centrs",
+      address: "Meža iela 1",
       dangerous: "tekts",
-      description: "Party   \"RedHeads\"↵Ballīte↵Pārveidot ballīte↵",
+      description: "Parastais publiskais pasakums",
       end_date: new Date(2016, 10, 25),
       end_time: new Date(2016, 10, 25, 22, 30, 0),
       gov_dangerous_response: "tekts",

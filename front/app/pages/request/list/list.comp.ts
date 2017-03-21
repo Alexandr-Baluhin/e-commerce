@@ -25,11 +25,15 @@ export class ListComp {
   private userIdHeader: Object;
 
   private requests: Object[];
+  private mapData: Object[];
+
+  private mapDataLoaded: boolean;
 
   constructor(private router: Router, private confService: ConfirmationService,
     private backend: BackendService, private guard: AuthGuard) {
     this.requests = [];
     this.notifications = [];
+    this.mapDataLoaded = false;
     this.guard.userType$.subscribe(type => this.userType = type);
     this.guard.userId$.subscribe(id => this.userId = id);
   }
@@ -38,6 +42,7 @@ export class ListComp {
     this.userTypeHeader = { name: "type", value: this.userType };
     this.userIdHeader = { name: "id", value: this.userId };
     this.getList();
+    this.getMapList();
   }
 
   public ngOnDestroy(): void { }
@@ -46,6 +51,14 @@ export class ListComp {
     this.backend.getRequest('request/list', null, [this.userTypeHeader, this.userIdHeader]).subscribe(res => {
       if (res.length != 0) {
         this.formatDate(res).then(res => this.requests = res);
+      }
+    });
+  }
+
+  private getMapList(): void {
+    this.backend.getRequest('request/map', null, [this.userIdHeader]).subscribe(res => {
+      if (res.length != 0) {
+        this.mapData = res;
       }
     });
   }
@@ -112,5 +125,13 @@ export class ListComp {
       });
       resolve(result);
     });
+  }
+
+  private handleChange(e) {
+    if (e.index == 1) {
+      this.mapDataLoaded = true;
+    } else {
+      this.mapDataLoaded = false;
+    }
   }
 }
