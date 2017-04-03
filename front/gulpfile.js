@@ -19,6 +19,8 @@ gulp.task('copy-libs', function () {
     .pipe(gulp.dest('dist/app/node_modules/systemjs'))
   gulp.src('./node_modules/primeng/**/*')
     .pipe(gulp.dest('dist/app/node_modules/primeng'))
+  gulp.src('./node_modules/leaflet/**/*')
+    .pipe(gulp.dest('dist/app/node_modules/leaflet'))
   gulp.src('./app/libs/**/*')
     .pipe(gulp.dest('dist/app/libs'))
   gulp.src('./app/css/**/*')

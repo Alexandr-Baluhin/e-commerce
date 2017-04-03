@@ -18,17 +18,12 @@ export class MapComp {
 
   @Input() data: any;
 
-  constructor(@Inject('config') private env: Object) {
+  constructor() {
     this.height = '380px';
-    if (env['PROD']) {
-      this.tileDetailed = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-      });
-    } else {
-      this.tileDetailed = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      });
-    }
+
+    this.tileDetailed = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    });
   }
 
   public ngOnInit(): void {
@@ -58,7 +53,7 @@ export class MapComp {
     data.forEach(marker => {
       L.marker([marker.lat, marker.long]).bindPopup('' +
         '<strong>Norisīnas vieta: </strong> ' + marker.address + '<br>' +
-        '<strong>Datums: </strong> ' + marker.start_date + '-' + marker.end_date + '<br>' +
+        '<strong>Datums: </strong> <i>' + marker.start_date + '</i>  -  <i>' + marker.end_date + '</i><br>' +
         '<strong>Organizators: </strong> ' + marker.organizer_name + '<br>' +
         '<strong>Statuss: </strong> <strong>' + marker.status + '</strong><br>' +
         '<strong>Apraksts: </strong> ' + marker.description).addTo(this.markersScope);
