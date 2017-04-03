@@ -128,10 +128,6 @@ export class ListComp {
   }
 
   private handleChange(e) {
-    if (e.index == 1) {
-      this.mapDataLoaded = true;
-    } else {
-      this.mapDataLoaded = false;
-    }
+    this.mapDataLoaded = e.index == 1;
   }
 }

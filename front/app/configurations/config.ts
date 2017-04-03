@@ -1,6 +1,7 @@
 export const CONFIG = {
-	"HOSTNAME": "https://localhost",
+	"HOSTNAME": "localhost",
 	"HOSTNAME_PORT": "80",
-	"API": "https://localhost",
-	"API_PORT": "8443"
+	"API": "localhost",
+	"API_PORT": "8443",
+	"PROD": true
 };

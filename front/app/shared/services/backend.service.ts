@@ -9,7 +9,9 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class BackendService {
 
-  private URL: string = this.env['API'] + ':' + this.env['API_PORT'] + '/';
+  private URL: string = this.env['PROD']
+    ? 'https://' + this.env['API'] + ':' + this.env['API_PORT'] + '/'
+    : 'http://' + this.env['API'] + ':' + this.env['API_PORT'] + '/';
 
   constructor(private http: Http, @Inject('config') private env: Object) { }
 

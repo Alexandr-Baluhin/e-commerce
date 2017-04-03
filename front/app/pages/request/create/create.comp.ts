@@ -48,7 +48,9 @@ export class CreateComp {
 
   private locations: SelectItem[];
 
-  private url: string = this.env['API'] + ':' + this.env['API_PORT'] + '/upload';
+  private url: string = this.env['PROD']
+    ? 'https://' + this.env['API'] + ':' + this.env['API_PORT'] + '/upload'
+    : 'http://' + this.env['API'] + ':' + this.env['API_PORT'] + '/upload';
 
   constructor(private _service: CreateService,
     private fb: FormBuilder,
@@ -140,6 +142,7 @@ export class CreateComp {
       'location': ['', Validators.required],
       'persons_type': ['legal']
     });
+
     this.isBegin = true;
     this.files = [];
     this.lifeTime = 5000;
@@ -150,11 +153,10 @@ export class CreateComp {
   }
 
   public ngOnInit(): void {
-    this.backend.getRequest('locations')
-      .subscribe(res => {
-        res.forEach((el) => {
-          this.locations.push({ label: el['name'], value: el['id'] });
-        });
+    this.backend.getRequest('locations').subscribe(
+      res => {
+        res.forEach(el => this.locations.push({ label: el['name'], value: el['id'] }));
+
         this.requestForm.controls['location'].setValue(this.locations[0]['value']);
         this.requestLawForm.controls['location'].setValue(this.locations[0]['value']);
       },
@@ -171,7 +173,7 @@ export class CreateComp {
       if (secret) {
         this.test2();
         this.test();
-      };
+      }
     })
   }
 

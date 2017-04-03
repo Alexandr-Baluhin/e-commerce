@@ -121,8 +121,9 @@ export class ViewComp {
     this.backend.getRequest('request', [this.id])
       .subscribe(res => {
         this.sourceRequest = res;
-        if (this.userType == 'user' || (this.userType == 'employee' && res['status'] != 'Procesā')) 
-          this.commentFromGov = this.sourceRequest['gov_callback_text']
+        if (this.userType == 'user' || (this.userType == 'employee' && res['status'] != 'Procesā')) {
+          this.commentFromGov = this.sourceRequest['gov_callback_text'];
+        }
         this.preFormatRequest(res).then(
           res => {
             this.formatRequest(res).then(
