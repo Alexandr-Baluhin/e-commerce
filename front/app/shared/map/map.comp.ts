@@ -43,7 +43,7 @@ export class MapComp {
   private initMap(): void {
     this.map = L.map('map', {
       center: [56.945984, 24.080721],
-      zoom: 8,
+      zoom: 10,
       layers: [this.tileDetailed]
     });
   }
